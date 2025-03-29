@@ -29,6 +29,11 @@ can be used to add depending files without renaming existing.
 
 The package files containing comments which describe the functionality.
 
+Many thanks to [Thomas Harm](https://github.com/TomHarm) who has developed a cool solar monitoring
+dashboard for [photovoltaikforum](https://www.photovoltaikforum.com) and shared it with me. The
+[010_solar_monitoring_package.yaml](./packages/010_solar_monitoring_package.yaml) contains a
+adopted version of his package and my dashboard also has included some of his work.
+
 ## VControld
 
 * Folder: [vcontrold](./vcontrold)

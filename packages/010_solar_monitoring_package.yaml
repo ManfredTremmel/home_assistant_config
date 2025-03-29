@@ -1,0 +1,319 @@
+# ########## HA Local Solar monitoring Integration ##########
+#
+# (C) 2025 Bauer Harmes
+#
+# provide Sensors to track and calculate PV production.
+# necessary inputs:
+# planned production for each month, provided in some
+#
+# We keep the data from PVSOL in a JSON file and load it here dynamically.
+# the interested user may be tempted to do it in some other way, but this
+# approach keeps everything separate and tidy.
+rest:
+  #  name: forecast_pv_production
+  # the local folder here is equal to /config/www folder in HA
+  - resource: http://homeassistant.local:8123/local/PV_forecast/pv_forecasted.json
+    scan_interval: 30
+    sensor:
+      - unique_id: "forecasted_pv_production_pvsol"
+        name: "Forecasted PV Production PVSOL"
+        value_template: "{{ value_json['forecast'][now().month]['value'] }}"
+        unit_of_measurement: "kWh"
+      - unique_id: "installed_pv_plant_size"
+        name: "Installed PV Size"
+        value_template: "{{ value_json['InstalledSize'] }}"
+        unit_of_measurement: "kW"
+      - unique_id: "installed_pv_wr1"
+        name: "Installed PV WR1"
+        value_template: "{{ value_json['Installed_WR1'] }}"
+        unit_of_measurement: "kW"
+      - unique_id: "installed_pv_wr2"
+        name: "Installed PV WR2"
+        value_template: "{{ value_json['Installed_WR2'] }}"
+        unit_of_measurement: "kW"
+
+input_boolean:
+  pv_monitoring_absolute_relativ:
+    name: "PV Monitoring Absolute Relativ"
+    initial: On
+
+#################################################################
+#
+# Dependency: the forecasted values per month as JSON structure as defined above
+# Todo: Add the yearly summarized result in a loop, as well add yearly target levels
+#
+# Dependency: Solcast PV for Forecasting the next days:
+# Used entities:
+#   none :-D but I planned to do a forecast target if we come to the end of month
+#   2nd Scenario: check in if the planned production fits the forecasted value
+#
+# Dependency: Sun2 for calculation of the solar day % as an integral of elevation, rising
+#       and setting azimuths,
+# Used entities:
+#       sensor.home_sun_rising_azimuth
+#       sensor.home_sun_maximum_elevation
+#       sensor.home_sun_setting_azimuth
+#       sensor.home_sun_azimuth
+#
+# Your daily and monthly solar yields
+#  used entities:
+#       sensor.solar_yield_monthly
+#       sensor.solar_yield_daily
+#
+#
+# Now we gonna define the necessary sensors from our rest api as well as the
+# necessary calculations we have to do:
+template:
+  - sensor:
+      # part of the current day, so we´re able to establish a comparison, how much of the day is still
+      # about to happen. we do it as a triangle calculation, as a curve integral may be nasty
+      - name: "Sun daily percent"
+        unique_id: "sun_daily_percent"
+        unit_of_measurement: "%"
+        state: >-
+          {% set deg2rad = pi/180.0 %}
+          {% set P1 = states('sensor.home_sun_rising_azimuth')|float(0)*deg2rad %}
+          {% set P2 = states('sensor.home_sun_maximum_elevation')|float(0)*deg2rad %}
+          {% set Pc = states('sensor.home_sun_azimuth')|float(0)*deg2rad %}
+          {% set P3 = states('sensor.home_sun_setting_azimuth')|float(0)*deg2rad %}
+          {% if Pc<P1 %}
+            {{0}}
+          {% elif Pc < P3 %}
+            {% set A = P2 %}
+            {% set B = pi/(P3-P1) %}
+            {% set C = -B*P1 %}
+            {% set F3 = -(A/B)*cos(B*P3+C) %}
+            {% set F1 = -(A/B)*cos(B*P1+C) %}
+            {% set Fa = F3-F1 %}
+            {% set Fc = -(A/B)*cos(B*Pc+C)-F1 %}
+            {{ (Fc/Fa*100)|round(2) }}
+          {% else %}
+            {{100}}
+          {%endif%}
+
+      # First the forecasted values in total
+      - name: "Forecasted PV Production daily"
+        unique_id: "forecasted_pv_production_daily"
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >-
+          {% set dom = 31 if now().month == 12 else (now().replace(month=now().month+1, day=1) - timedelta(days=1)).day %}
+          {% set fpv = states("sensor.forecasted_pv_production_pvsol") | float(0) %}
+          {{ (fpv / dom) | round(2) }}
+        availability: >-
+          {{ states("sensor.forecasted_pv_production_pvsol") | is_number }}
+
+      # also here the calculation for the MTD module, it tells the amount per current day
+      - name: "Forecasted PV Production MTD neu"
+        unique_id: "forecasted_pv_production_mtd_neu"
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >-
+          {% set cd = now().day-1 %}
+          {% set dp = states("sensor.sun_daily_percent")|float(2)/100.0 %}
+          {% set cd = cd+dp %}
+          {% set fpd = states("sensor.forecasted_pv_production_daily") | float(0) %}
+          {{ (fpd * cd) | round(2) }}
+        availability: >-
+          {{ states("sensor.forecasted_pv_production_daily") | is_number }}
+
+      - name: "Forecasted PV production daily per kWp"
+        unique_id: "forecasted_pv_production_daily_per_kwp"
+        unit_of_measurement: "kWh/kWp"
+        device_class: energy
+        state: >-
+          {% set fpd = states("sensor.forecasted_pv_production_daily") | float(0) %}
+          {% set ips = states("sensor.installed_pv_size") | float(0) %}
+          {{ (fpd / ips) | round(2) }}
+        availability: >-
+          {{ (states("sensor.forecasted_pv_production_daily") | is_number) 
+          and (states("sensor.installed_pv_size") | is_number)  }}
+
+      - name: "Forecasted PV production monthly per kWp"
+        unique_id: "forecasted_pv_production_monthly_per_kwp"
+        unit_of_measurement: "kWh/kWp"
+        device_class: energy
+        state: >-
+          {% set fpd = states("sensor.forecasted_pv_production_pvsol") | float(0) %}
+          {% set ips = states("sensor.installed_pv_size") | float(0) %}
+          {{ (fpd / ips) | round(2) }}
+        availability: >-
+          {{ (states("sensor.forecasted_pv_production_pvsol") | is_number) 
+          and (states("sensor.installed_pv_size") | is_number)  }}
+
+      - name: "Forecasted PV Production MTD per kWp"
+        unique_id: "forecasted_pv_production_mtd_per_kwp"
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >-
+          {% set fpm = states("sensor.forecasted_pv_production_mtd_neu") | float(0) %}
+          {% set ips = states("sensor.installed_pv_size") | float(0) %}
+          {{ (fpm / ips) | round(2) }}
+        availability: >-
+          {{ (states("sensor.forecasted_pv_production_mtd_neu") | is_number)
+          and (states("sensor.installed_pv_size") | is_number)  }}
+
+      - name: "Wechselrichter Yield Monthly per kWp"
+        unique_id: "wechselrichter_yield_monthly_per_kwp"
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >-
+          {% set inv = states("sensor.solar_yield_monthly") | float(0) %}
+          {% set ips = states("sensor.installed_pv_size") | float(0) %}
+          {{ (inv/ips) | round(2) }}
+        availability: >-
+          {{ (states("sensor.solar_yield_monthly") | is_number) 
+          and (states("sensor.installed_pv_size") | is_number)  }}
+
+      - name: "Wechselrichter Yield daily per kWp"
+        unique_id: "wechselrichter_yield_daily_per_kwp"
+        state_class: "measurement"
+        unit_of_measurement: "kWh/kWp"
+        # device_class: "energy"
+        state: >-
+          {% set inv = states("sensor.solar_yield_daily") | float(0) %}
+          {% set ips = states("sensor.installed_pv_size") | float(0) %}
+          {{ (inv/ips) | round(2) }}
+        availability: >-
+          {{ (states("sensor.solar_yield_daily") | is_number) 
+          and (states("sensor.installed_pv_size") | is_number)  }}
+
+      # To show the progress of the current month so far:
+      - name: "PV Abgelaufener Monat Prozent"
+        unique_id: "pv_abgelaufener_monat_prozent"
+        state_class: "measurement"
+        unit_of_measurement: "%"
+        state: >-
+          {% set dom = 31 if now().month == 12 else (now().replace(month=now().month+1, day=1) - timedelta(days=1)).day %}
+          {% set cd = now().day-1 %}
+          {% set dp = states("sensor.sun_daily_percent")|float(2)/100.0 %}
+          {% set cd = cd+dp %}
+          {{ (cd / dom * 100.0) | round(1) }}
+        # in term of calculation it would make sense to have the area under the sun curve as the part of day progress
+
+      - name: "PV Zielerreichung Tagesertrag"
+        unique_id: "pv_zielerreichung_tagesertrag"
+        state_class: "measurement"
+        unit_of_measurement: "%"
+        icon: >-
+          {% if states("sensor.pv_zielerreichung_tagesertrag") >= 95 %}
+            mdi:check
+          {% elif states("sensor.pv_zielerreichung_tagesertrag") >= 80 %}
+            mdi:alert-circle
+          {% else %}
+            mdi:alpha-x-circle
+          {% endif %}
+        state: >-
+          {% set inv = states("sensor.solar_yield_daily") | float(0) %}
+          {% set t = states("sensor.forecasted_pv_production_daily") | float(0) %}
+          {{ (inv / t * 100.0) | round(2) }}
+        availability: >-
+          {{ (states("sensor.solar_yield_daily") | is_number() )
+          and (states("sensor.forecasted_pv_production_daily") | is_number() ) }}
+
+      # Target level for the current month, used to extrapolate the result for this month
+      - name: "PV Zielerreichung Monatsertrag"
+        unique_id: "pv_zielerreichung_monatsertrag"
+        state_class: "measurement"
+        unit_of_measurement: "%"
+        state: >-
+          {% set inv = states("sensor.inverter_yield_monthly") | float(0) %}
+          {% set t = states("sensor.forecasted_pv_production_pvsol") | float(0) %}
+          {{ (inv / t * 100.0) | round(2) }}
+        availability: >-
+          {{ (states("sensor.inverter_yield_monthly") | is_number() )
+          and (states("sensor.forecasted_pv_production_pvsol") | is_number() ) }}
+
+      - name: "PV Zielerreichung Monatsertrag MTD"
+        unique_id: "pv_zielerreichung_monatsertrag_mtd"
+        state_class: "measurement"
+        unit_of_measurement: "%"
+        state: >-
+          {% set inv = states("sensor.inverter_yield_monthly") | float(0) %}
+          {% set t = states("sensor.forecasted_pv_production_mtd_neu") | float(0) %}
+          {{ (inv / t * 100.0) | round(2) }}
+        availability: >-
+          {{ (states("sensor.inverter_yield_monthly") | is_number() )
+          and (states("sensor.forecasted_pv_production_mtd_neu") | is_number() ) }}
+
+      # Extrapolate in a simple manner the expected go to
+      - name: "PV Extrapolierter Ertrag"
+        unique_id: "pv_extrapolierter_ertrag"
+        state_class: "measurement"
+        unit_of_measurement: "kWh"
+        state: >-
+          {% set inv = states("sensor.inverter_yield_monthly") | float(0) %}
+          {% set cmp = states("sensor.pv_abgelaufener_monat_prozent") | float(0) %}
+          {% set cd = now().day %}
+          {% if cd <= 5 %}
+            {{ 'unavailable' }}
+          {% elif cmp == 0 %}
+            {{ 'unavailable' }}
+          {% else %}
+            {{ (inv/(cmp/100.0)) | round(2) }}
+          {% endif %}
+        availability: >-
+          {{ has_value("sensor.inverter_yield_monthly") 
+          and has_value("sensor.pv_abgelaufener_monat_prozent") }}
+
+      - name: "PV Extrapolierter Ertrag per kWp"
+        unique_id: "pv_extrapolierter_ertrag_per_kwp"
+        state_class: "measurement"
+        unit_of_measurement: "kWh/kWp"
+        state: >-
+          {% set inv = states("sensor.pv_extrapolierter_ertrag") | float(0) %}
+          {% set ips = states("sensor.installed_pv_size") | float(0) %}
+          {{ ((inv)/ips) | round(2) }}
+        availability: >-
+          {{ has_value("sensor.pv_extrapolierter_ertrag")
+          and has_value("sensor.installed_pv_size") }}
+
+      # Zielerreichung des extrapolierten Ertrages im Vergleich zum Planwert
+      - name: "PV extrapolierte Zielerreichung"
+        unique_id: "pv_extrapolierte_zielerreichung"
+        state_class: "measurement"
+        unit_of_measurement: "%"
+        state: >-
+          {% set exe = states("sensor.pv_extrapolierter_ertrag")|float(0) %}
+          {% set pz = states("sensor.forecasted_pv_production_pvsol")|float(0) %}
+          {{ (exe/pz*100.0) | round(1) }}
+        availability: >-
+          {{ has_value("sensor.pv_extrapolierter_ertrag") 
+          and has_value("sensor.forecasted_pv_production_pvsol") }}
+
+      # notwendige Erzeugung um 100% zu schaffen pro Tag>
+      # If we´re about to end the month and solcast has enough data available, I would transit it to Solcast
+      - name: "PV notwendige Erzeugung pro Tag"
+        unique_id: "pv_notwendige_erzeugung_pro_tag"
+        state_class: "measurement"
+        unit_of_measurement: "kWh"
+        state: >-
+          {% set inv = states("sensor.solar_yield_monthly") | float(0) %}
+          {% set pz = states("sensor.forecasted_pv_production_pvsol")|float(0) %}
+          {% set cd = now().day-1 %}
+          {% set dp = states("sensor.sun_daily_percent")|float(2)/100.0 %}
+          {% set cd = cd+dp %}
+          {% set dom = 31 if now().month == 12 else (now().replace(month=now().month+1, day=1) - timedelta(days=1)).day %}
+          {% set remDays = dom-cd %}
+          {% set remDays = 1 if remDays < 1 else remDays %}
+          {% set remPV = pz-inv %}
+          {% if remDays > 0 and remPV > 0 %}
+            {{ (remPV / remDays) | round(1) }}
+          {% else %}
+            {{ 0.0 }}
+          {% endif %}
+        availability: >-
+          {{ has_value("sensor.solar_yield_monthly")
+          and has_value("sensor.forecasted_pv_production_pvsol") }}
+
+      - name: "PV notwendige Erzeugung pro Tag per kWp"
+        unique_id: "pv_notwendige_erzeugung_pro_tag_per_kwp"
+        state_class: "measurement"
+        unit_of_measurement: "kWh/kWp"
+        state: >-
+          {% set inv = states("sensor.pv_notwendige_erzeugung_pro_tag") | float(0) %}
+          {% set ips = states("sensor.installed_pv_size") | float(0) %}
+          {{ (inv/ips) | round(2) }}
+        availability: >-
+          {{ has_value("sensor.pv_notwendige_erzeugung_pro_tag")
+          and has_value("sensor.installed_pv_size") }}
