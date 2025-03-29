@@ -1,0 +1,92 @@
+# ########## HA Local SMA Message Translation ##########
+#
+# (C) 2025 Manfred Tremmel
+#
+# The SMA solar inverter provides some status information only as number,
+# this configuration file provides sensors which translate this numeric
+# values into readable German test messages.
+#
+# Based on ModBus documentation and a board entry, see
+# https://files.sma.de/downloads/WEBBOX-MODBUS-TB-de-19.pdf
+# https://solaranzeige.de/phpBB3/viewtopic.php?t=3204
+#
+# Dependency: "SMA Devices Plus" extension from HACS
+#
+# Used entities:
+#       sensor.sunny_tripower_x_20_grid_relay_status
+#       sensor.sunny_tripower_x_20_operating_status_general
+#       sensor.sunny_tripower_x_20_status
+#
+# Provided entities:
+#       sensor.sma_grid_relay_status
+#       sensor.sma_operating_status_general
+#       sensor.sma_status
+#
+template:
+  - sensor:
+
+    #
+    # the relay status represents the relay to the grid and has two possible values:
+    # - 51  => closed
+    # - 311 => open
+    #
+    - unique_id: "sma_grid_relay_status"
+      name: "SMA Grid Relay Status"
+      icon: "mdi:information"
+      state: >-
+          {% set mapper =  {
+               '51' : 'geschlossen',
+               '311' : 'offen' } %}
+          {% set state =  states.sensor.sunny_tripower_x_20_grid_relay_status.state %}
+          {{ mapper[state] if state in mapper else 'Unbekannt' }}
+      availability: "{{ has_value('sensor.sunny_tripower_x_20_grid_relay_status') }}"
+
+    #
+    # the general status about the operating of the inverter has following entries:
+    # - 303  => off
+    # - 569  => on
+    # - 1295 => standby
+    # - 1795 => locked
+    #
+    - unique_id: "sma_operating_status_general"
+      name: "SMA Operating Status General"
+      icon: "mdi:information"
+      state: >-
+          {% set mapper =  {
+               '303' : 'Aus',
+               '569' : 'Eingeschaltet',
+               '1295' : 'Standby',
+               '1795' : 'Verriegelt' } %}
+          {% set state =  states.sensor.sunny_tripower_x_20_operating_status_general.state %}
+          {{ mapper[state] if state in mapper else 'Unbekannt' }}
+      availability: "{{ has_value('sensor.sunny_tripower_x_20_operating_status_general') }}"
+
+    #
+    # the status provides correct operation or possible inverter error messages:
+    # - 307  => OK
+    # - 467  => DC overvoltage
+    # - 477  => Inverse current
+    # - 1492 => String temporarily de-grouped due to ground fault
+    # - 1493 => String permanently de-grouped due to ground fault
+    # - 1649 => String x has low power
+    # - 1650 => Partial string x has low power
+    # - 1692 => String deactivated due to power reduction
+    # - 1693 => No string connected
+    #
+    - unique_id: "sma_status"
+      name: "SMA Status"
+      icon: "mdi:information"
+      state: >-
+          {% set mapper =  {
+               '307' : 'OK',
+               '467' : 'DC-Überspannung',
+               '477' : 'Inversstrom',
+               '1492' : 'String temporär ausgruppiert wegen Erdschluss',
+               '1493' : 'String permanent ausgruppiert wegen Erdschluss',
+               '1649' : 'String x hat geringe Leistung',
+               '1650' : 'Teil-String x hat geringe Leistung',
+               '1692' : 'String deaktiviert wegen Leistungsreduzierung',
+               '1693' : 'Kein String angeschlossen' } %}
+          {% set state =  states.sensor.sunny_tripower_x_20_status.state %}
+          {{ mapper[state] if state in mapper else 'Unbekannt' }}
+      availability: "{{ has_value('sensor.sunny_tripower_x_20_status') }}"

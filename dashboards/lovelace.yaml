@@ -1,0 +1,1544 @@
+views:
+  - title: Home
+    sections:
+      - type: grid
+        cards:
+          - type: custom:power-flow-card-plus
+            entities:
+              battery:
+                entity: sensor.rct_power_storage_battery_power
+                state_of_charge: sensor.rct_power_storage_battery_state_of_charge
+                tap_action:
+                  action: navigate
+                  navigation_path: /lovelace/batterie
+                state_of_charge_decimals: 1
+              grid:
+                entity: sensor.rct_power_storage_grid_power
+                secondary_info: {}
+                tap_action:
+                  action: navigate
+                  navigation_path: /lovelace/pv-netz
+              solar:
+                entity: sensor.solar_power_generators_sum
+                display_zero_state: true
+                secondary_info: {}
+                tap_action:
+                  action: navigate
+                  navigation_path: /lovelace/pv-details
+              fossil_fuel_percentage:
+                state_type: percentage
+                secondary_info: {}
+                entity: sensor.electricity_maps_anteil_fossiler_energietrager
+              home:
+                secondary_info: {}
+                entity: sensor.power_consumption
+                override_state: true
+              individual: []
+            clickable_entities: true
+            display_zero_lines:
+              mode: show
+              transparency: 50
+              grey_color:
+                - 189
+                - 189
+                - 189
+            use_new_flow_rate_model: true
+            w_decimals: 0
+            kw_decimals: 1
+            min_flow_rate: 0.75
+            max_flow_rate: 6
+            max_expected_power: 30000
+            min_expected_power: 0.01
+            watt_threshold: 1000
+            transparency_zero_lines: 0
+            title: Stromflüsse
+            grid_options:
+              columns: full
+              rows: 7
+          - type: custom:horizon-card
+        column_span: 1
+      - type: grid
+        cards:
+          - type: custom:heat-pump-card
+            heatingPumpStatusOnOff: binary_sensor.heating_pump_status_on_off
+            heatingPumpHotWaterMode: binary_sensor.heating_pump_hot_water_mode
+            heatingPumpHeatingMode: binary_sensor.heating_pump_heating_mode
+            heatingPumpCoolingMode: binary_sensor.heating_pump_cooling_mode
+            heatingPumpPartyMode: binary_sensor.heating_pump_party_mode
+            heatingPumpEnergySaveMode: binary_sensor.heating_pump_energy_save_mode
+            heatingPumpNightMode: binary_sensor.heating_pump_night_mode
+            outdoorTemperature: sensor.mosquitto_mqtt_broker_aussentemperatur
+            ambientTemperatureNormal: number.mosquitto_mqtt_broker_raumsolltemperatur_normal
+            ambientTemperatureReduced: number.mosquitto_mqtt_broker_raumsolltemperatur_reduziert
+            ambientTemperatureParty: number.mosquitto_mqtt_broker_raumsolltemperatur_party
+            supplyTemperature: sensor.mosquitto_mqtt_broker_anlagenvorlauftemperatur
+            hpRunning: binary_sensor.mosquitto_mqtt_broker_status_primaerquelle
+            compressorRunning: binary_sensor.mosquitto_mqtt_broker_status_verdichter
+            heatingCircuitPumpRunning: binary_sensor.mosquitto_mqtt_broker_heizkreispumpe
+            circulatingPumpRunning: binary_sensor.mosquitto_mqtt_broker_warmwasser_zirkulationspumpe
+            tankTempHPUp: sensor.mosquitto_mqtt_broker_pufferspeichertemperatur
+            tankTempHPMiddle: ''
+            tankTempHPDown: ''
+            tankTempWWUp: sensor.mosquitto_mqtt_broker_warmwassertemperatur_oben
+            tankTempWWMiddle: ''
+            tankTempWWDown: ''
+            supplyTemperatureHeating: sensor.mosquitto_mqtt_broker_vorlauftemperatur_heizkreis
+            refluxTemperatureHeating: ''
+            evaporatorPressure: sensor.mosquitto_mqtt_broker_druck_im_verdampfer
+            evaporatorTemperature: sensor.mosquitto_mqtt_broker_temperatur_verdampfer
+            condenserPressure: sensor.mosquitto_mqtt_broker_druck_im_kondensator
+            wwHeatingValve: binary_sensor.mosquitto_mqtt_broker_status_warmwasserventil
+            heaterRodWW: >-
+              switch.mosquitto_mqtt_broker_freigabe_elektroheizung_fuer_ww_bereitung
+            heaterRodHP: switch.mosquitto_mqtt_broker_freigabe_heizen_mit_elektro
+            heaterRodLevel1: binary_sensor.mosquitto_mqtt_broker_status_heizstab_stufe_1
+            heaterRodLevel2: binary_sensor.mosquitto_mqtt_broker_status_heizstab_stufe_2
+            linkDetails: /lovelace/hp-details
+            linkSettings: /lovelace/hp-settings
+          - type: custom:hourly-weather
+            entity: weather.forecast_home
+            show_precipitation_amounts: false
+            show_precipitation_probability: false
+            icons: true
+            name: Wetter die nächsten Stunden
+      - type: grid
+        cards:
+          - type: heading
+            heading: Entsorgung
+            heading_style: title
+            icon: mdi:trash-can-outline
+          - event_grouping: true
+            drop_todayevents_from: '10:00:00'
+            next_days: 14
+            pattern:
+              - icon: mdi:flower
+                color: lime
+                type: organic
+              - icon: mdi:newspaper
+                color: blue
+                type: paper
+                pattern: Papier
+              - icon: mdi:recycle-variant
+                color: amber
+                type: recycle
+                pattern: Gelbe
+              - icon: mdi:trash-can-outline
+                color: grey
+                type: waste
+                pattern: Restmüll
+                pattern_exact: true
+              - icon: mdi:dump-truck
+                color: purple
+                type: others
+              - label: Problemmüll
+                icon: mdi:biohazard
+                color: deep-orange
+                type: custom
+                pattern: Problem
+            card_style: chip
+            alignment_style: left
+            items_per_row: 1
+            refresh_rate: 60
+            with_label: true
+            type: custom:trash-card
+            entities:
+              - calendar.abfall_wirtschafts_verband_nordschwaben
+          - type: heading
+            heading: Internetzugang
+            heading_style: title
+            icon: mdi:router-network
+          - type: tile
+            features_position: bottom
+            vertical: false
+            entity: binary_sensor.fritz_box_7590_verbindung
+            name: Internetverbindung
+          - type: tile
+            entity: sensor.fritz_box_7590_externe_ip
+            features_position: bottom
+            vertical: false
+            name: Externe IP
+          - type: tile
+            entity: sensor.fritz_box_7590_maximaler_download_durchsatz_der_verbindung
+            features_position: bottom
+            vertical: false
+            name: Max. Download
+          - features:
+              - type: update-actions
+                backup: 'no'
+            type: tile
+            entity: update.fritz_box_7590_fritz_os
+            features_position: bottom
+            vertical: false
+            state_content:
+              - state
+              - latest_version
+              - update_percentage
+              - release_summary
+            visibility:
+              - condition: state
+                entity: update.fritz_box_7590_fritz_os
+                state: 'on'
+            show_entity_picture: true
+          - type: tile
+            entity: sensor.fritz_box_7590_maximaler_upload_durchsatz_der_verbindung
+            features_position: bottom
+            vertical: false
+            name: Max. Upload
+          - type: tile
+            entity: button.fritz_box_7590_neu_verbinden
+            features_position: bottom
+            vertical: false
+            visibility:
+              - condition: state
+                entity: binary_sensor.fritz_box_7590_verbindung
+                state: 'off'
+          - type: heading
+            heading: Netzwerkspeicher
+            heading_style: title
+            icon: mdi:nas
+          - type: tile
+            entity: sensor.nasqnap671_status
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: sensor.nasqnap671_eth3_link
+            features_position: bottom
+            vertical: false
+            name: Netzwerkverbindung (eth3)
+            hide_state: false
+          - type: custom:bar-card
+            positions:
+              icon: outside
+              name: inside
+            entities:
+              - entity: sensor.nasqnap671_verwendetes_volume_datavol1
+                name: Plattenbelegung
+                icon: mdi:chart-pie
+                decimal: 1
+                severity:
+                  - color: Red
+                    from: 99
+                    to: 100
+                  - color: Orange
+                    from: 96
+                    to: 98
+                  - color: Green
+                    from: 0
+                    to: 95
+              - entity: sensor.nasqnap671_arbeitsspeicherauslastung
+                name: Speicher
+                icon: mdi:memory
+                decimal: 1
+                severity:
+                  - color: Red
+                    from: 91
+                    to: 100
+                  - color: Orange
+                    from: 81
+                    to: 90
+                  - color: Green
+                    from: 0
+                    to: 80
+              - entity: sensor.nasqnap671_cpu_auslastung
+                name: CPU
+                icon: mdi:chip
+                decimal: 1
+                severity:
+                  - color: Red
+                    from: 91
+                    to: 100
+                  - color: Orange
+                    from: 81
+                    to: 90
+                  - color: Green
+                    from: 0
+                    to: 80
+              - entity: sensor.nasqnap671_systemtemperatur
+                name: Systemtemperatur
+                icon: mdi:thermometer
+                decimal: 1
+                severity:
+                  - color: Red
+                    from: 61
+                    to: 100
+                  - color: Orange
+                    from: 41
+                    to: 60
+                  - color: Green
+                    from: 0
+                    to: 40
+            grid_options:
+              columns: 12
+              rows: auto
+            visibility:
+              - condition: state
+                entity: sensor.nasqnap671_status
+                state_not: unavailable
+    cards: []
+    type: sections
+    max_columns: 3
+    background:
+      opacity: 33
+      alignment: center
+      size: cover
+      repeat: repeat
+      attachment: fixed
+      image: /api/image/serve/e878b99eac87ae118400013840acf974/original
+    icon: mdi:white-balance-sunny
+  - type: sections
+    max_columns: 2
+    title: PV Netz
+    path: pv-netz
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            icon: mdi:car-speed-limiter
+            heading: Einsepeisebegrenzung
+            heading_style: title
+          - type: tile
+            name: Installierte Modulleistung
+            icon: mdi:solar-power-variant
+            features_position: bottom
+            vertical: false
+            entity: sensor.installed_pv_size
+          - type: tile
+            icon: mdi:lightning-bolt
+            features_position: bottom
+            vertical: false
+            entity: sensor.installed_pv_wr_sum
+            name: Limit Alle Wechselrichter
+          - type: tile
+            features_position: bottom
+            vertical: false
+            entity: sensor.installed_pv_wr1
+            icon: mdi:solar-power
+            name: Limit RCT Wechselrichter
+          - type: tile
+            entity: sensor.installed_pv_wr2
+            features_position: bottom
+            vertical: false
+            name: Limit SMA Wechselrichter
+            icon: mdi:solar-power
+          - features:
+              - style: slider
+                type: numeric-input
+            type: tile
+            entity: input_number.solar_grid_limit
+            grid_options:
+              columns: full
+            name: PV Einspeisebegrenzung
+            features_position: bottom
+            vertical: false
+          - type: tile
+            name: Eigenverbrauch
+            icon: mdi:home
+            features_position: bottom
+            vertical: false
+            entity: sensor.power_consumption
+          - type: tile
+            entity: sensor.solar_power_grid_limit_soft
+            features_position: bottom
+            vertical: false
+            name: PV Einspeiselimit Soft
+          - type: tile
+            entity: sensor.solar_power_grid_limit_soft_sma
+            features_position: bottom
+            vertical: false
+            name: PV Einspeiselimit Soft SMA
+          - type: tile
+            entity: sensor.sunny_tripower_x_20_inverter_power_limit
+            name: SMA gesetztes Power Limit
+          - type: tile
+            entity: sensor.rct_power_storage_grid_power
+            name: Netzebezug/-einspeisung
+            icon: mdi:transmission-tower
+            grid_options:
+              columns: full
+      - type: grid
+        cards:
+          - type: heading
+            icon: mdi:account-group
+            heading: Ertragsstammtisch
+            heading_style: title
+          - type: horizontal-stack
+            cards:
+              - type: markdown
+                content: <center><h4>{{ now().strftime('%A,&nbsp;%-d&nbsp;%b')}}
+                card_mod:
+                  style: |
+                    ha-card {
+                    box-shadow: none !important; 
+                    padding: 0px !important;
+                    background: none !important;
+                    }
+              - type: entities
+                card_mod:
+                  style: |
+                    ha-card {
+                    box-shadow: none !important; 
+                    padding: 0px !important;
+                    background: none !important;
+                    }
+                entities:
+                  - entity: input_boolean.pv_monitoring_absolute_relativ
+                    name: Abs/Rel
+          - type: conditional
+            conditions: []
+            card:
+              type: entities
+              card_mod:
+                style: |
+                  ha-card {
+                  box-shadow: none !important; 
+                  padding: 0px !important;
+                  background: none !important;
+                  }
+              entities:
+                - type: custom:mushroom-chips-card
+                - type: custom:bar-card
+                  card_mod:
+                    style: |
+                      ha-card {
+                      border: none !important;
+                      box-shadow: none !important; 
+                      padding: -5px !important;
+                      background: none !important;
+                      }
+                  positions:
+                    icon: 'off'
+                    indicator: inside
+                    name: outside
+                  width: 80%
+                  height: 15px
+                  text-align: right
+                  padding-left: 4px
+                  bar-card-border-radius: 2px
+                  entities:
+                    - entity: sensor.pv_abgelaufener_monat_prozent
+                      name: Monat
+                      severity:
+                        - color: Red
+                          from: 0
+                          to: 33
+                        - color: Orange
+                          from: 34
+                          to: 66
+                        - color: Green
+                          from: 67
+                          to: 100
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: input_boolean.pv_monitoring_absolute_relativ
+                state: 'off'
+            card:
+              type: entities
+              card_mod:
+                style: |
+                  ha-card {
+                  box-shadow: none !important; 
+                  padding: 0px !important;
+                  background: none !important;
+                  }
+              entities:
+                - type: custom:mushroom-chips-card
+                - entity: sensor.forecasted_pv_production_pvsol
+                  type: custom:multiple-entity-row
+                  show_state: false
+                  width: 80%
+                  name: Planwerte
+                  secondary_info: '[kWh]'
+                  icon: mdi:chart-bar
+                  entities:
+                    - entity: sensor.forecasted_pv_production_daily
+                      name: 'Tgl:'
+                      unit: false
+                    - entity: sensor.forecasted_pv_production_mtd_neu
+                      name: 'MTD:'
+                      unit: false
+                    - entity: sensor.forecasted_pv_production_pvsol
+                      name: 'Mtl:'
+                      unit: false
+                - entity: sensor.forecasted_pv_production_pvsol
+                  type: custom:multiple-entity-row
+                  show_state: false
+                  name: Absolut
+                  icon: mdi:chart-bar
+                  entities:
+                    - entity: sensor.solar_yield_daily
+                      name: false
+                      format: precision2
+                      unit: false
+                    - entity: sensor.inverter_yield_monthly
+                      name: false
+                      unit: false
+                    - entity: sensor.inverter_yield_monthly
+                      name: false
+                      unit: false
+                - entity: sensor.forecasted_pv_production_pvsol
+                  type: custom:multiple-entity-row
+                  show_state: false
+                  name: in %
+                  icon: mdi:percent-circle
+                  entities:
+                    - entity: sensor.pv_zielerreichung_tagesertrag
+                      name: false
+                      unit: false
+                    - entity: sensor.pv_zielerreichung_monatsertrag_mtd
+                      name: false
+                      format: precision2
+                      unit: false
+                    - entity: sensor.pv_zielerreichung_monatsertrag
+                      name: false
+                      format: precision2
+                      unit: false
+                - type: custom:bar-card
+                  card_mod:
+                    style: |
+                      ha-card {
+                      border: none !important;
+                      box-shadow: none !important; 
+                      padding: -5px !important;
+                      background: none !important;
+                      }
+                  positions:
+                    icon: 'off'
+                    indicator: inside
+                    name: outside
+                  animation:
+                    state: 'on'
+                    speed: 5
+                  width: 86%
+                  height: 18px
+                  text-align: right
+                  padding-left: 0px
+                  bar-card-border-radius: 2px
+                  entities:
+                    - entity: sensor.pv_zielerreichung_tagesertrag
+                      name: Tag
+                      severity:
+                        - color: Red
+                          from: 0
+                          to: 80
+                        - color: Orange
+                          from: 80
+                          to: 95
+                        - color: Green
+                          from: 95
+                          to: 200
+                        - color: Darkgreen
+                          from: 200
+                          to: 500
+                    - entity: sensor.pv_zielerreichung_monatsertrag_mtd
+                      name: MTD
+                      severity:
+                        - color: Red
+                          below: 70
+                        - color: Orange
+                          from: 70
+                          to: 90
+                        - color: Green
+                          from: 90
+                          to: 110
+                        - color: Darkgreen
+                          from: 110
+                          to: 200
+                    - entity: sensor.pv_zielerreichung_monatsertrag
+                      name: Monat
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: input_boolean.pv_monitoring_absolute_relativ
+                state: 'on'
+            card:
+              type: entities
+              card_mod:
+                style: |
+                  ha-card {
+                  box-shadow: none !important; 
+                  padding: 0px !important;
+                  background: none !important;
+                  }
+              entities:
+                - type: custom:mushroom-chips-card
+                - entity: sensor.forecasted_pv_production_pvsol
+                  type: custom:multiple-entity-row
+                  show_state: false
+                  name: Planwerte
+                  icon: mdi:chart-bar
+                  secondary_info: '[kWh/kWp]'
+                  entities:
+                    - entity: sensor.forecasted_pv_production_daily_per_kwp
+                      name: 'Tgl:'
+                      unit: false
+                    - entity: sensor.forecasted_pv_production_mtd_per_kwp
+                      name: 'MTD:'
+                      unit: false
+                    - entity: sensor.forecasted_pv_production_monthly_per_kwp
+                      name: 'Mtl:'
+                      unit: false
+                - entity: sensor.forecasted_pv_production_pvsol
+                  type: custom:multiple-entity-row
+                  show_state: false
+                  name: Absolut
+                  icon: mdi:chart-bar
+                  entities:
+                    - entity: sensor.wechselrichter_yield_daily_per_kwp
+                      name: false
+                      unit: false
+                    - entity: sensor.wechselrichter_yield_monthly_per_kwp
+                      name: false
+                      unit: false
+                    - entity: sensor.wechselrichter_yield_monthly_per_kwp
+                      name: false
+                      unit: false
+                - entity: sensor.forecasted_pv_production_pvsol
+                  type: custom:multiple-entity-row
+                  show_state: false
+                  name: in %
+                  icon: mdi:percent-circle
+                  entities:
+                    - entity: sensor.pv_zielerreichung_tagesertrag
+                      name: false
+                      unit: false
+                    - entity: sensor.pv_zielerreichung_monatsertrag_mtd
+                      name: false
+                      unit: false
+                    - entity: sensor.pv_zielerreichung_monatsertrag
+                      name: false
+                      unit: false
+                - type: custom:bar-card
+                  card_mod:
+                    style: |
+                      ha-card {
+                      border: none !important;
+                      box-shadow: none !important; 
+                      padding: -5px !important;
+                      background: none !important;
+                      }
+                  positions:
+                    icon: 'off'
+                    indicator: inside
+                    name: outside
+                  animations:
+                    state: 'on'
+                    speed: 5
+                  width: 85%
+                  height: 18px
+                  text-align: right
+                  padding-left: 0px
+                  bar-card-border-radius: 5px
+                  entities:
+                    - entity: sensor.pv_zielerreichung_tagesertrag
+                      name: Tag
+                      severity:
+                        - color: Red
+                          from: 0
+                          to: 80
+                        - color: Orange
+                          from: 80
+                          to: 95
+                        - color: Green
+                          from: 95
+                          to: 300
+                        - color: DarkGreen
+                          above: 110
+                    - entity: sensor.pv_zielerreichung_monatsertrag_mtd
+                      name: MTD
+                      severity:
+                        - color: Red
+                          below: 70
+                        - color: Orange
+                          from: 70
+                          to: 90
+                        - color: Green
+                          from: 90
+                          to: 300
+                    - entity: sensor.pv_zielerreichung_monatsertrag
+                      name: Monat
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: input_boolean.pv_monitoring_absolute_relativ
+                state: 'on'
+            card:
+              type: entities
+              card_mod:
+                style: |
+                  ha-card {
+                  box-shadow: none !important; 
+                  padding: 0px !important;
+                  background: none !important;
+                  }
+              entities:
+                - type: custom:mushroom-chips-card
+                - entity: sensor.forecasted_pv_production_pvsol
+                  card_mod:
+                    style:
+                      hui-generic-entity-row:
+                        $: |
+                          state-badge {
+                            display: none;
+                          }
+                          .info {
+                            margin-left:0 !important;
+                          }
+                  type: custom:multiple-entity-row
+                  show_state: false
+                  name: Ausblick
+                  icon: m3o:chart-data
+                  entities:
+                    - entity: sensor.pv_notwendige_erzeugung_pro_tag_per_kwp
+                      name: Notwendig pro Tag
+                    - entity: sensor.pv_extrapolierter_ertrag_per_kwp
+                      name: Hochrechnung
+                    - entity: sensor.pv_extrapolierte_zielerreichung
+                      name: Zielerreichung
+                - type: custom:bar-card
+                  card_mod:
+                    style: |
+                      ha-card {
+                      border: none !important;
+                      box-shadow: none !important; 
+                      padding: 0px !important;
+                      background: none !important;
+                      }
+                  positions:
+                    icon: 'off'
+                    indicator: inside
+                    name: outside
+                  animation:
+                    state: 'on'
+                    speed: 5
+                  width: 75%
+                  height: 15px
+                  text-align: right
+                  padding-left: 4px
+                  bar-card-border-radius: 10px
+                  entities:
+                    - entity: sensor.pv_extrapolierte_zielerreichung
+                      name: Zielerreichung
+                      severity:
+                        - color: Red
+                          from: 0
+                          to: 80
+                        - color: Orange
+                          from: 80
+                          to: 95
+                        - color: Green
+                          from: 95
+                          to: 110
+                        - color: DarkGreen
+                          above: 110
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: input_boolean.pv_monitoring_absolute_relativ
+                state: 'off'
+            card:
+              type: entities
+              card_mod:
+                style: |
+                  ha-card {
+                  box-shadow: none !important; 
+                  padding: 0px !important;
+                  background: none !important;
+                  }
+              entities:
+                - type: custom:mushroom-chips-card
+                - entity: sensor.forecasted_pv_production_pvsol
+                  card_mod:
+                    style:
+                      hui-generic-entity-row:
+                        $: |
+                          state-badge {
+                            display: none;
+                          }
+                          .info {
+                            margin-left:0 !important;
+                          }
+                  type: custom:multiple-entity-row
+                  show_state: false
+                  name: Ausblick
+                  icon: m3o:chart-data
+                  entities:
+                    - entity: sensor.pv_notwendige_erzeugung_pro_tag
+                      name: Notwendig pro Tag
+                    - entity: sensor.pv_extrapolierter_ertrag
+                      name: Hochrechnung
+                    - entity: sensor.pv_extrapolierte_zielerreichung
+                      name: Zielerreichung
+                - entity: sensor.forecasted_pv_production_pvsol
+                  card_mod:
+                    style:
+                      hui-generic-entity-row:
+                        $: |
+                          state-badge {
+                            display: none;
+                          }
+                          .info {
+                            margin-left:0 !important;
+                          }
+                  type: custom:multiple-entity-row
+                  show_state: false
+                  name: Forecast
+                  icon: m3o:chart-data
+                  entities:
+                    - entity: sensor.solcast_pv_forecast_prognose_heute
+                      name: heute
+                      format: precision2
+                    - entity: sensor.solcast_pv_forecast_prognose_fur_morgen
+                      name: morgen
+                      format: precision2
+                    - entity: sensor.solcast_pv_forecast_vorhersage_tag_3
+                      name: übermorgen
+                      format: precision2
+                - type: custom:bar-card
+                  card_mod:
+                    style: |
+                      ha-card {
+                      border: none !important;
+                      box-shadow: none !important; 
+                      padding: -5px !important;
+                      background: none !important;
+                      }
+                  positions:
+                    icon: 'off'
+                    indicator: inside
+                    name: outside
+                  animation:
+                    state: 'on'
+                    speed: 5
+                  width: 75%
+                  height: 15px
+                  text-align: right
+                  padding-left: 4px
+                  bar-card-border-radius: 2px
+                  entities:
+                    - entity: sensor.pv_extrapolierte_zielerreichung
+                      name: Zielerreichung
+                      severity:
+                        - color: Red
+                          from: 0
+                          to: 80
+                        - color: Orange
+                          from: 80
+                          to: 95
+                        - color: Green
+                          from: 95
+                          to: 110
+                        - color: DarkGreen
+                          above: 110
+    subview: true
+    cards: []
+    icon: mdi:transmission-tower
+  - type: sections
+    max_columns: 3
+    title: Batterie
+    path: batterie
+    icon: mdi:battery
+    subview: true
+    sections:
+      - type: grid
+        cards:
+          - title: Verlauf Füllstand
+            type: history-graph
+            hours_to_show: 24
+            entities:
+              - sensor.rct_power_storage_battery_state_of_charge
+            min_y_axis: 0
+            max_y_axis: 100
+            fit_y_data: false
+            grid_options:
+              columns: full
+              rows: 5
+        column_span: 3
+      - type: grid
+        cards:
+          - type: heading
+            heading: Batteriestatus
+            heading_style: title
+          - type: tile
+            entity: sensor.rct_power_storage_battery_state_of_health
+            name: Gesundheitszustand
+            icon: mdi:battery-heart-variant
+            vertical: false
+            hide_state: false
+            show_entity_picture: false
+          - type: tile
+            entity: sensor.rct_power_storage_battery_status
+            icon: mdi:battery-sync
+            name: Batterieladestatus
+          - type: tile
+            entity: sensor.rct_power_storage_battery_temperature
+            name: Temperatur
+            color: orange
+            icon: mdi:thermometer
+          - type: tile
+            entity: sensor.rct_power_storage_heat_sink_battery_actuator_temperature
+            name: Kühlkörpertemperatur
+            icon: mdi:thermometer
+            color: orange
+          - type: tile
+            entity: sensor.rct_power_storage_next_battery_calibration_date
+            icon: mdi:calendar
+            name: Nächste Kalibrierung
+          - type: tile
+            name: Kapazität letzte Kalibrierung
+            icon: mdi:battery-unknown
+            features_position: bottom
+            vertical: false
+            entity: sensor.rct_battery_capacity_unload_calibration
+          - type: tile
+            entity: sensor.rct_power_storage_battery_cycles
+            name: Ladezyklen
+            icon: mdi:battery-sync
+          - type: tile
+            entity: sensor.rct_power_storage_battery_charge_capacity
+            name: Ladekapazität
+            icon: mdi:battery-charging-high
+          - type: tile
+            entity: sensor.rct_power_storage_battery_stored_energy
+            name: Gespeicherte Energie
+            icon: mdi:battery-arrow-up
+          - type: tile
+            entity: sensor.rct_power_storage_battery_used_energy
+            name: Entnommene Energie
+            icon: mdi:battery-arrow-down
+          - type: tile
+            entity: sensor.rct_power_storage_faults
+            name: Batteriefehler
+            icon: mdi:battery-alert
+            state_content: bitfield
+      - type: grid
+        cards:
+          - type: heading
+            heading: Batteriesteuerung
+            heading_style: title
+          - type: tile
+            entity: sensor.rct_power_storage_battery_state_of_charge
+            name: Füllstand (SOC)
+            icon: mdi:battery
+            state_content: state
+            grid_options:
+              columns: full
+            show_entity_picture: false
+          - type: tile
+            entity: sensor.rct_power_storage_battery_minimum_state_of_charge
+            name: Min. SOC Zielwert Insel
+            icon: mdi:battery-10
+            color: yellow
+            grid_options:
+              columns: full
+          - features:
+              - style: slider
+                type: numeric-input
+            type: tile
+            name: Min SOC Zielwert
+            state_content: state
+            icon: mdi:battery-charging-wireless-10
+            grid_options:
+              columns: full
+            color: yellow
+            features_position: bottom
+            vertical: false
+            entity: input_number.rct_power_storage_battery_minimum_state_of_charge
+          - features:
+              - style: slider
+                type: numeric-input
+            type: tile
+            name: Max. SOC Zielwert
+            icon: ''
+            color: green
+            grid_options:
+              columns: full
+            features_position: bottom
+            vertical: false
+            entity: input_number.rct_power_storage_battery_maximum_state_of_charge
+          - type: tile
+            entity: sensor.rct_power_storage_battery_state_of_charge_target
+            name: Aktueller SOC Zielwert
+            icon: mdi:battery-90
+            color: green
+          - type: tile
+            name: Errechneter Max. SOC Zielwert
+            icon: mdi:battery-90
+            color: primary
+            features_position: bottom
+            vertical: false
+            entity: sensor.calculated_maximum_battery_soc
+      - type: grid
+        cards:
+          - type: heading
+            heading_style: title
+            heading: Seriennummern
+          - type: tile
+            entity: sensor.rct_power_storage_battery_management_system_serial_number
+            name: Batterie Master
+          - type: tile
+            entity: >-
+              sensor.rct_power_storage_battery_management_system_software_version
+            name: BMS Version
+          - type: tile
+            entity: sensor.rct_power_storage_battery_module_1_serial_number
+            name: Modul 1
+            grid_options:
+              columns: full
+          - type: tile
+            entity: sensor.rct_power_storage_battery_module_2_serial_number
+            name: Modul 2
+            grid_options:
+              columns: full
+          - type: tile
+            entity: sensor.rct_power_storage_battery_module_3_serial_number
+            name: Modul 3
+            grid_options:
+              columns: full
+          - type: tile
+            entity: sensor.rct_power_storage_battery_module_4_serial_number
+            name: Modul 4
+            grid_options:
+              columns: full
+          - type: tile
+            entity: sensor.rct_power_storage_battery_module_5_serial_number
+            name: Modul 5
+            grid_options:
+              columns: full
+          - type: tile
+            entity: sensor.rct_power_storage_battery_module_6_serial_number
+            name: Modul 6
+            grid_options:
+              columns: full
+    cards: []
+  - type: sections
+    max_columns: 2
+    title: PV Details
+    path: pv-details
+    subview: true
+    icon: mdi:solar-panel
+    sections:
+      - type: grid
+        cards:
+          - chart_type: line
+            period: 5minute
+            type: statistics-graph
+            entities:
+              - entity: sensor.solar_power_generators_sum
+                name: PV
+              - entity: sensor.rct_power_storage_generator_a_power
+                name: Gar. (WR1S1)
+              - entity: sensor.sunny_tripower_x_20_pv_power_a
+                name: Süd (WR2S1)
+              - entity: sensor.sunny_tripower_x_20_pv_power_b
+                name: Süd (WR2S2+3)
+              - entity: sensor.sunny_tripower_x_20_pv_power_c
+                name: Nord (WR2S4)
+              - entity: sensor.power_consumption
+                name: Verbrauch
+              - entity: sensor.rct_power_storage_grid_power
+                name: Bez./Einsp.
+              - entity: sensor.rct_power_storage_battery_power
+                name: 🔋
+            stat_types:
+              - mean
+            title: Verlauf PV-Generatorleistung
+            logarithmic_scale: false
+            hide_legend: false
+            days_to_show: 1
+            grid_options:
+              columns: full
+        column_span: 2
+      - type: grid
+        cards:
+          - type: heading
+            heading: RCT-Power Storage DC 6.0
+            heading_style: title
+          - type: tile
+            entity: sensor.rct_power_storage_inverter_device_name
+            name: Name
+            icon: ''
+          - type: tile
+            entity: sensor.rct_power_storage_inverter_serial_number
+            name: Seriennummer
+          - type: tile
+            entity: sensor.rct_power_storage_inverter_software_version
+            name: Softwareversion
+          - type: tile
+            entity: sensor.rct_power_storage_all_generators_power
+            name: Generatorleistung
+            icon: mdi:solar-panel
+            color: yellow
+          - type: tile
+            entity: sensor.rct_power_storage_faults
+            name: Fehler
+            icon: mdi:alert-circle
+            color: red
+          - type: tile
+            entity: sensor.rct_power_storage_insulation_resistance
+            name: Isolationswiderstand
+            icon: ''
+          - type: tile
+            entity: sensor.rct_power_storage_core_temperature
+            icon: mdi:thermometer
+            color: red
+            name: Wechselrichtertemperatur
+          - type: tile
+            entity: sensor.rct_power_storage_heat_sink_temperature
+            icon: mdi:thermometer
+            color: red
+            name: Kühlkörpertemperatur
+          - type: tile
+            entity: sensor.rct_power_storage_grid_maximum_feed_power
+            name: Maximale Netzeinspeisung
+            icon: mdi:transmission-tower-import
+          - type: tile
+            entity: sensor.rct_power_storage_inverter_ac_power
+            icon: mdi:transmission-tower-import
+            name: Wechselstromleistung
+        column_span: 1
+      - type: grid
+        cards:
+          - type: heading
+            heading: SMA Tripower X 20
+            heading_style: title
+          - type: tile
+            entity: sensor.sma_status
+            name: Status
+            icon: mdi:list-status
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: sensor.sma_operating_status_general
+            name: Status Generell
+            icon: mdi:list-status
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: sensor.sma_grid_relay_status
+            name: Netzrelais Status
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: sensor.sunny_tripower_x_20_pv_power
+            name: Generatorleistung
+            icon: mdi:solar-panel
+            color: yellow
+          - type: tile
+            entity: sensor.sunny_tripower_x_20_grid_power
+            name: Wechselstromleistung
+            icon: mdi:transmission-tower-export
+          - type: tile
+            entity: sensor.sunny_tripower_x_20_insulation_residual_current
+            name: Isolationsleekstrom
+          - type: tile
+            entity: sensor.sunny_tripower_x_20_temp_a
+            name: Temperatur A
+            color: red
+          - type: tile
+            entity: sensor.sunny_tripower_x_20_temp_b
+            name: Temperatur B
+            color: red
+          - type: tile
+            entity: sensor.sunny_tripower_x_20_temp_c
+            name: Temperatur C
+            color: red
+  - type: sections
+    max_columns: 3
+    title: Wärmepumpen Einstellungen
+    path: hp-settings
+    icon: mdi:heat-pump-outline
+    subview: true
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: Wärmepumpe
+            heading_style: title
+            icon: mdi:heat-pump-outline
+          - graph: line
+            type: sensor
+            detail: 1
+            entity: sensor.mosquitto_mqtt_broker_aussentemperatur
+            name: Außentemperatur
+            grid_options:
+              columns: full
+            hours_to_show: 24
+          - features:
+              - type: select-options
+            type: tile
+            entity: select.mosquitto_mqtt_broker_betriebsart
+            grid_options:
+              columns: full
+            vertical: true
+            hide_state: true
+            name: Betriebsart
+            features_position: bottom
+      - type: grid
+        cards:
+          - type: heading
+            heading: Heizen
+            heading_style: title
+            icon: mdi:heating-coil
+          - graph: line
+            type: sensor
+            entity: sensor.mosquitto_mqtt_broker_pufferspeichertemperatur
+            detail: 1
+            name: Pufferspeicher
+            grid_options:
+              columns: full
+            hours_to_show: 24
+          - features:
+              - style: slider
+                type: numeric-input
+            type: tile
+            entity: number.mosquitto_mqtt_broker_raumsolltemperatur_normal
+            name: Raumsolltemp. normal
+            hide_state: false
+            vertical: false
+          - features:
+              - style: slider
+                type: numeric-input
+            type: tile
+            entity: number.mosquitto_mqtt_broker_raumsolltemperatur_reduziert
+            name: Raumsolltemp. reduziert
+          - type: tile
+            entity: number.mosquitto_mqtt_broker_raumsolltemperatur_party
+            name: Raumsolltemp. Party
+            features:
+              - style: slider
+                type: numeric-input
+          - type: tile
+            entity: switch.mosquitto_mqtt_broker_freigabe_heizen_mit_elektro
+            name: Freigabe Heizstab
+          - type: tile
+            entity: switch.mosquitto_mqtt_broker_freigabe_heizwasser_durchlauferhitzer
+            name: Freigabe Durchlauferhitzer
+          - type: tile
+            entity: number.mosquitto_mqtt_broker_niveau_der_heizkennlinie
+            name: Niveau der Heizkennlinie
+            features:
+              - style: slider
+                type: numeric-input
+          - type: tile
+            entity: number.mosquitto_mqtt_broker_neigung_der_heizkennlinie
+            name: Neigung der Heizkennlinie
+            features:
+              - style: slider
+                type: numeric-input
+      - type: grid
+        cards:
+          - type: heading
+            heading: Warmwasser
+            heading_style: title
+            icon: mdi:thermometer-water
+          - graph: line
+            type: sensor
+            detail: 1
+            entity: sensor.mosquitto_mqtt_broker_warmwassertemperatur_oben
+            name: Warmwassertank
+            hours_to_show: 24
+            grid_options:
+              columns: full
+          - graph: line
+            type: sensor
+            detail: 1
+            entity: sensor.mosquitto_mqtt_broker_warmwassertemperatur_unten
+            visibility:
+              - condition: state
+                entity: >-
+                  switch.mosquitto_mqtt_broker_temperatursensor_unten_im_speicher
+                state: 'on'
+            grid_options:
+              columns: full
+            name: Warmwassertemperatur unten
+            hours_to_show: 24
+          - features:
+              - style: slider
+                type: numeric-input
+            type: tile
+            entity: number.mosquitto_mqtt_broker_warmwassersolltemperatur
+            name: Solltemperatur
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: number.mosquitto_mqtt_broker_warmwassersolltemperatur_2
+            name: Solltemperatur 2
+            features:
+              - style: slider
+                type: numeric-input
+          - type: tile
+            entity: switch.mosquitto_mqtt_broker_einschaltoptimierung_fuer_warmwasser
+            name: Einschaltoptimierung
+          - type: tile
+            entity: switch.mosquitto_mqtt_broker_ausschaltoptimierung_fuer_warmwasser
+            name: Ausschaltoptimierung
+          - type: tile
+            entity: >-
+              switch.mosquitto_mqtt_broker_freigabe_zusatzheizung_fuer_ww_bereitung
+            name: Freigabe Zusatzheizung
+          - type: tile
+            entity: >-
+              switch.mosquitto_mqtt_broker_freigabe_elektroheizung_fuer_ww_bereitung
+            name: Freigabe Heizstab
+          - type: tile
+            entity: switch.mosquitto_mqtt_broker_temperatursensor_unten_im_speicher
+            name: Temperatursensor unten im Speicher
+          - type: tile
+            entity: switch.mosquitto_mqtt_broker_einmal_ww_bereitung
+            name: 1x Aufbereitung starten
+  - type: sections
+    max_columns: 3
+    subview: true
+    path: hp-details
+    title: Wärmepumpe Details
+    icon: mdi:heat-pump
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: Wärmepumpe
+            heading_style: title
+            icon: mdi:heat-pump-outline
+          - graph: line
+            type: sensor
+            detail: 1
+            entity: sensor.mosquitto_mqtt_broker_aussentemperatur
+            name: Außentemperatur
+            grid_options:
+              columns: full
+            hours_to_show: 24
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_anlagentyp
+            name: Typ
+            grid_options:
+              columns: full
+          - type: tile
+            entity: binary_sensor.mosquitto_mqtt_broker_status_primaerquelle
+            name: Status Primärquelle
+          - type: tile
+            entity: binary_sensor.mosquitto_mqtt_broker_status_sekundaerquelle
+            name: Status Sekundärquelle
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_vorlauftemperatur_primaerquelle
+            name: Vorlauftemperatur Primärquelle
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_ruecklauftemperatur_primaerquelle
+            name: Rücklauftemperatur Primärquelle
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: binary_sensor.mosquitto_mqtt_broker_status_heizstab_stufe_1
+            name: Status Heizstab Stufe 1
+          - type: tile
+            entity: binary_sensor.mosquitto_mqtt_broker_status_heizstab_stufe_2
+            name: Status Heizstab Stufe 2
+          - type: tile
+            entity: binary_sensor.mosquitto_mqtt_broker_status_verdichter
+            name: Status Verdichter
+          - type: tile
+            entity: binary_sensor.mosquitto_mqtt_broker_status_sammelmeldung
+            name: Status Sammelmeldungen
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_anlagenvorlauftemperatur
+            name: Anlagenvorlauftemperatur
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_jahresarbeitszahl
+            name: JAZ
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_einschaltungen_primaerquelle
+            name: Einschaltungen Primärquelle
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_betriebsstunden_primaerquelle
+            name: Betriebsstunden Primärquelle
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_einschaltungen_sekundaerquelle
+            name: Einschaltungen Sekundärquelle
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_betriebsstunden_sekundaerquelle
+            name: Betriebsstunden Sekundärquell
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_einschaltungen_verdichter
+            name: Einschaltungen Verdichter
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_betriebsstunden_verdichter
+            name: Betriebsstunden Verdichter
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_einschaltungen_heizstab_stufe_1
+            name: Einschaltungen Heizstab Stufe 1
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_betriebsstunden_heizstab_stufe_1
+            name: Betriebsstunden Heizstab Stufe 1
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_einschaltungen_heizstab_stufe_2
+            name: Einschaltungen Heizstab Stufe 2
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_betriebsstunden_heizstab_stufe_2
+            name: Betriebsstunden Heizstab Stufe 2
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_einschaltungen_sammelmeldung
+            name: Einschaltungen Sammelmeldung
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_betriebsstunden_sammelmeldung
+            name: Betriebsstunden Sammelmeldung
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_druck_im_verdampfer
+            name: Druck im Verdampfer
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_temperatur_verdampfer
+            name: Temperatur im Verdampfer
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_druck_im_kondensator
+            name: Druck im Kondensator
+      - type: grid
+        cards:
+          - type: heading
+            heading: Heizen
+            heading_style: title
+            icon: mdi:heating-coil
+          - graph: line
+            type: sensor
+            entity: sensor.mosquitto_mqtt_broker_pufferspeichertemperatur
+            detail: 1
+            name: Pufferspeicher
+            grid_options:
+              columns: full
+            hours_to_show: 24
+          - type: tile
+            entity: binary_sensor.mosquitto_mqtt_broker_heizkreispumpe
+            name: Heizkreispumpe
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: binary_sensor.mosquitto_mqtt_broker_status_speicherladepumpe
+            name: Status Speicherladepumpe
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_vorlauftemperatur_heizkreis
+            name: Vorlauftemperatur Heizkreis
+            features_position: bottom
+            vertical: false
+          - type: tile
+            name: Raumtemperatur ist Heizkreis
+            features_position: bottom
+            vertical: false
+            entity: sensor.mosquitto_mqtt_broker_raumtemperatur_ist_heizkreis
+          - type: tile
+            name: Raumtemperatur soll Heizkreis
+            features_position: bottom
+            vertical: false
+            entity: sensor.mosquitto_mqtt_broker_raumtemperatur_soll_heizkreis
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_jahresarbeitszahl_heizen
+            name: JAZ
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_einschaltungen_speicherladepumpe
+            name: Einschaltungen Speicherladepumpe
+          - type: tile
+            name: Betriebsstunden Speicherladepumpe
+            features_position: bottom
+            vertical: false
+            entity: sensor.mosquitto_mqtt_broker_betriebsstunden_speicherladepumpe
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_einschaltungen_heizkreis
+            name: Einschaltungen Heizkreis
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_betriebsstunden_pumpe_heizkreis
+            name: Betriebsstunden Pumpe Heizkreis
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_waermeenergie_heizen_woche
+            name: Wärmeenergie Woche
+            icon: mdi:heat-wave
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_elektroenergie_heizen_woche
+            name: Elektrische Energie Woche
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_waermeenergie_heizen_jahr
+            name: Wärmeenergie Jahr
+            icon: mdi:heat-wave
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_elektroenergie_heizen_jahr
+            name: Elektrische Energie Jahr
+      - type: grid
+        cards:
+          - type: heading
+            heading: Warmwasser
+            heading_style: title
+            icon: mdi:thermometer-water
+          - graph: line
+            type: sensor
+            detail: 1
+            entity: sensor.mosquitto_mqtt_broker_warmwassertemperatur_oben
+            name: Warmwassertank
+            hours_to_show: 24
+            grid_options:
+              columns: full
+          - graph: line
+            type: sensor
+            detail: 1
+            visibility:
+              - condition: state
+                entity: >-
+                  switch.mosquitto_mqtt_broker_temperatursensor_unten_im_speicher
+                state: 'on'
+            grid_options:
+              columns: full
+            name: Warmwassertemperatur unten
+            hours_to_show: 24
+            entity: sensor.mosquitto_mqtt_broker_warmwassertemperatur_unten
+          - type: tile
+            name: Zirkulationspumpe
+            features_position: bottom
+            vertical: false
+            entity: binary_sensor.mosquitto_mqtt_broker_warmwasser_zirkulationspumpe
+          - type: tile
+            name: Warmwasserventil
+            icon: mdi:pipe-valve
+            features_position: bottom
+            vertical: false
+            entity: binary_sensor.mosquitto_mqtt_broker_status_warmwasserventil
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_jahresarbeitszahl_ww
+            name: Jahresarbeitszahl
+            grid_options:
+              columns: full
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_einschaltungen_warmwasserventil
+            name: Einschaltungen Warmwasserventil
+          - type: tile
+            name: Betriebsstunden Warmwasserventil
+            features_position: bottom
+            vertical: false
+            entity: sensor.mosquitto_mqtt_broker_betriebsstunden_warmwasserventil
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_waermeenergie_warmwasser_woche
+            name: Wärmeenergie Woche
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_elektroenergie_warmwasser_woche
+            name: Elektrische Energie Woche
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_waermeenergie_warmwasser_jahr
+            name: Wärmeenergie Jahr
+          - type: tile
+            entity: sensor.mosquitto_mqtt_broker_elektroenergie_warmwasser_jahr
+            name: Elektrische Energie Jahr
+          - show_current: true
+            show_forecast: true
+            type: weather-forecast
+            entity: weather.forecast_home
+            forecast_type: daily
+            name: Wettervorhersage
+    cards: []

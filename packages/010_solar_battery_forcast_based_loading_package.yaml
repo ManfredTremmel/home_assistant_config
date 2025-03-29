@@ -1,0 +1,308 @@
+# ################ HA Local RCT forcast based battery loading ################
+#
+# (C) 2025 Manfred Tremmel
+#
+# Optimize battery loading to save battery and grid.
+# - on sunrise check the forcast, when expected energy is enough to fill the
+#   battery, only use the RCT inverter, otherwise enable external loading and
+#   also use the SMA inverter
+# - between sunrise and one hour before noon try to load only a minimum
+#   - when expected production > 40 kWh and heating is on
+#     or production > 20 kWh without heating, then target is 27%
+#   - when expected production > 30 kWh and heating is on
+#     or production > 15 kWh without heating, then target is 37%
+#   - when expected production > 20 kWh and heating is on
+#     or production > 10 kWh without heating, then target is 47%
+#   - when expected production > 15 kWh and heating is on
+#     or production >  7 kWh without heating, then target is 57%
+#   - when expected production > 10 kWh and heating is on
+#     or production >  5 kWh without heating, then target is 67%
+# - on hour before noon start loading to the days end target
+#   - when tomorrows production > 40 kWh and heating is on or
+#     the temperature > 15 ℃, then target is 77%
+#   - when tomorrows production > 20 kWh and heating is on or
+#     the temperature > 10 ℃, then target is 87%
+#   - otherwise target is 97%
+# - on calibration unload phase at morning 45 minutes before sunrise
+#   unload rest of battery entry into the grid
+#     
+#
+# Dependencies:
+#       "RCT Power" extension from HACS
+#       "Forecast.Solar" extension
+#       "000_energy_prognostic_helper_package.yaml"
+#       "000_heatpump_mqtt_package.yaml"
+#
+# Used entities:
+#       sensor.energy_production_today_remaining_total
+#       sensor.energy_production_tomorrow_total
+#       sensor.sun_next_noon
+#       sensor.sun_next_rising
+#       sensor.rct_battery_capacity_unload_calibration
+#       sensor.rct_power_storage_battery_state_of_charge
+#       sensor.rct_power_storage_battery_minimum_state_of_charge_2
+#       sensor.mosquitto_mqtt_broker_aussentemperatur
+#       sensor.heating_pump_heating_mode
+#
+# Provided entities:
+#       sensor.calculated_maximum_battery_soc
+#       input_number.rct_power_storage_battery_maximum_state_of_charge
+#       input_number.rct_power_storage_battery_minimum_state_of_charge
+#
+template:
+  - sensor:
+
+    #
+    # calculate the maximum battery soc.
+    #
+    - unique_id: "calculated_maximum_battery_soc"
+      name: "Calculated maximum battery soc"
+      icon: "mdi:battery"
+      state_class: "measurement"
+      unit_of_measurement: "%"
+      state: >-
+          {% set epr_today = (states('sensor.energy_production_today_remaining_total')|float(0.0)) %}
+          {% set ep_tomorrow = (states('sensor.energy_production_tomorrow_total')|float(0.0)) %}
+          {% set heating_on = states("binary_sensor.heating_pump_heating_mode") | bool %}
+          {% set before_noon_minus_one = ((states('sensor.sun_next_noon') | as_datetime() | as_local()).day == now().day) and (now() + timedelta( hours = 1 )) < (states('sensor.sun_next_noon') | as_datetime() | as_local()) %}
+          {% set after_sunrise = (((states('sensor.sun_next_rising') | as_datetime() | as_local()).day == now().day) and (now() < (states('sensor.sun_next_rising')) | as_datetime() | as_local()) | bool) == false %}
+          {% set hold_phase = after_sunrise and before_noon_minus_one %}
+          {% set temperature = (states('sensor.mosquitto_mqtt_broker_aussentemperatur')|float(0.0)) %}
+          {% if ((epr_today > 40 and heating_on) or (epr_today > 20 and heating_on == false)) and hold_phase -%}
+              27
+          {%- elif ((epr_today > 30 and heating_on) or (epr_today > 15 and heating_on == false)) and hold_phase -%}
+              37
+          {%- elif ((epr_today > 20 and heating_on) or (epr_today > 10 and heating_on == false)) and hold_phase -%}
+              47
+          {%- elif ((epr_today > 15 and heating_on) or (epr_today > 7 and heating_on == false)) and hold_phase -%}
+              57
+          {%- elif ((epr_today > 10 and heating_on) or (epr_today > 5 and heating_on == false)) and hold_phase -%}
+              67
+          {%- elif ep_tomorrow > 40 and (heating_on == false or temperature > 15) -%}
+              77
+          {%- elif ep_tomorrow > 20 and (heating_on == false or temperature > 10) -%}
+              87
+          {%- else -%}
+              97
+          {%- endif %}
+      availability: "{{ has_value('sensor.energy_production_today_remaining_total') and has_value('sensor.energy_production_tomorrow_total') and has_value('binary_sensor.heating_pump_heating_mode') and has_value('sensor.sun_next_noon') and has_value('sensor.sun_next_rising') and has_value('sensor.mosquitto_mqtt_broker_aussentemperatur') }}"
+
+input_number:
+
+  #
+  # input number field for maximum soc.
+  #
+  rct_power_storage_battery_maximum_state_of_charge:
+    name: "Input RCT Power Storage Battery Maximum SOC"
+    icon: "mdi:battery-charging-wireless-90"
+    unit_of_measurement: "%"
+    mode: slider
+    initial: 97
+    min: 7
+    max: 97
+    step: 1
+
+  #
+  # input number field for minimum soc.
+  #
+  rct_power_storage_battery_minimum_state_of_charge:
+    name: "Input RCT Power Storage Battery Minimum SOC"
+    icon: "mdi:battery-charging-wireless-10"
+    unit_of_measurement: "%"
+    mode: slider
+    initial: 7
+    min: 7
+    max: 97
+    step: 1
+
+automation rct_soc_min_max:
+
+  #
+  # write calculated maximum soc value into the corresponding input number field, when changed.
+  #
+  - id: "pv_battery_calculated_soc_max_to_input"
+    alias: "RCT Power SOC Errechnet Max in Input-Feld"
+    description: "Netzdienliches und Akku schonendes Laden des Akkus, errechneten Wert in entsprechendes Eingabefeld übernehmen"
+    triggers:
+      - trigger: state
+        entity_id:
+        - sensor.calculated_maximum_battery_soc
+        not_from:
+        - unknown
+        - unavailable
+        not_to:
+        - unknown
+        - unavailable
+    conditions: []
+    actions:
+      - action: input_number.set_value
+        metadata: {}
+        data:
+          value: '{{ states(''sensor.calculated_maximum_battery_soc'')|float(97.0) }}'
+        target:
+          entity_id: input_number.rct_power_storage_battery_maximum_state_of_charge
+    mode: single
+
+  #
+  # write maximum soc inverter value into the corresponding input number field, when changed.
+  #
+  - id: "pv_battery_soc_max_to_input"
+    alias: "RCT Power SOC Max vom Wechselrichter in Input-Feld"
+    description: "Eingabefeld mit SOC Max Vorgabewert befüllen, wenn dieser sich ändert"
+    triggers:
+      - trigger: state
+        entity_id:
+        - sensor.rct_power_storage_battery_maximum_state_of_charge
+        not_from:
+        - unknown
+        - unavailable
+        not_to:
+        - unknown
+        - unavailable
+    conditions: []
+    actions:
+      - action: input_number.set_value
+        metadata: {}
+        data:
+          value: '{{ states(''sensor.rct_power_storage_battery_maximum_state_of_charge'')|float(97.0) }}'
+        target:
+          entity_id: input_number.rct_power_storage_battery_maximum_state_of_charge
+    mode: single
+
+  #
+  # set maximum soc input number value into the inverter, when value has
+  # changed and keeps new value for three seconds.
+  #
+  - id: "pv_battery_soc_max_input_to_inverter"
+    alias: "Eingabe an RCT Power SOC Max des Wechselrichters senden"
+    description: "Den maximalen Ladestand der PV-Batterie anpassen"
+    triggers:
+      - trigger: state
+        entity_id:
+        - input_number.rct_power_storage_battery_maximum_state_of_charge
+        for:
+          hours: 0
+          minutes: 0
+          seconds: 3
+    conditions: []
+    actions:
+      - action: pyscript.rct_ha_call
+        data:
+          parameter: power_mng.soc_max
+          value: '{{ states(''input_number.rct_power_storage_battery_maximum_state_of_charge'')|float(97.0)|multiply(0.01)|round(2) }}'
+    mode: single
+
+  #
+  # write minimum soc inverter value into the corresponding input number field, when changed.
+  #
+  - id: "pv_battery_soc_min_to_input"
+    alias: "RCT Power SOC Min vom Wechselrichter in Input-Feld"
+    description: "Eingabefeld mit SOC Min Vorgabewert befüllen, wenn dieser sich ändert"
+    triggers:
+      - trigger: state
+        entity_id:
+        - sensor.rct_power_storage_battery_minimum_state_of_charge_2
+        not_from:
+        - unknown
+        - unavailable
+        not_to:
+        - unknown
+        - unavailable
+    conditions: []
+    actions:
+      - action: input_number.set_value
+        metadata: {}
+        data:
+          value: '{{ states(''sensor.rct_power_storage_battery_minimum_state_of_charge_2'')|float(7.0) }}'
+        target:
+          entity_id: input_number.rct_power_storage_battery_minimum_state_of_charge
+    mode: single
+
+  #
+  # set minimum soc input number value into the inverter, when value has
+  # changed and keeps new value for three seconds.
+  #
+  - id: "pv_battery_soc_min_input_to_inverter"
+    alias: "Eingabe an RCT Power SOC Min des Wechselrichters senden"
+    description: "Den minimalen Ladestand der PV-Batterie anpassen"
+    triggers:
+      - trigger: state
+        entity_id:
+        - input_number.rct_power_storage_battery_minimum_state_of_charge
+        for:
+          hours: 0
+          minutes: 0
+          seconds: 3
+    conditions: []
+    actions:
+      - action: pyscript.rct_ha_call
+        data:
+          action: set
+          parameter: power_mng.soc_min
+          value: '{{ states(''input_number.rct_power_storage_battery_minimum_state_of_charge'')|float(7.0)|multiply(0.01)|round(2) }}'
+    mode: single
+
+  #
+  # on sinrise check expected production of rct connected string, when it's
+  # < 15 kWh enable external loading support, otherwise disable it.
+  #
+  - id: "pv_battery_grid_power_enable"
+    alias: "Batterie laden mit Energie vom SMA Wechselrichter erlauben"
+    description: "Wenn der RCT Wechselrichter zu wenig produziert, um die Battierie zu laden, SMA dazu schalten"
+    triggers:
+      - trigger: sun
+        event: sunrise
+    conditions: []
+    actions:
+      - action: pyscript.rct_ha_call
+        data:
+          action: set
+          parameter: power_mng.use_grid_power_enable
+          value: '{% if (states(''sensor.energy_production_today_remaining'')|float(0.0)) < 15 -%}true{%- else -%}false{%- endif %}'
+    mode: single
+
+  #
+  # 45 minutes before sunrise, when calibration discharging is active,
+  # unload to grid. The battery capacity of last calibration run and current
+  # soc is used to calculate current entry of battery, try to unload it in
+  # one hour, but ensure unload is limited to 6000 W.
+  #
+  - id: "pv_batery_start_unload_to_grid_on_calibration"
+    alias: "RCT Batterie Kalibrierung, Entladen ins Netz starten"
+    description: "RCT Batterie Kalibrierung, vor Sonnenaufgang Entladen ins Netz starten um die Batterie leer zu bekommen"
+    triggers:
+      - trigger: sun
+        event: sunrise
+        offset: "-00:45:00"
+    conditions:
+      - condition: state
+        entity_id: "sensor.rct_power_storage_battery_status"
+        state: "discharging"
+    actions:
+      - action: pyscript.rct_ha_call
+        data:
+          action: set
+          parameter: p_rec_lim[1]
+          value: '{{ min(6000, ((states(''sensor.rct_battery_capacity_unload_calibration'')|float(0.0)) * (states(''sensor.rct_power_storage_battery_state_of_charge'')|float(0.0)))|multiply(10)|round(0)) }}'
+    mode: single
+
+  #
+  # when calibration discharging is complete, set unload to grid back to zero.
+  #
+  - id: "pv_batery_stop_unload_to_grid_on_calibration"
+    alias: "RCT Batterie Kalibrierungsende, Entladen ins Netz stoppen"
+    description: "RCT Batterie Kalibrierung, zum Ende der Entladung bei Kalibrierung, Entladen ins Netz stoppen"
+    triggers:
+      - trigger: state
+        entity_id:
+        - sensor.rct_power_storage_battery_status
+        from: discharging
+        to: normal
+    conditions: []
+    actions:
+      - action: pyscript.rct_ha_call
+        data:
+          action: set
+          parameter: p_rec_lim[1]
+          value: 0
+    mode: single

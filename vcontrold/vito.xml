@@ -1,0 +1,1218 @@
+<vito>
+    <devices>
+        <device ID="2048" name="Vitocal-G mit Vitotronic 200 (Typ WO1A) (ab 08/2010)" protocol="P300"/>
+        <device ID="2049" name="Vitocal 3xx mit Vitotronic 200 (Typ WO1A) (ab 08/2010)" protocol="P300"/>
+        <device ID="204A" name="Vitocal 200-S mit Vitotronic 200 (Typ WO1A) (ab 08/2010)" protocol="P300"/>
+    </devices>
+    <commands>
+
+        <!-- Information - Allgemein -->
+        <command name="getDevType" protocmd="getaddr">
+            <addr>00F8</addr>
+            <len>2</len>
+            <unit>DT</unit>
+            <description>Information - Allgemein: Anlagentyp (204D)</description>
+            <!-- verified -->
+        </command>
+        <command name="getTempA" protocmd="getaddr">
+            <addr>0101</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Information - Allgemein: Aussentemperatur (-40..70)</description>
+            <!-- verified -->
+        </command>
+        <command name="getTempAnlVL" protocmd="getaddr">
+            <addr>010A</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Information - Allgemein: Anlagenvorlauftemperatur (0..95)</description>
+            <!-- verified -->
+        </command>
+        <command name="getTempPufferIst" protocmd="getaddr">
+            <addr>010B</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Information - Allgemein: Pufferspeichertemperatur (0..95)</description>
+            <!-- verified -->
+        </command>
+
+        <!-- Information - Heizkreis HK1 -->
+        <command name="getTempSekVL" protocmd="getaddr">
+            <addr>0105</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Information - Heizkreis HK1: Vorlauftemperatur Sekundaer 1 (0..95)</description>
+        </command>
+        <command name="getTempRaumIst" protocmd="getaddr">
+            <addr>0116</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Information - Heizkreis HK1: Raumtemperatur HK1 (0..40)</description>
+        </command>
+        <command name="getTempKuehlVL" protocmd="getaddr">
+            <addr>0119</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Information - Heizkreis HK1: Vorlauftemperatur Kuehlkreis 1 (0..95)</description>
+        </command>
+        <command name="getTempRaumSoll" protocmd="getaddr">
+            <addr>011B</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Information - Heizkreis HK1: Raumsolltemperatur HK1 von FB (10..30)</description>
+        </command>
+        <command name="getStatusPumpe" protocmd="getaddr">
+            <addr>048D</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Information - Heizkreis HK1: Heizkreispumpe (0..1)</description>
+        </command>
+        <command name="getStatusAC" protocmd="getaddr">
+            <addr>096C</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Information - Heizkreis HK1: Kuehlung fuer HK1 (0..1)</description>
+        </command>
+
+        <!-- Information - Heizkreis HK2 -->
+        <command name="getTempSek2VL" protocmd="getaddr">
+            <addr>0114</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Information - Heizkreis HK2: Vorlauftemperatur Sekundaer 2 (0..95)</description>
+            <!-- verified -->
+        </command>
+        <command name="getTempRaumIst2" protocmd="getaddr">
+            <addr>0117</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Information - Heizkreis HK2: Raumtemperatur HK2 (0..40)</description>
+            <!-- verified -->
+        </command>
+        <command name="getTempKuehlVL2" protocmd="getaddr">
+            <addr>0119</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Information - Heizkreis HK2: Vorlauftemperatur Kuehlkreis 2 (0..95)</description>
+            <!-- verified -->
+        </command>
+        <command name="getTempRaumSoll2" protocmd="getaddr">
+            <addr>011C</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Information - Heizkreis HK2: Raumsolltemperatur HK2 von FB (10..30)</description>
+            <!-- verified -->
+        </command>
+        <command name="getStatusPumpe2" protocmd="getaddr">
+            <addr>048E</addr>
+            <len>1-Bit</len>
+            <unit>RT</unit>
+            <description>Information - Heizkreis HK2: Heizkreispumpe (0..1)</description>
+            <!-- verified -->
+        </command>
+        <command name="getStatusAC2" protocmd="getaddr">
+            <addr>096D</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Information - Heizkreis HK2: Kuehlung fuer HK2 (0..1)</description>
+        </command>
+
+        <!-- Information - Heizkreis HK3 -->
+        <command name="getTempSek3VL" protocmd="getaddr">
+            <addr>0115</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Information - Heizkreis HK3: Vorlauftemperatur Sekundaer 3 (0..95)</description>
+        </command>
+        <command name="getTempRaumIst3" protocmd="getaddr">
+            <addr>0118</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Information - Heizkreis HK3: Raumtemperatur HK3 (0..40)</description>
+        </command>
+        <command name="getTempKuehlVL3" protocmd="getaddr">
+            <addr>0119</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Information - Heizkreis HK3: Vorlauftemperatur Kuehlkreis 3 (0..95)</description>
+        </command>
+        <command name="getTempRaumSoll3" protocmd="getaddr">
+            <addr>011D</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Information - Heizkreis HK3: Raumsolltemperatur HK3 von FB (10..30)</description>
+        </command>
+        <command name="getStatusPumpe3" protocmd="getaddr">
+            <addr>048F</addr>
+            <len>1-Bit</len>
+            <unit>RT</unit>
+            <description>Information - Heizkreis HK3: Heizkreispumpe (0..1)</description>
+        </command>
+        <command name="getStatusAC3" protocmd="getaddr">
+            <addr>096E</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Information - Heizkreis HK3: Kuehlung fuer HK3 (0..1)</description>
+        </command>
+
+        <!-- Information - Warmwasser -->
+        <command name="getTempWWIstOben" protocmd="getaddr">
+            <addr>010D</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Information - Warmwasser: Warmwassertemperatur oben (0..95)</description>
+            <!-- verified -->
+        </command>
+        <command name="getTempWWIstUnten" protocmd="getaddr">
+            <addr>010E</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Information - Warmwasser: Warmwassertemperatur unten (0..95)</description>
+            <!-- verified -->
+        </command>
+        <command name="getStatusPumpeZirk" protocmd="getaddr">
+            <addr>0490</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Information - Warmwasser: Zirkulationspumpe (0..1)</description>
+            <!-- verified -->
+        </command>
+        <command name="getStatusSpeicherPumpe" protocmd="getaddr">
+            <addr>0496</addr>
+            <len>1-Bit</len>
+            <unit>RT</unit>
+            <description>Information - Warmwasser: Speicherladepumpe (0..1)</description>
+            <!-- verified -->
+        </command>
+
+        <!-- Information - Solar -->
+        <command name="getTempSolKoll" protocmd="getaddr">
+            <addr>0111</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Information - Solar: Solar Kollektortemperatur (-20..190)</description>
+        </command>
+        <command name="getTempSolRL" protocmd="getaddr">
+            <addr>0112</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Information - Solar: Solar Ruecklauftemperatur (0..95)</description>
+        </command>
+        <command name="getTempSolSp" protocmd="getaddr">
+            <addr>0113</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Information - Solar: Solar Speichertemperatur (0..95)</description>
+        </command>
+
+        <!-- Diagnose - Anlagenuebersicht -->
+        <command name="getTempPriVL" protocmd="getaddr">
+            <addr>0103</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Diagnose - Anlagenuebersicht: Vorlauftemperatur Primaerquelle (-20..95)</description>
+            <!-- verified -->
+        </command>
+        <command name="getTempPriRL" protocmd="getaddr">
+            <addr>0104</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Diagnose - Anlagenuebersicht: Ruecklauftemperatur Primaerquelle (-20..95)</description>
+            <!-- verified -->
+        </command>
+        <command name="getTempSekRL" protocmd="getaddr">
+            <addr>0106</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Diagnose - Anlagenuebersicht: Ruecklauftemperatur Sekundaer 1 (0..95)</description>
+            <!-- verified -->
+        </command>
+        <command name="getStatusVerdichter" protocmd="getaddr">
+            <addr>0400</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Diagnose - Anlagenuebersicht: Status Verdichter (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getStatusQuellePrim" protocmd="getaddr">
+            <addr>0402</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Diagnose - Anlagenuebersicht: Status Primaerquelle (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getStatusQuelleSek" protocmd="getaddr">
+            <addr>0404</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Diagnose - Anlagenuebersicht: Status Sekundaerquelle (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getStatusHeizstabSt1" protocmd="getaddr">
+            <addr>0408</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Diagnose - Anlagenuebersicht: Status Heizstab Stufe 1 (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getStatusHeizstabSt2" protocmd="getaddr">
+            <addr>0409</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Diagnose - Anlagenuebersicht: Status Heizstab Stufe 2 (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getStatusHK" protocmd="getaddr">
+            <addr>040D</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Diagnose - Anlagenuebersicht: Status Heizkreis HK1 (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getStatusHK2" protocmd="getaddr">
+            <addr>040E</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Diagnose - Anlagenuebersicht: Status Heizkreis HK2 (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getStatusHK3" protocmd="getaddr">
+            <addr>040F</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Diagnose - Anlagenuebersicht: Status Heizkreis HK3 (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getStatusUPump" protocmd="getaddr">
+            <addr>0410</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Diagnose - Anlagenuebersicht: Status Umwaelzpumpe (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getStatusSammel" protocmd="getaddr">
+            <addr>0411</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Diagnose - Anlagenuebersicht: Status Sammelmeldung (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getStatusVentilWW" protocmd="getaddr">
+            <addr>0414</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Diagnose - Anlagenuebersicht: Status Warmwasserventil (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getStatusSpeicherladePumpe" protocmd="getaddr">
+            <addr>0416</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Diagnose - Anlagenuebersicht: Status Speicherladepumpe (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getStatusV1" protocmd="getaddr">
+            <addr>0480</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Diagnose - Anlagenuebersicht: Verdichter 1 (Schuetz) (0..1)</description>
+            <!-- verified -->
+        </command>
+        <command name="getStatusV2" protocmd="getaddr">
+            <addr>0481</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Diagnose - Anlagenuebersicht: Verdichter 2 (Schuetz) (0..1)</description>
+        </command>
+        <command name="getStatusQuellePri1" protocmd="getaddr">
+            <addr>0482</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Diagnose - Anlagenuebersicht: Primaerquelle 1 (Vent. oder Primaerpumpe (0..1)</description>
+            <!-- verified -->
+        </command>
+        <command name="getStatusQuellePri2" protocmd="getaddr">
+            <addr>0483</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Diagnose - Anlagenuebersicht: Primaerquelle 2 (Primaerpumpe) (0..1)</description>
+        </command>
+        <command name="getStatusSekP" protocmd="getaddr">
+            <addr>0484</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Diagnose - Anlagenuebersicht: Sekundaerpumpe 1 (0..1)</description>
+            <!-- verified -->
+        </command>
+        <command name="getPwrSollVerdichter" protocmd="getaddr">
+            <addr>5030</addr>
+            <len>1</len>
+            <unit>CO</unit>
+            <description>Diagnose - Anlagenuebersicht: Soll-Leistung Verdichter 1 (0..100)</description>
+        </command>
+        <command name="getPwrSollVerdichter2" protocmd="getaddr">
+            <addr>5130</addr>
+            <len>1</len>
+            <unit>CO</unit>
+            <description>Diagnose - Anlagenuebersicht: Soll-Leistung Verdichter 2 (0..100)</description>
+        </command>
+
+        <!-- Diagnose - Allgemein -->
+        <command name="getStatusExtW" protocmd="getaddr">
+            <addr>048B</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Diagnose - Allgemein: Relais Ansteuerung ext. Waermeerzeuge (0..1)</description>
+        </command>
+
+        <!-- Diagnose - Waermepumpe -->
+        <command name="getTempVerdampf" protocmd="getaddr">
+            <addr>0102</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Diagnose - Waermepumpe: Temperatur Verdampfer</description>
+            <!-- documentation -->
+        </command>
+        <command name="getDruckImVerdampf" protocmd="getaddr">
+            <addr>0680</addr>
+            <len>2</len>
+            <unit>COT</unit>
+            <description>Diagnose - Waermepumpe: Druck im Verdampfer</description>
+            <!-- documentation -->
+        </command>
+        <command name="getDruckImKondensator" protocmd="getaddr">
+            <addr>0682</addr>
+            <len>2</len>
+            <unit>COT</unit>
+            <description>Diagnose - Waermepumpe: Druck im Kondensator</description>
+            <!-- documentation -->
+        </command>
+        <command name="getStatusVentilWW1" protocmd="getaddr">
+            <addr>0494</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Diagnose - Waermepumpe: 3-W-Ventil Heizen WW1 (0 (Heizen)..1 (WW))</description>
+            <!-- verified -->
+        </command>
+        <command name="getStatusVentilWW2" protocmd="getaddr">
+            <addr>0495</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Diagnose - Waermepumpe: 3-W-Ventil Heizen WW2 (0 (Heizen)..1 (WW))</description>
+        </command>
+
+        <!-- Diagnose - Heizkreis -->
+        <command name="getTempVLSoll" protocmd="getaddr">
+            <addr>1800</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Diagnose - Heizkreis HK1: Vorlaufsolltemperatur HK1 (0..95)</description>
+            <!-- verified -->
+        </command>
+        <command name="getTempVLSoll2" protocmd="getaddr">
+            <addr>1801</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Diagnose - Heizkreis HK2: Vorlaufsolltemperatur HK2 (0..95)</description>
+            <!-- verified -->
+        </command>
+        <command name="getTempVLSoll3" protocmd="getaddr">
+            <addr>1802</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Diagnose - Heizkreis HK3: Vorlaufsolltemperatur HK3 (0..95)</description>
+            <!-- verified -->
+        </command>
+
+        <!-- Diagnose - Solar -->
+        <command name="getSolarRegler" protocmd="getaddr">
+            <addr>190A</addr>
+            <len>4</len>
+            <unit>UT</unit>
+            <description>Diagnose - Solar: Solarertrag Reglermethoden (0..1150000)</description>
+        </command>
+
+        <!-- Statistik - Schaltzyklen Anlage -->
+        <command name="getAnzVerdichter" protocmd="getaddr">
+            <addr>0500</addr>
+            <len>4</len>
+            <unit>CO</unit>
+            <description>Statistik - Schaltzyklen Anlage: Einschaltungen Verdichter (?)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getAnzQuellePrim" protocmd="getaddr">
+            <addr>0502</addr>
+            <len>4</len>
+            <unit>CO</unit>
+            <description>Statistik - Schaltzyklen Anlage: Einschaltungen Primaerquelle (?)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getAnzQuelleSek" protocmd="getaddr">
+            <addr>0504</addr>
+            <len>4</len>
+            <unit>CO</unit>
+            <description>Statistik - Schaltzyklen Anlage: Einschaltungen Sekundaerquelle (?)</description>
+            <!-- verified -->
+        </command>
+        <command name="getAnzHeizstabSt1" protocmd="getaddr">
+            <addr>0508</addr>
+            <len>4</len>
+            <unit>CO</unit>
+            <description>Statistik - Schaltzyklen Anlage: Einschaltungen Heizstab Stufe 1 (?)</description>
+            <!-- verified -->
+        </command>
+        <command name="getAnzHeizstabSt2" protocmd="getaddr">
+            <addr>0509</addr>
+            <len>4</len>
+            <unit>CO</unit>
+            <description>Statistik - Schaltzyklen Anlage: Einschaltungen Heizstab Stufe 2 (?)</description>
+            <!-- verified -->
+        </command>
+        <command name="getAnzHK" protocmd="getaddr">
+            <addr>050D</addr>
+            <len>4</len>
+            <unit>CO</unit>
+            <description>Statistik - Schaltzyklen Anlage: Einschaltungen Heizkreis HK1 (?)</description>
+            <!-- verified -->
+        </command>
+        <command name="getAnzHK2" protocmd="getaddr">
+            <addr>050E</addr>
+            <len>4</len>
+            <unit>CO</unit>
+            <description>Statistik - Schaltzyklen Anlage: Einschaltungen Heizkreis HK2 (?)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getAnzHK3" protocmd="getaddr">
+            <addr>050F</addr>
+            <len>4</len>
+            <unit>CO</unit>
+            <description>Statistik - Schaltzyklen Anlage: Einschaltungen Heizkreis HK3 (?)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getAnzUPump" protocmd="getaddr">
+            <addr>0510</addr>
+            <len>4</len>
+            <unit>CO</unit>
+            <description>Statistik - Schaltzyklen Anlage: Einschaltungen Umwaelzpumpe (?)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getAnzSammel" protocmd="getaddr">
+            <addr>0511</addr>
+            <len>4</len>
+            <unit>CO</unit>
+            <description>Statistik - Schaltzyklen Anlage: Einschaltungen Sammelmeldung (?)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getAnzVentilWW" protocmd="getaddr">
+            <addr>0514</addr>
+            <len>4</len>
+            <unit>CO</unit>
+            <description>Statistik - Schaltzyklen Anlage: Einschaltungen Warmwasserventil (?)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getAnzSpeicherPumpe" protocmd="getaddr">
+            <addr>0516</addr>
+            <len>4</len>
+            <unit>CO</unit>
+            <description>Statistik - Schaltzyklen Anlage: Einschaltungen Speicherladepumpe (?)</description>
+            <!-- documentation -->
+        </command>
+
+        <!-- Statistik - Betriebsstunden Anlage -->
+        <command name="getLZVerdichter" protocmd="getaddr">
+            <addr>0580</addr>
+            <len>4</len>
+            <unit>CS</unit>
+            <description>Statistik - Betriebsstunden Anlage: Betriebsstunden Verdichter (?)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getLZQuellePrim" protocmd="getaddr">
+            <addr>0582</addr>
+            <len>4</len>
+            <unit>CS</unit>
+            <description>Statistik - Betriebsstunden Anlage: Betriebsstunden Primaerquelle (?)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getLZQuelleSek" protocmd="getaddr">
+            <addr>0584</addr>
+            <len>4</len>
+            <unit>CS</unit>
+            <description>Statistik - Betriebsstunden Anlage: Betriebsstunden Sekundaerquelle (?)</description>
+            <!-- verified -->
+        </command>
+        <command name="getLZHeizstabSt1" protocmd="getaddr">
+            <addr>0588</addr>
+            <len>4</len>
+            <unit>CS</unit>
+            <description>Statistik - Betriebsstunden Anlage: Betriebsstunden Heizstab Stufe 1 (?)</description>
+            <!-- verified -->
+        </command>
+        <command name="getLZHeizstabSt2" protocmd="getaddr">
+            <addr>0589</addr>
+            <len>4</len>
+            <unit>CS</unit>
+            <description>Statistik - Betriebsstunden Anlage: Betriebsstunden Heizstab Stufe 2 (?)</description>
+            <!-- verified -->
+        </command>
+        <command name="getLZSNH" protocmd="getaddr">
+            <addr>058A</addr>
+            <len>4</len>
+            <unit>CO</unit>
+            <description>Statistik - Betriebsstunden Anlage: Betriebsstunden Speichernachheizung (0..1150000)</description>
+            <!-- verified -->
+        </command>
+        <command name="getLZAC" protocmd="getaddr">
+            <addr>058C</addr>
+            <len>4</len>
+            <unit>CS</unit>
+            <description>Statistik - Betriebsstunden Anlage: Betriebsstunden Active Cooling (0..1150000)</description>
+        </command>
+        <command name="getLZHK" protocmd="getaddr">
+            <addr>058D</addr>
+            <len>4</len>
+            <unit>CS</unit>
+            <description>Statistik - Betriebsstunden Anlage: Betriebsstunden Pumpe HK1 (0..1150000)</description>
+            <!-- verified -->
+        </command>
+        <command name="getLZHK2" protocmd="getaddr">
+            <addr>058E</addr>
+            <len>4</len>
+            <unit>CS</unit>
+            <description>Statistik - Betriebsstunden Anlage: Betriebsstunden Pumpe HK2 (0..1150000)</description>
+            <!-- verified -->
+        </command>
+        <command name="getLZHK3" protocmd="getaddr">
+            <addr>058F</addr>
+            <len>4</len>
+            <unit>CS</unit>
+            <description>Statistik - Betriebsstunden Anlage: Betriebsstunden Pumpe HK3 (0..1150000)</description>
+            <!-- verified -->
+        </command>
+        <command name="getLZUPumpe" protocmd="getaddr">
+            <addr>0590</addr>
+            <len>4</len>
+            <unit>CS</unit>
+            <description>Statistik - Betriebsstunden Anlage: Betriebsstunden Umwaelzpumpe (?)</description>
+            <!-- verified -->
+        </command>
+        <command name="getLZSammel" protocmd="getaddr">
+            <addr>0591</addr>
+            <len>4</len>
+            <unit>CS</unit>
+            <description>Statistik - Betriebsstunden Anlage: Betriebsstunden Sammelmeldung (?)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getLZVentilWW" protocmd="getaddr">
+            <addr>0594</addr>
+            <len>4</len>
+            <unit>CS</unit>
+            <description>Statistik - Betriebsstunden Anlage: Betriebsstunden Warmwasserventil (?)</description>
+            <!-- verified -->
+        </command>
+        <command name="getLZSpeicherPumpe" protocmd="getaddr">
+            <addr>0596</addr>
+            <len>4</len>
+            <unit>CS</unit>
+            <description>Statistik - Betriebsstunden Anlage: Betriebsstunden Speicherladepumpe (0..1150000)</description>
+            <!-- verified -->
+        </command>
+        <command name="getLZVerdSt1" protocmd="getaddr">
+            <addr>1620</addr>
+            <len>4</len>
+            <unit>CS</unit>
+            <description>Statistik - Betriebsstunden Anlage: Betriebsstunden Verdichter auf Stufe 1 (?)</description>
+            <!-- verified -->
+        </command>
+        <command name="getLZVerdSt2" protocmd="getaddr">
+            <addr>1622</addr>
+            <len>4</len>
+            <unit>CS</unit>
+            <description>Statistik - Betriebsstunden Anlage: Betriebsstunden Verdichter auf Stufe 2 (?)</description>
+            <!-- verified -->
+        </command>
+        <command name="getLZVerdSt3" protocmd="getaddr">
+            <addr>1624</addr>
+            <len>4</len>
+            <unit>CS</unit>
+            <description>Statistik - Betriebsstunden Anlage: Betriebsstunden Verdichter auf Stufe 3 (?)</description>
+            <!-- verified -->
+        </command>
+        <command name="getLZVerdSt4" protocmd="getaddr">
+            <addr>1626</addr>
+            <len>4</len>
+            <unit>CS</unit>
+            <description>Statistik - Betriebsstunden Anlage: Betriebsstunden Verdichter auf Stufe 4 (?)</description>
+            <!-- verified -->
+        </command>
+        <command name="getLZVerdSt5" protocmd="getaddr">
+            <addr>1628</addr>
+            <len>4</len>
+            <unit>CS</unit>
+            <description>Statistik - Betriebsstunden Anlage: Betriebsstunden Verdichter auf Stufe 5 (?)</description>
+            <!-- verified -->
+        </command>
+        <command name="getLZWP" protocmd="getaddr">
+            <addr>5005</addr>
+            <len>4</len>
+            <unit>CS</unit>
+            <description>Statistik - Betriebsstunden Anlage: Betriebsstunden Waermepumpe (0..1150000)</description>
+            <!-- verified -->
+        </command>
+
+        <!-- Statistik - Energiebilanz -->
+        <command name="getWaermeHeiz12M" protocmd="getaddr">
+            <addr>1640</addr>
+            <len>4</len>
+            <unit>KWH</unit>
+            <description>Statistik - Energiebilanz: Waermeenergie Heizen Jahr</description>
+            <!-- documentation -->
+        </command>
+        <command name="getWaermeWW12M" protocmd="getaddr">
+            <addr>1650</addr>
+            <len>4</len>
+            <unit>KWH</unit>
+            <description>Statistik - Energiebilanz: Waermeenergie Warmwasser Jahr</description>
+            <!-- documentation -->
+        </command>
+        <command name="getElektroHeiz12M" protocmd="getaddr">
+            <addr>1660</addr>
+            <len>4</len>
+            <unit>KWHK</unit>
+            <description>Statistik - Energiebilanz: Elektroenergie Heizen Jahr</description>
+            <!-- documentation -->
+        </command>
+        <command name="getElektroWW12M" protocmd="getaddr">
+            <addr>1670</addr>
+            <len>4</len>
+            <unit>KWHK</unit>
+            <description>Statistik - Energiebilanz: Elektroenergie Warmwasser Jahr</description>
+            <!-- documentation -->
+        </command>
+        <command name="getWaermeHeiz1W" protocmd="getaddr">
+            <addr>16D3</addr>
+            <len>2</len>
+            <unit>KWH</unit>
+            <description>Statistik - Energiebilanz: Waermeenergie Heizen Woche</description>
+            <!-- documentation -->
+        </command>
+        <command name="getWaermeWW1W" protocmd="getaddr">
+            <addr>16D2</addr>
+            <len>2</len>
+            <unit>KWH</unit>
+            <description>Statistik - Energiebilanz: Waermeenergie Warmwasser Woche</description>
+            <!-- documentation -->
+        </command>
+        <command name="getElektroHeiz1W" protocmd="getaddr">
+            <addr>16D1</addr>
+            <len>2</len>
+            <unit>KWHK</unit>
+            <description>Statistik - Energiebilanz: Elektroenergie Heizen Woche</description>
+            <!-- documentation -->
+        </command>
+        <command name="getElektroWW1W" protocmd="getaddr">
+            <addr>16D0</addr>
+            <len>2</len>
+            <unit>KWHK</unit>
+            <description>Statistik - Energiebilanz: Elektroenergie Warmwasser Woche</description>
+            <!-- documentation -->
+        </command>
+        <command name="getEnergiePV" protocmd="getaddr">
+            <addr>1678</addr>
+            <len>4</len>
+            <unit>KWH</unit>
+            <description>Statistik - Energiebilanz: ElektroenergiePV (0..1150000)</description>
+        </command>
+        <command name="getJAZ" protocmd="getaddr">
+            <addr>1680</addr>
+            <len>1</len>
+            <unit>JAZ</unit>
+            <description>Statistik - Energiebilanz: Jahresarbeitszahl (0..10)</description>
+            <!-- verified -->
+        </command>
+        <command name="getJAZHeiz" protocmd="getaddr">
+            <addr>1681</addr>
+            <len>1</len>
+            <unit>JAZ</unit>
+            <description>Statistik - Energiebilanz: Jahresarbeitszahl Heizen (0..10)</description>
+            <!-- verified -->
+        </command>
+        <command name="getJAZWW" protocmd="getaddr">
+            <addr>1682</addr>
+            <len>1</len>
+            <unit>JAZ</unit>
+            <description>Statistik - Energiebilanz: Jahresarbeitszahl WW (0..10)</description>
+            <!-- verified -->
+        </command>
+        <command name="getCOPHeiz" protocmd="getaddr">
+            <addr>1690</addr>
+            <len>2</len>
+            <unit>JAZ</unit>
+            <description>Statistik - Energiebilanz: COP Heizbetrieb (0..10)</description>
+            <!-- verified -->
+        </command>
+        <command name="getTempSekVLMittel" protocmd="getaddr">
+            <addr>16B2</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Statistik - Energiebilanz: mittlere sek. Vorlauftemperatur (0..95)</description>
+            <!-- verified -->
+        </command>
+        <command name="getTempSekRLMittel" protocmd="getaddr">
+            <addr>16B3</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Statistik - Energiebilanz: mittlere sek.Temperatur RL1 (0..95)</description>
+            <!-- verified -->
+        </command>
+        <command name="getTempSekRLMittel2" protocmd="getaddr">
+            <addr>16B4</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Statistik - Energiebilanz: mittlere sek.Temperatur RL2 (0..95)</description>
+        </command>
+
+        <!-- Bedienung Anlage -->
+        <command name="getHeizwasserDurchlauferhitzer" protocmd="getaddr">
+            <addr>7900</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Bedienung Anlage - Freigabe Heizwasser-Durchlauferhitzer (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="setHeizwasserDurchlauferhitzer" protocmd="setaddr">
+            <addr>7900</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Bedienung Anlage - Freigabe Heizwasser-Durchlauferhitzer (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getHeizenMitElektro" protocmd="getaddr">
+            <addr>7902</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Bedienung Anlage - Heizen mit Elektro (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="setHeizenMitElektro" protocmd="setaddr">
+            <addr>7902</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Bedienung Anlage - Heizen mit Elektro (0..1)</description>
+            <!-- documentation -->
+        </command>
+
+        <!-- Bedienung HK1 -->
+        <command name="getBetriebsart" protocmd="getaddr">
+            <addr>B000</addr>
+            <len>1</len>
+            <unit>BA</unit>
+            <description>Bedienung HK1 - Heizkreis 1: Betriebsart (0..4)</description>
+            <!-- verified -->
+        </command>
+        <command name="setBetriebsart" protocmd="setaddr">
+            <addr>B000</addr>
+            <len>1</len>
+            <unit>BA</unit>
+            <description>Bedienung HK1 - Heizkreis 1: Betriebsart (0..4)</description>
+            <!-- verified -->
+        </command>
+        <command name="getTempRaumSollNormal" protocmd="getaddr">
+            <addr>2000</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Bedienung HK1 - Heizkreis 1: Raumsolltemperatur normal (10..30)</description>
+            <!-- verified -->
+        </command>
+        <command name="setTempRaumSollNormal" protocmd="setaddr">
+            <addr>2000</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Bedienung HK1 - Heizkreis 1: Raumsolltemperatur normal (10..30)</description>
+            <!-- verified -->
+        </command>
+        <command name="getTempRaumSollRed" protocmd="getaddr">
+            <addr>2001</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Bedienung HK1 - Heizkreis 1: Raumsolltemperatur reduzierter Betrieb (10..30)</description>
+            <!-- verified -->
+        </command>
+        <command name="setTempRaumSollRed" protocmd="setaddr">
+            <addr>2001</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Bedienung HK1 - Heizkreis 1: Raumsolltemperatur reduzierter Betrieb (10..30)</description>
+            <!-- verified -->
+        </command>
+        <command name="getHKLNiveau" protocmd="getaddr">
+            <addr>2006</addr>
+            <len>2</len>
+            <unit>UN</unit>
+            <description>Bedienung HK1 - Heizkreis 1: Niveau der Heizkennlinie (-15..40)</description>
+            <!-- verified -->
+        </command>
+        <command name="setHKLNiveau" protocmd="setaddr">
+            <addr>2006</addr>
+            <len>2</len>
+            <unit>UN</unit>
+            <description>Bedienung HK1 - Heizkreis 1: Niveau der Heizkennlinie (-15..40)</description>
+            <!-- verified -->
+        </command>
+        <command name="getHKLNeigung" protocmd="getaddr">
+            <addr>2007</addr>
+            <len>2</len>
+            <unit>UN</unit>
+            <description>Bedienung HK1 - Heizkreis 1: Neigung der Heizkennlinie (0..35)</description>
+            <!-- verified -->
+        </command>
+        <command name="setHKLNeigung" protocmd="setaddr">
+            <addr>2007</addr>
+            <len>2</len>
+            <unit>UN</unit>
+            <description>Bedienung HK1 - Heizkreis 1: Neigung der Heizkennlinie (0..35)</description>
+            <!-- verified -->
+        </command>
+        <command name="getTempRaumSollParty" protocmd="getaddr">
+            <addr>2022</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Bedienung HK1 - Heizkreis 1: Party Solltemperatur (10..30)</description>
+            <!-- verified -->
+        </command>
+        <command name="setTempRaumSollParty" protocmd="setaddr">
+            <addr>2022</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Bedienung HK1 - Heizkreis 1: Party Solltemperatur (10..30)</description>
+            <!-- verified -->
+        </command>
+        <command name="getFreigabeActiveCooling" protocmd="getaddr">
+            <addr>71FE</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Bedienung HK1 - Freigabe Active Cooling (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="setFreigabeActiveCooling" protocmd="setaddr">
+            <addr>71FE</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Bedienung HK1 - Freigabe Active Cooling (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getKKLNiveau" protocmd="getaddr">
+            <addr>7110</addr>
+            <len>2</len>
+            <unit>UN</unit>
+            <description>Bedienung HK1 - Heizkreis 1: Niveau Kuehlkennlinie (-15..40)</description>
+            <!-- documentation -->
+        </command>
+        <command name="setKKLNiveau" protocmd="setaddr">
+            <addr>7110</addr>
+            <len>2</len>
+            <unit>UN</unit>
+            <description>Bedienung HK1 - Heizkreis 1: Niveau Kuehlkennlinie (-15..40)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getKKLNeigung" protocmd="getaddr">
+            <addr>7111</addr>
+            <len>2</len>
+            <unit>UN</unit>
+            <description>Bedienung HK1 - Heizkreis 1: Neigung Kuehlkennlinie (0..35)</description>
+            <!-- documentation -->
+        </command>
+        <command name="setKKLNeigung" protocmd="setaddr">
+            <addr>7111</addr>
+            <len>2</len>
+            <unit>UN</unit>
+            <description>Bedienung HK1 - Heizkreis 1: Neigung Kuehlkennlinie (0..35)</description>
+            <!-- documentation -->
+        </command>
+
+        <!-- Bedienung HK2 -->
+        <command name="getBetriebsart2" protocmd="getaddr">
+            <addr>B001</addr>
+            <len>1</len>
+            <unit>BA</unit>
+            <description>Bedienung HK2 - Heizkreis 2: Betriebsart (0..4)</description>
+            <!-- verified -->
+        </command>
+        <command name="setBetriebsart2" protocmd="setaddr">
+            <addr>B001</addr>
+            <len>1</len>
+            <unit>BA</unit>
+            <description>Bedienung HK2 - Heizkreis 2: Betriebsart (0..4)</description>
+            <!-- verified -->
+        </command>
+        <command name="getTempRaumSollNormal2" protocmd="getaddr">
+            <addr>3000</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Bedienung HK2 - Heizkreis 2: Raumsolltemperatur normal (10..30)</description>
+            <!-- verified -->
+        </command>
+        <command name="setTempRaumSollNormal2" protocmd="setaddr">
+            <addr>3000</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Bedienung HK2 - Heizkreis 2: Raumsolltemperatur normal (10..30)</description>
+            <!-- verified -->
+        </command>
+        <command name="getTempRaumSollRed2" protocmd="getaddr">
+            <addr>3001</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Bedienung HK2 - Heizkreis 2: Raumsolltemperatur reduzierter Betrieb (10..30)</description>
+            <!-- verified -->
+        </command>
+        <command name="setTempRaumSollRed2" protocmd="setaddr">
+            <addr>3001</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Bedienung HK2 - Heizkreis 2: Raumsolltemperatur reduzierter Betrieb (10..30)</description>
+            <!-- verified -->
+        </command>
+        <command name="getHKLNiveau2" protocmd="getaddr">
+            <addr>3006</addr>
+            <len>2</len>
+            <unit>UN</unit>
+            <description>Bedienung HK2 - Heizkreis 2: Niveau der Heizkennlinie (-15..40)</description>
+            <!-- verified -->
+        </command>
+        <command name="setHKLNiveau2" protocmd="setaddr">
+            <addr>3006</addr>
+            <len>2</len>
+            <unit>UN</unit>
+            <description>Bedienung HK2 - Heizkreis 2: Niveau der Heizkennlinie (-15..40)</description>
+            <!-- verified -->
+        </command>
+        <command name="getHKLNeigung2" protocmd="getaddr">
+            <addr>3007</addr>
+            <len>2</len>
+            <unit>UN</unit>
+            <description>Bedienung HK2 - Heizkreis 2: Neigung der Heizkennlinie (0..35)</description>
+            <!-- verified -->
+        </command>
+        <command name="setHKLNeigung2" protocmd="setaddr">
+            <addr>3007</addr>
+            <len>2</len>
+            <unit>UN</unit>
+            <description>Bedienung HK2 - Heizkreis 2: Neigung der Heizkennlinie (0..35)</description>
+            <!-- verified -->
+        </command>
+        <command name="getTempRaumSollParty2" protocmd="getaddr">
+            <addr>3022</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Bedienung HK2 - Heizkreis 2: Party Solltemperatur (10..30)</description>
+            <!-- verified -->
+        </command>
+        <command name="setTempRaumSollParty2" protocmd="setaddr">
+            <addr>3022</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Bedienung HK2 - Heizkreis 2: Party Solltemperatur (10..30)</description>
+            <!-- verified -->
+        </command>
+
+        <!-- Bedienung HK3 -->
+        <command name="getBetriebsart3" protocmd="getaddr">
+            <addr>B002</addr>
+            <len>1</len>
+            <unit>BA</unit>
+            <description>Bedienung HK3 - Heizkreis 3: Betriebsart (0..4)</description>
+            <!-- verified -->
+        </command>
+        <command name="setBetriebsart3" protocmd="setaddr">
+            <addr>B002</addr>
+            <len>1</len>
+            <unit>BA</unit>
+            <description>Bedienung HK3 - Heizkreis 3: Betriebsart (0..4)</description>
+            <!-- verified -->
+        </command>
+        <command name="getTempRaumSollNormal3" protocmd="getaddr">
+            <addr>4000</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Bedienung HK3 - Heizkreis 3: Raumsolltemperatur normal (10..30)</description>
+            <!-- verified -->
+        </command>
+        <command name="setTempRaumSollNormal3" protocmd="setaddr">
+            <addr>4000</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Bedienung HK3 - Heizkreis 3: Raumsolltemperatur normal (10..30)</description>
+            <!-- verified -->
+        </command>
+        <command name="getTempRaumSollRed3" protocmd="getaddr">
+            <addr>4001</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Bedienung HK3 - Heizkreis 3: Raumsolltemperatur reduzierter Betrieb (10..30)</description>
+            <!-- verified -->
+        </command>
+        <command name="setTempRaumSollRed3" protocmd="setaddr">
+            <addr>4001</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Bedienung HK3 - Heizkreis 3: Raumsolltemperatur reduzierter Betrieb (10..30)</description>
+            <!-- verified -->
+        </command>
+        <command name="getHKLNiveau3" protocmd="getaddr">
+            <addr>4006</addr>
+            <len>2</len>
+            <unit>UN</unit>
+            <description>Bedienung HK3 - Heizkreis 3: Niveau der Heizkennlinie (-15..40)</description>
+            <!-- verified -->
+        </command>
+        <command name="setHKLNiveau3" protocmd="setaddr">
+            <addr>4006</addr>
+            <len>2</len>
+            <unit>UN</unit>
+            <description>Bedienung HK3 - Heizkreis 3: Niveau der Heizkennlinie (-15..40)</description>
+            <!-- verified -->
+        </command>
+        <command name="getHKLNeigung3" protocmd="getaddr">
+            <addr>4007</addr>
+            <len>2</len>
+            <unit>UN</unit>
+            <description>Bedienung HK3 - Heizkreis 3: Neigung der Heizkennlinie (0..35)</description>
+            <!-- verified -->
+        </command>
+        <command name="setHKLNeigung3" protocmd="setaddr">
+            <addr>4007</addr>
+            <len>2</len>
+            <unit>UN</unit>
+            <description>Bedienung HK3 - Heizkreis 3: Neigung der Heizkennlinie (0..35)</description>
+            <!-- verified -->
+        </command>
+        <command name="getTempRaumSollParty3" protocmd="getaddr">
+            <addr>4022</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Bedienung HK3 - Heizkreis 3: Party Solltemperatur (10..30)</description>
+            <!-- verified -->
+        </command>
+        <command name="setTempRaumSollParty3" protocmd="setaddr">
+            <addr>4022</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Bedienung HK3 - Heizkreis 3: Party Solltemperatur (10..30)</description>
+            <!-- verified -->
+        </command>
+
+        <!-- Bedienung WW -->
+        <command name="getTempWWSoll" protocmd="getaddr">
+            <addr>6000</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Bedienung WW - Betriebsdaten WW: Warmwassersolltemperatur (10..60 (95))</description>
+            <!-- verified -->
+        </command>
+        <command name="setTempWWSoll" protocmd="setaddr">
+            <addr>6000</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Bedienung WW - Betriebsdaten WW: Warmwassersolltemperatur (10..60 (95))</description>
+            <!-- verified -->
+        </command>
+        <command name="getEinschaltoptimierungWW" protocmd="getaddr">
+            <addr>6009</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Bedienung WW - Betriebsdaten WW: Einschaltoptimierung fuer Warmwasser (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="setEinschaltoptimierungWW" protocmd="setaddr">
+            <addr>6009</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Bedienung WW - Betriebsdaten WW: Einschaltoptimierung fuer Warmwasser (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getAusschaltoptimierungWW" protocmd="getaddr">
+            <addr>600A</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Bedienung WW - Betriebsdaten WW: Ausschaltoptimierung fuer Warmwasser (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="setAusschaltoptimierungWW" protocmd="setaddr">
+            <addr>600A</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Bedienung WW - Betriebsdaten WW: Ausschaltoptimierung fuer Warmwasser (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getZweiterSensorWW" protocmd="getaddr">
+            <addr>600E</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Bedienung WW - Betriebsdaten WW: Temperatursensor unten im Speicher (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="setZweiterSensorWW" protocmd="setaddr">
+            <addr>600E</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Bedienung WW - Betriebsdaten WW: Temperatursensor unten im Speicher (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getTempWWSoll2" protocmd="getaddr">
+            <addr>600C</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Bedienung WW - Betriebsdaten WW: Zweiter Sollwert (10..60 (95))</description>
+            <!-- verified -->
+        </command>
+        <command name="setTempWWSoll2" protocmd="setaddr">
+            <addr>600C</addr>
+            <len>2</len>
+            <unit>UT</unit>
+            <description>Bedienung WW - Betriebsdaten WW: Zweiter Sollwert (10..60 (95))</description>
+            <!-- verified -->
+        </command>
+        <command name="getFreigabeZusatzheizungWW" protocmd="getaddr">
+            <addr>6014</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Bedienung WW - Betriebsdaten WW: Freigabe Zusatzheizung fuer WW-Bereitung (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="setFreigabeZusatzheizungWW" protocmd="setaddr">
+            <addr>6014</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Bedienung WW - Betriebsdaten WW: Freigabe Zusatzheizung fuer WW-Bereitung (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getFreigabeElektroheizungWW" protocmd="getaddr">
+            <addr>6015</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Bedienung WW - Betriebsdaten WW: Freigabe Elektroheizung fuer WW-Bereitung (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="setFreigabeElektroheizungWW" protocmd="setaddr">
+            <addr>6015</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Bedienung WW - Betriebsdaten WW: Freigabe Elektroheizung fuer WW-Bereitung (0..1)</description>
+            <!-- documentation -->
+        </command>
+        <command name="getWWEinmal" protocmd="getaddr">
+            <addr>B020</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Bedienung WW - Betriebsdaten WW: 1x WW-Bereitung (0..1)</description>
+            <!-- verified -->
+        </command>
+        <command name="setWWEinmal" protocmd="setaddr">
+            <addr>B020</addr>
+            <len>1</len>
+            <unit>RT</unit>
+            <description>Bedienung WW - Betriebsdaten WW: 1x WW-Bereitung (0..1)</description>
+            <!-- verified -->
+        </command>
+    </commands>
+</vito>

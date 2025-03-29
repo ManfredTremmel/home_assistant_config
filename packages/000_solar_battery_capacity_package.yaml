@@ -1,0 +1,91 @@
+# ############ HA Local RCT helpers to calculate battery capacity ############
+#
+# (C) 2025 Manfred Tremmel
+#
+# The RCT inverter doesn't provide the capacity of the battery, this helper
+# calculates it by monitoring the used energy when unloading battery from
+# 100% to 0% in the calibration process.
+#
+# Dependency: "RCT Power" extension from HACS
+#
+# Used entities:
+#       sensor.rct_power_storage_battery_used_energy
+#       sensor.rct_power_storage_battery_stored_energy
+#
+# Provided entities:
+#       sensor.rct_battery_capacity_unload_calibration
+#
+# Provided helper entities (only used for calculation):
+#       sensor.rct_power_storage_battery_used_energy_start
+#       sensor.rct_power_storage_battery_stored_energy_start
+#       sensor.rct_power_storage_battery_used_energy_end
+#       sensor.rct_power_storage_battery_stored_energy_end
+#
+template:
+  - sensor:
+
+    #
+    # This sensor calculates the capacity out of the stored used and stored
+    # values (stored shouldn't change, in the case, battery is loaded in the
+    # unload phase, it's used to correct the result).
+    # As long as process is running, calculated unload value is below zero,
+    # so the old sensor value is returned.
+    #
+    # The default values I've added, are the manual taken values from the last
+    # calibration, before I've written this helper to have a initial entry.
+    #
+    - unique_id: "rct_battery_capacity_unload_calibration"
+      name: "RCT Battery Capacity Unload Calibration"
+      icon: "mdi:lightning-bolt"
+      state_class: "measurement"
+      unit_of_measurement: "kWh"
+      state: >-
+          {% set unload = ((states('sensor.rct_power_storage_battery_used_energy_end')|float(3526.68)) - (states('sensor.rct_power_storage_battery_used_energy_start')|float(3515.93))) %}
+          {% set stored = ((states('sensor.rct_power_storage_battery_stored_energy_end')|float(3835.32)) - (states('sensor.rct_power_storage_battery_stored_energy_start')|float(3835.32))) %}
+          {% if (unload > 0 and stored >= 0) -%}
+            {{ (unload - stored) | round(2) }}
+          {%- else -%}
+            {{ states('sensor.rct_battery_capacity_unload_calibration')|float() }}
+          {%- endif %}
+
+  #
+  # When the battery has reached 100% SOC in calibration process, the battery
+  # status changes form 'charging' to 'discharging'. That's the moment, to
+  # store used and stored energy sensors into helper sensors as start values.
+  #
+  - trigger:
+      - trigger: state
+        entity_id:
+        - sensor.rct_power_storage_battery_status
+        from: charging
+        to: discharging
+    sensor:
+      - unique_id: rct_power_storage_battery_used_energy_start
+        name: "RCT Power Storage Battery Used Energy Start"
+        state: '{{ states(''sensor.rct_power_storage_battery_used_energy'')|float()|multiply(0.001)|round(3) }}'
+        unit_of_measurement: "kWh"
+      - unique_id: rct_power_storage_battery_stored_energy_start
+        name: "RCT Power Storage Battery Stored Energy Start"
+        state: '{{ states(''sensor.rct_power_storage_battery_stored_energy'')|float()|multiply(0.001)|round(3) }}'
+        unit_of_measurement: "kWh"
+
+  #
+  # When the battery has reached 0% SOC in calibration process, the battery
+  # status changes form 'discharging' to 'normal'. That's the moment, to
+  # store used and stored energy sensors into helper sensors as end values.
+  #
+  - trigger:
+      - trigger: state
+        entity_id:
+        - sensor.rct_power_storage_battery_status
+        from: discharging
+        to: normal
+    sensor:
+      - unique_id: rct_power_storage_battery_used_energy_end
+        name: "RCT Power Storage Battery Used Energy End"
+        state: '{{ states(''sensor.rct_power_storage_battery_used_energy'')|float()|multiply(0.001)|round(3) }}'
+        unit_of_measurement: "kWh"
+      - unique_id: rct_power_storage_battery_stored_energy_end
+        name: "RCT Power Storage Battery Stored Energy End"
+        state: '{{ states(''sensor.rct_power_storage_battery_stored_energy'')|float()|multiply(0.001)|round(3) }}'
+        unit_of_measurement: "kWh"

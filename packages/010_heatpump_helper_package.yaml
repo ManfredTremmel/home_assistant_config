@@ -1,0 +1,131 @@
+# ###################### HA Heat Pump automation helpers #####################
+#
+# (C) 2025 Manfred Tremmel
+#
+# Some helper automations 
+#
+# Dependencies:
+#       "000_heatpump_mqtt_package.yaml"
+#       "000_energy_prognostic_helper_package.yaml"
+#       "RCT Power" extension from HACS
+#
+# Used entities:
+#       sensor.rct_power_storage_grid_power
+#       sensor.energy_production_today_remaining_total
+#       binary_sensor.heating_pump_heating_mode
+#       binary_sensor.heating_pump_party_mode
+#       select.mosquitto_mqtt_broker_betriebsart
+#       sensor.mosquitto_mqtt_broker_warmwassertemperatur_oben
+#       number.mosquitto_mqtt_broker_warmwassersolltemperatur_2
+#
+# Provided entities:
+#       none
+#
+automation heating_pump_helpers:
+
+  #
+  # When we push more then 4 kW into the grid for five minutes, forecast
+  # shows to produce more then 30 kWh, rest of the day and heating mode
+  # is active, then activate party mode.
+  #
+  - id: 'heating_pump_activate_partymode_with_solar_power'
+    alias: 'Wärmepumpe Partymodus aktivieren bei Stromüberschuss'
+    description: 'Wenn genügend Strom von der PV kommt und die Heizung aktiv ist, Partymodus (erhöhte Raumtemperatur) aktivieren'
+    triggers:
+      - trigger: numeric_state
+        entity_id:
+        - sensor.rct_power_storage_grid_power
+        below: -4000
+        for:
+          hours: 0
+          minutes: 5
+          seconds: 0
+    conditions:
+      - condition: numeric_state
+        entity_id: sensor.energy_production_today_remaining_total
+        above: 30
+      - condition: state
+        entity_id: binary_sensor.heating_pump_heating_mode
+        state: 'on'
+    actions:
+      - action: select.select_option
+        metadata: {}
+        data:
+          option: Heizen+WW+Party
+        target:
+          entity_id: select.mosquitto_mqtt_broker_betriebsart
+    mode: single
+
+  #
+  # When forecast for the rest of the day falls below 20 kWh and party mode
+  # is active, go back to normal heating mode.
+  #
+  - id: 'heating_pump_deactivate_partymode_without_solar_power'
+    alias: 'Wärmepumpe Partymodus deaktivieren bei Stromknappheit'
+    description: 'Den aktivierten Partymodus der Wärmepumpe deaktivieren, wenn am restlichen Tag weniger als 20 kWh Produktion erwartet werden'
+    triggers:
+      - trigger: numeric_state
+        entity_id:
+        - sensor.energy_production_today_remaining_total
+        below: 20
+    conditions:
+      - condition: state
+        entity_id: binary_sensor.heating_pump_party_mode
+        state: 'on'
+    actions:
+      - action: select.select_option
+        metadata: {}
+        data:
+          option: Heizen+WW
+        target:
+          entity_id: select.mosquitto_mqtt_broker_betriebsart
+    mode: single
+
+  #
+  # When one time hot water generation is active and target temperature is reached,
+  # turn it off.
+  #
+  - id: 'heating_pump_deactivate_hot_water'
+    alias: 'Einmal Warmwasseraufbereitung beenden, wenn Zieltemperatur erreicht'
+    description: 'Sobald die eingestellte Zieltemperatur erreicht wurde, Aufbereitung stoppen'
+    triggers:
+      - trigger: numeric_state
+        entity_id:
+        - sensor.mosquitto_mqtt_broker_warmwassertemperatur_oben
+        above: number.mosquitto_mqtt_broker_warmwassersolltemperatur_2
+    conditions:
+      - condition: state
+        entity_id: switch.mosquitto_mqtt_broker_einmal_ww_bereitung
+        state: 'on'
+    actions:
+      - action: switch.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: switch.mosquitto_mqtt_broker_einmal_ww_bereitung
+    mode: single
+
+  #
+  # At 1:30 PM turn on one time hot water generation, when temperature is below 45 ℃ and
+  # valve is in heating stage.
+  #
+  - id: 'heating_pump_activate_hot_water'
+    alias: 'Wärmepumpe einmal Warmwasseraufbereitung im Party Modus aktivieren'
+    description: 'Um 13:30 Uhr Warmwasseraufbereitung starten, wenn der Tank unter 45 Grad warm ist'
+    triggers:
+      - trigger: time
+        at: '13:30:00'
+    conditions:
+      - condition: numeric_state
+        entity_id: sensor.mosquitto_mqtt_broker_warmwassertemperatur_oben
+        below: 45
+      - condition: state
+        entity_id: binary_sensor.mosquitto_mqtt_broker_status_warmwasserventil
+        state: 'off'
+    actions:
+      - action: switch.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: switch.mosquitto_mqtt_broker_einmal_ww_bereitung
+    mode: single

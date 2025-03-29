@@ -1,0 +1,46 @@
+# ################## HA energy production forecast summarize #################
+#
+# (C) 2025 Manfred Tremmel
+#
+# Summarize forecast data, I have three different areas with different forecasts.
+#
+# Dependency: "Forecast.Solar" extension
+#
+# Used entities:
+#       sensor.energy_production_today_remaining
+#       sensor.energy_production_today_remaining_2
+#       sensor.energy_production_today_remaining_3
+#       sensor.energy_production_tomorrow
+#       sensor.energy_production_tomorrow_2
+#       sensor.energy_production_tomorrow_3
+#
+# Provided entities:
+#       sensor.energy_production_today_remaining_total
+#       sensor.energy_production_tomorrow_total
+#
+template:
+  - sensor:
+
+    #
+    # Sum of the energy_production_today_remaining values.
+    #
+    - unique_id: "energy_production_today_remaining_total"
+      name: "Energy Production Today Remaining Total"
+      icon: "mdi:calculator"
+      state_class: "measurement"
+      unit_of_measurement: "kWh"
+      state: >-
+          {{ ((states('sensor.energy_production_today_remaining')|float(0.0)) + (states('sensor.energy_production_today_remaining_2')|float(0.0)) + (states('sensor.energy_production_today_remaining_3')|float(0.0)))|round(1) }}
+      availability: "{{ has_value('sensor.energy_production_today_remaining') and has_value('sensor.energy_production_today_remaining_2') and has_value('sensor.energy_production_today_remaining_3') }}"
+
+    #
+    # Sum of the energy_production_tomorrow values.
+    #
+    - unique_id: "energy_production_tomorrow_total"
+      name: "Energy Production Tomorrow Total"
+      icon: "mdi:calculator"
+      state_class: "measurement"
+      unit_of_measurement: "kWh"
+      state: >-
+          {{ ((states('sensor.energy_production_tomorrow')|float(0.0)) + (states('sensor.energy_production_tomorrow_2')|float(0.0)) + (states('sensor.energy_production_tomorrow_3')|float(0.0)))|round(1) }}
+      availability: "{{ has_value('sensor.energy_production_tomorrow') and has_value('sensor.energy_production_tomorrow_2') and has_value('sensor.energy_production_tomorrow_3') }}"

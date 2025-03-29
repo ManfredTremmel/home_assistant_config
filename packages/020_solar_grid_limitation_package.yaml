@@ -1,0 +1,163 @@
+# ########################## HA gird power limitation ########################
+#
+# (C) 2025 Manfred Tremmel
+#
+# Limit the solar to grid power, but ensure local consumption is not affected.
+#
+# Dependency:
+#       "RCT Power" extension from HACS
+#       "SMA Devices Plus" extensions from HACS
+#       "010_solar_monitoring_package.yaml"
+#
+# Used entities:
+#       sensor.sunny_tripower_x_20_grid_power
+#       sensor.rct_power_storage_grid_power
+#       sensor.rct_power_storage_inverter_ac_power
+#       sensor.installed_pv_wr1
+#       sensor.installed_pv_wr2
+#       sensor.rct_power_storage_all_generators_power
+#       sensor.sunny_tripower_x_20_pv_power_a
+#       sensor.sunny_tripower_x_20_pv_power_b
+#       sensor.sunny_tripower_x_20_pv_power_c
+#       sensor.installed_pv_size
+#
+# Provided entities:
+#       sensor.power_consumption
+#       sensor.installed_pv_wr_sum
+#       sensor.solar_power_generators_sum
+#       sensor.solar_power_grid_limit_soft
+#       sensor.solar_power_grid_limit_soft_sma
+#
+template:
+  - sensor:
+
+    #
+    # Calculate the local power consumption.
+    #
+    - unique_id: "power_consumption"
+      name: "Power Consumption"
+      icon: "mdi:home-lightning-bolt"
+      state_class: "measurement"
+      unit_of_measurement: "kW"
+      state: >-
+          {{ ((states('sensor.sunny_tripower_x_20_grid_power')|float(0.0)) + (states('sensor.rct_power_storage_grid_power')|float(0.0)) + (states('sensor.rct_power_storage_inverter_ac_power')|float(0.0)))|multiply(0.001)|round(3) }}
+      availability: "{{ has_value('sensor.sunny_tripower_x_20_grid_power') and has_value('sensor.rct_power_storage_grid_power') and has_value('sensor.rct_power_storage_inverter_ac_power') }}"
+
+    #
+    # Summarize capacity of all inverters.
+    #
+    - unique_id: "installed_pv_wr_sum"
+      name: "Installed PV WR Sum"
+      icon: "mdi:solar-power"
+      state_class: "measurement"
+      unit_of_measurement: "kW"
+      state: >-
+          {{ ((states('sensor.installed_pv_wr1')|float(6.0)) + (states('sensor.installed_pv_wr2')|float(20.0)))|round(3) }}
+      availability: "{{ has_value('sensor.installed_pv_wr1') and has_value('sensor.installed_pv_wr2') }}"
+
+    #
+    # Summarize generator power of all strings.
+    #
+    - unique_id: "solar_power_generators_sum"
+      name: "Solar Power Generators Sum"
+      icon: "mdi:solar-power"
+      state_class: "measurement"
+      unit_of_measurement: "W"
+      state: >-
+          {{ ((states('sensor.rct_power_storage_all_generators_power')|float(0.0)) + (states('sensor.sunny_tripower_x_20_pv_power_a')|float(0.0)) + (states('sensor.sunny_tripower_x_20_pv_power_b')|float(0.0)) + (states('sensor.sunny_tripower_x_20_pv_power_c')|float(0.0)))|round(0) }}
+      availability: "{{ has_value('sensor.rct_power_storage_all_generators_power') and has_value('sensor.sunny_tripower_x_20_pv_power_a') and has_value('sensor.sunny_tripower_x_20_pv_power_b') and has_value('sensor.sunny_tripower_x_20_pv_power_c') }}"
+
+    #
+    # Calculate the allowed grid power.
+    #
+    - unique_id: "solar_power_grid_limit_soft"
+      name: "Solar Power Grid Limit Soft"
+      icon: "mdi:solar-power"
+      state_class: "measurement"
+      unit_of_measurement: "kW"
+      state: >-
+          {% set calc_limit = (((states('sensor.installed_pv_size')|float(29.645)) * (states('input_number.solar_grid_limit')|float(100.0)) / 100) + (((states('sensor.power_consumption')|float(0.0)) -0.05)|round(1))) %}
+          {% set wr_limit = states('sensor.installed_pv_wr_sum')|float(26.0) %}
+          {{ max(0, min(wr_limit, calc_limit)) | round(3) }}
+      availability: "{{ has_value('sensor.installed_pv_size') and has_value('sensor.power_consumption') and has_value('sensor.installed_pv_wr_sum') }}"
+
+    #
+    # Calculate the allowed grid power for sma inverter.
+    #
+    - unique_id: "solar_power_grid_limit_soft_sma"
+      name: "Solar Power Grid Limit Soft SMA"
+      icon: "mdi:solar-power"
+      state_class: "measurement"
+      unit_of_measurement: "kW"
+      state: >-
+          {{ max(0, min((states('sensor.solar_power_grid_limit_soft')|float(20.0)), (states('sensor.installed_pv_wr2')|float(20.0)))) | round(3) }}
+      availability: "{{ has_value('sensor.solar_power_grid_limit_soft') and has_value('sensor.installed_pv_wr2') }}"
+
+input_number:
+  #
+  # input number with percentage power limitation.
+  #
+  solar_grid_limit:
+    name: "Einspeisebegrenzung"
+    icon: "mdi:transmission-tower-import"
+    unit_of_measurement: "%"
+    mode: slider
+    initial: 100
+    min: 0
+    max: 100
+    step: 1
+
+automation grid_power_limitation:
+  #
+  # send percentage power limitation to rct inverter.
+  #
+  - id: "rct_converter_set_grid_power_limit"
+    alias: "RCT Wechselrichter Limit setzen"
+    description: "Setze das prozentuale Einspeiselimit des RCT Wechselrichters"
+    triggers:
+    - trigger: state
+      entity_id:
+      - input_number.solar_grid_limit
+      not_from:
+      - unknown
+      - unavailable
+      not_to:
+      - unknown
+      - unavailable
+      for:
+        hours: 0
+        minutes: 0
+        seconds: 3
+    conditions: []
+    actions:
+      - action: pyscript.rct_ha_call
+        data:
+          action: set
+          parameter: buf_v_control.power_reduction
+          value: '{{ states(''input_number.solar_grid_limit'')|float(100.0)|multiply(0.01)|round(2) }}'
+    mode: single
+
+  #
+  # send watt power limitation to sma inverter.
+  #
+  - id: "sma_converter_set_grid_power_limit"
+    alias: "SMA Wechselrichter Limit setzen"
+    description: "Setze das absoluten Einspeiselimits des SMA Wechselrichters in Watt"
+    triggers:
+    - trigger: state
+      entity_id:
+      - sensor.solar_power_grid_limit_soft_sma
+      not_from:
+      - unknown
+      - unavailable
+      not_to:
+      - unknown
+      - unavailable
+    conditions: []
+    actions:
+      - action: pysmaplus.set_value
+        metadata: {}
+        data:
+          entity_id: sensor.sunny_tripower_x_20_inverter_power_limit
+          value: '{{ states(''sensor.solar_power_grid_limit_soft_sma'')|float(20.0)|multiply(1000)|round(0) }}'
+    mode: single

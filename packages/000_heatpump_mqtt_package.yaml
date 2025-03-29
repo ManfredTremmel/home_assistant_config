@@ -1,0 +1,868 @@
+# ############ HA Heat Pump integration based on vcontrol and mqtt ###########
+#
+# (C) 2025 Manfred Tremmel
+#
+# Definitions of all the sensors and input fields provided by vcontrold and
+# mqtt for the use in home assistant.
+#
+# Dependencies:
+#       "vcontrol" extension from HACS
+#       "Mosquitto Mqtt Broker" extension
+#       "vcontrold/vcontrold.xml" vcontrold field type definitions
+#       "vcontrold/vito.xml" vcontrold field definitions
+#
+# Used entities: none
+#
+# Provided entities:
+#       to much to list here, see below
+#
+mqtt:
+  binary_sensor:
+    - unique_id: "vcontroldgetStatusPumpe2"
+      name: "Heizkreispumpe"
+      state_topic: "openv/getStatusPumpe2"
+      device_class: running
+      value_template: "{% if(float(value) | round(0) == 0) %}OFF{% else %}ON{% endif %}"
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetStatusPumpeZirk"
+      name: "Warmwasser Zirkulationspumpe"
+      state_topic: "openv/getStatusPumpeZirk"
+      device_class: running
+      value_template: "{% if(float(value) | round(0) == 0) %}OFF{% else %}ON{% endif %}"
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetStatusVerdichter"
+      name: "Status Verdichter"
+      state_topic: "openv/getStatusVerdichter"
+      device_class: running
+      value_template: "{% if(float(value) | round(0) == 0) %}OFF{% else %}ON{% endif %}"
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetStatusQuellePrim"
+      name: "Status Primaerquelle"
+      state_topic: "openv/getStatusQuellePrim"
+      device_class: connectivity
+      value_template: "{% if(float(value) | round(0) == 0) %}OFF{% else %}ON{% endif %}"
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetStatusQuelleSek"
+      name: "Status Sekundaerquelle"
+      state_topic: "openv/getStatusQuelleSek"
+      device_class: connectivity
+      value_template: "{% if(float(value) | round(0) == 0) %}OFF{% else %}ON{% endif %}"
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetStatusHeizstabSt1"
+      name: "Status Heizstab Stufe 1"
+      state_topic: "openv/getStatusHeizstabSt1"
+      device_class: running
+      value_template: "{% if(float(value) | round(0) == 0) %}OFF{% else %}ON{% endif %}"
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetStatusHeizstabSt2"
+      name: "Status Heizstab Stufe 2"
+      state_topic: "openv/getStatusHeizstabSt2"
+      device_class: running
+      value_template: "{% if(float(value) | round(0) == 0) %}OFF{% else %}ON{% endif %}"
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetStatusUPump"
+      name: "Status Umwaelzpumpe"
+      state_topic: "openv/getStatusUPump"
+      device_class: running
+      value_template: "{% if(float(value) | round(0) == 0) %}OFF{% else %}ON{% endif %}"
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetStatusSammel"
+      name: "Status Sammelmeldung"
+      state_topic: "openv/getStatusSammel"
+      value_template: "{% if(float(value) | round(0) == 0) %}OFF{% else %}ON{% endif %}"
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetStatusVentilWW"
+      name: "Status Warmwasserventil"
+      state_topic: "openv/getStatusVentilWW"
+      value_template: "{% if(float(value) | round(0) == 0) %}OFF{% else %}ON{% endif %}"
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetStatusSpeicherladePumpe"
+      name: "Status Speicherladepumpe"
+      state_topic: "openv/getStatusSpeicherladePumpe"
+      device_class: running
+      value_template: "{% if(float(value) | round(0) == 0) %}OFF{% else %}ON{% endif %}"
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+  sensor:
+    - unique_id: "vcontroldgetDevType"
+      name: "Anlagentyp"
+      state_topic: "openv/getDevType"
+      value_template: |-
+        {{ value }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetTempA"
+      name: "Aussentemperatur"
+      state_topic: "openv/getTempA"
+      state_class: "measurement"
+      device_class: temperature
+      unit_of_measurement: "°C"
+      suggested_display_precision: 1
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetTempAnlVL"
+      name: "Anlagenvorlauftemperatur"
+      state_topic: "openv/getTempAnlVL"
+      state_class: "measurement"
+      device_class: temperature
+      unit_of_measurement: "°C"
+      suggested_display_precision: 1
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetTempPufferIst"
+      name: "Pufferspeichertemperatur"
+      state_topic: "openv/getTempPufferIst"
+      state_class: "measurement"
+      device_class: temperature
+      unit_of_measurement: "°C"
+      suggested_display_precision: 1
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetTempSek2VL"
+      name: "Vorlauftemperatur Heizkreis"
+      state_topic: "openv/getTempSek2VL"
+      state_class: "measurement"
+      device_class: temperature
+      unit_of_measurement: "°C"
+      suggested_display_precision: 1
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetTempRaumIst2"
+      name: "Raumtemperatur ist Heizkreis"
+      state_topic: "openv/getTempRaumIst2"
+      state_class: "measurement"
+      device_class: temperature
+      unit_of_measurement: "°C"
+      suggested_display_precision: 1
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetTempRaumSoll2"
+      name: "Raumtemperatur soll Heizkreis"
+      state_topic: "openv/getTempRaumSoll2"
+      state_class: "measurement"
+      device_class: temperature
+      unit_of_measurement: "°C"
+      suggested_display_precision: 1
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetTempWWIstOben"
+      name: "Warmwassertemperatur oben"
+      state_topic: "openv/getTempWWIstOben"
+      state_class: "measurement"
+      device_class: temperature
+      unit_of_measurement: "°C"
+      suggested_display_precision: 1
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetTempWWIstUnten"
+      name: "Warmwassertemperatur unten"
+      state_topic: "openv/getTempWWIstUnten"
+      state_class: "measurement"
+      device_class: temperature
+      unit_of_measurement: "°C"
+      suggested_display_precision: 1
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetTempPriVL"
+      name: "Vorlauftemperatur Primaerquelle"
+      state_topic: "openv/getTempPriVL"
+      state_class: "measurement"
+      device_class: temperature
+      unit_of_measurement: "°C"
+      suggested_display_precision: 1
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetTempPriRL"
+      name: "Ruecklauftemperatur Primaerquelle"
+      state_topic: "openv/getTempPriRL"
+      state_class: "measurement"
+      device_class: temperature
+      unit_of_measurement: "°C"
+      suggested_display_precision: 1
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetTempVerdampf"
+      name: "Temperatur Verdampfer"
+      state_topic: "openv/getTempVerdampf"
+      state_class: "measurement"
+      device_class: temperature
+      unit_of_measurement: "°C"
+      suggested_display_precision: 1
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetDruckImVerdampf"
+      name: "Druck im Verdampfer"
+      state_topic: "openv/getDruckImVerdampf"
+      state_class: "measurement"
+      device_class: pressure
+      unit_of_measurement: "bar"
+      suggested_display_precision: 1
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetDruckImKondensator"
+      name: "Druck im Kondensator"
+      state_topic: "openv/getDruckImKondensator"
+      state_class: "measurement"
+      device_class: pressure
+      unit_of_measurement: "bar"
+      suggested_display_precision: 1
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetTempVLSoll2"
+      name: "Vorlaufsolltemperatur Heizkreis"
+      state_topic: "openv/getTempVLSoll2"
+      state_class: "measurement"
+      device_class: temperature
+      unit_of_measurement: "°C"
+      suggested_display_precision: 1
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetAnzVerdichter"
+      name: "Einschaltungen Verdichter"
+      state_topic: "openv/getAnzVerdichter"
+      state_class: "total_increasing"
+      value_template: |-
+        {{ value | round(0) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetAnzQuellePrim"
+      name: "Einschaltungen Primaerquelle"
+      state_topic: "openv/getAnzQuellePrim"
+      state_class: "total_increasing"
+      value_template: |-
+        {{ value | round(0) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetAnzQuelleSek"
+      name: "Einschaltungen Sekundaerquelle"
+      state_topic: "openv/getAnzQuelleSek"
+      state_class: "total_increasing"
+      value_template: |-
+        {{ value | round(0) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetAnzHeizstabSt1"
+      name: "Einschaltungen Heizstab Stufe 1"
+      state_topic: "openv/getAnzHeizstabSt1"
+      state_class: "total_increasing"
+      value_template: |-
+        {{ value | round(0) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetAnzHeizstabSt2"
+      name: "Einschaltungen Heizstab Stufe 2"
+      state_topic: "openv/getAnzHeizstabSt2"
+      state_class: "total_increasing"
+      value_template: |-
+        {{ value | round(0) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetAnzHK2"
+      name: "Einschaltungen Heizkreis"
+      state_topic: "openv/getAnzHK2"
+      state_class: "total_increasing"
+      value_template: |-
+        {{ value | round(0) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetAnzUPump"
+      name: "Einschaltungen Umwaelzpumpe"
+      state_topic: "openv/getAnzUPump"
+      state_class: "total_increasing"
+      value_template: |-
+        {{ value | round(0) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetAnzSammel"
+      name: "Einschaltungen Sammelmeldung"
+      state_topic: "openv/getAnzSammel"
+      state_class: "total_increasing"
+      value_template: |-
+        {{ value | round(0) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetAnzVentilWW"
+      name: "Einschaltungen Warmwasserventil"
+      state_topic: "openv/getAnzVentilWW"
+      state_class: "total_increasing"
+      value_template: |-
+        {{ value | round(0) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetAnzSpeicherPumpe"
+      name: "Einschaltungen Speicherladepumpe"
+      state_topic: "openv/getAnzSpeicherPumpe"
+      state_class: "total_increasing"
+      value_template: |-
+        {{ value | round(0) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetLZVerdichter"
+      name: "Betriebsstunden Verdichter"
+      state_topic: "openv/getLZVerdichter"
+      state_class: "total_increasing"
+      device_class: duration
+      unit_of_measurement: "h"
+      value_template: |-
+        {{ value | round(0) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetLZQuellePrim"
+      name: "Betriebsstunden Primaerquelle"
+      state_topic: "openv/getLZQuellePrim"
+      state_class: "total_increasing"
+      device_class: duration
+      unit_of_measurement: "h"
+      value_template: |-
+        {{ value | round(0) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetLZQuelleSek"
+      name: "Betriebsstunden Sekundaerquelle"
+      state_topic: "openv/getLZQuelleSek"
+      state_class: "total_increasing"
+      device_class: duration
+      unit_of_measurement: "h"
+      value_template: |-
+        {{ value | round(0) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetLZHeizstabSt1"
+      name: "Betriebsstunden Heizstab Stufe 1"
+      state_topic: "openv/getLZHeizstabSt1"
+      state_class: "total_increasing"
+      device_class: duration
+      unit_of_measurement: "h"
+      value_template: |-
+        {{ value | round(0) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetLZHeizstabSt2"
+      name: "Betriebsstunden Heizstab Stufe 2"
+      state_topic: "openv/getLZHeizstabSt2"
+      state_class: "total_increasing"
+      device_class: duration
+      unit_of_measurement: "h"
+      value_template: |-
+        {{ value | round(0) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetLZSNH"
+      name: "Betriebsstunden Speichernachheizung"
+      state_topic: "openv/getLZSNH"
+      state_class: "total_increasing"
+      device_class: duration
+      unit_of_measurement: "h"
+      value_template: |-
+        {{ value | round(0) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetLZHK2"
+      name: "Betriebsstunden Pumpe Heizkreis"
+      state_topic: "openv/getLZHK2"
+      state_class: "total_increasing"
+      device_class: duration
+      unit_of_measurement: "h"
+      value_template: |-
+        {{ value | round(0) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetLZUPumpe"
+      name: "Betriebsstunden Umwaelzpumpe"
+      state_topic: "openv/getLZUPumpe"
+      state_class: "total_increasing"
+      device_class: duration
+      unit_of_measurement: "h"
+      value_template: |-
+        {{ value | round(0) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetLZSammel"
+      name: "Betriebsstunden Sammelmeldung"
+      state_topic: "openv/getLZSammel"
+      state_class: "total_increasing"
+      device_class: duration
+      unit_of_measurement: "h"
+      value_template: |-
+        {{ value | round(0) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetLZVentilWW"
+      name: "Betriebsstunden Warmwasserventil"
+      state_topic: "openv/getLZVentilWW"
+      state_class: "total_increasing"
+      device_class: duration
+      unit_of_measurement: "h"
+      value_template: |-
+        {{ value | round(0) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetLZSpeicherPumpe"
+      name: "Betriebsstunden Speicherladepumpe"
+      state_topic: "openv/getLZSpeicherPumpe"
+      state_class: "total_increasing"
+      device_class: duration
+      unit_of_measurement: "h"
+      value_template: |-
+        {{ value | round(0) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetLZWP"
+      name: "Betriebsstunden Waermepumpe"
+      state_topic: "openv/getLZWP"
+      state_class: "total_increasing"
+      device_class: duration
+      unit_of_measurement: "h"
+      value_template: |-
+        {{ value | round(0) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetWaermeHeiz12M"
+      name: "Waermeenergie Heizen Jahr"
+      state_topic: "openv/getWaermeHeiz12M"
+      state_class: "total_increasing"
+      device_class: energy
+      unit_of_measurement: "kWh"
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetWaermeWW12M"
+      name: "Waermeenergie Warmwasser Jahr"
+      state_topic: "openv/getWaermeWW12M"
+      state_class: "total_increasing"
+      device_class: energy
+      unit_of_measurement: "kWh"
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetElektroHeiz12M"
+      name: "Elektroenergie Heizen Jahr"
+      state_topic: "openv/getElektroHeiz12M"
+      state_class: "total_increasing"
+      device_class: energy
+      unit_of_measurement: "kWh"
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetElektroWW12M"
+      name: "Elektroenergie Warmwasser Jahr"
+      state_topic: "openv/getElektroWW12M"
+      state_class: "total_increasing"
+      device_class: energy
+      unit_of_measurement: "kWh"
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetWaermeHeiz1W"
+      name: "Waermeenergie Heizen Woche"
+      state_topic: "openv/getWaermeHeiz1W"
+      state_class: "total_increasing"
+      device_class: energy
+      unit_of_measurement: "kWh"
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetWaermeWW1W"
+      name: "Waermeenergie Warmwasser Woche"
+      state_topic: "openv/getWaermeWW1W"
+      state_class: "total_increasing"
+      device_class: energy
+      unit_of_measurement: "kWh"
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetElektroHeiz1W"
+      name: "Elektroenergie Heizen Woche"
+      state_topic: "openv/getElektroHeiz1W"
+      state_class: "total_increasing"
+      device_class: energy
+      unit_of_measurement: "kWh"
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetElektroWW1W"
+      name: "Elektroenergie Warmwasser Woche"
+      state_topic: "openv/getElektroWW1W"
+      state_class: "total_increasing"
+      device_class: energy
+      unit_of_measurement: "kWh"
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetJAZ"
+      name: "Jahresarbeitszahl"
+      state_topic: "openv/getJAZ"
+      state_class: "measurement"
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetJAZHeiz"
+      name: "Jahresarbeitszahl Heizen"
+      state_topic: "openv/getJAZHeiz"
+      state_class: "measurement"
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldgetJAZWW"
+      name: "Jahresarbeitszahl WW"
+      state_topic: "openv/getJAZWW"
+      state_class: "measurement"
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+  select:
+    - unique_id: "vcontroldSelectBetriebsart2"
+      name: "Betriebsart"
+      state_topic: "openv/getBetriebsart2"
+      command_topic: "openv/setBetriebsart2"
+      value_template: |-
+        {{ value }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+      options:
+        - "Abschaltbetrieb"
+        - "Warmwasser"
+        - "Heizen+WW"
+        - "Heizen+WW+Party"
+        - "Heizen+WW+Sparbetrieb"
+  number:
+    - unique_id: "vcontroldNumberTempRaumSollNormal2"
+      name: "Raumsolltemperatur normal"
+      state_topic: "openv/getTempRaumSollNormal2"
+      command_topic: "openv/setTempRaumSollNormal2"
+      min: 10
+      max: 30
+      unit_of_measurement: "°C"
+      value_template: |-
+        {{ value | round(0) }}
+      device_class: temperature
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldNumberTempRaumSollRed2"
+      name: "Raumsolltemperatur reduziert"
+      state_topic: "openv/getTempRaumSollRed2"
+      command_topic: "openv/setTempRaumSollRed2"
+      min: 10
+      max: 30
+      unit_of_measurement: "°C"
+      value_template: |-
+        {{ value | round(0) }}
+      device_class: temperature
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldNumberTempRaumSollParty2"
+      name: "Raumsolltemperatur Party"
+      state_topic: "openv/getTempRaumSollParty2"
+      command_topic: "openv/setTempRaumSollParty2"
+      min: 10
+      max: 30
+      unit_of_measurement: "°C"
+      value_template: |-
+        {{ value | round(0) }}
+      device_class: temperature
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldNumberHKLNiveau2"
+      name: "Niveau der Heizkennlinie"
+      state_topic: "openv/getHKLNiveau2"
+      command_topic: "openv/setHKLNiveau2"
+      min: -15
+      max: 40
+      value_template: |-
+        {{ value | round(0) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldNumberHKLNeigung2"
+      name: "Neigung der Heizkennlinie"
+      state_topic: "openv/getHKLNeigung2"
+      command_topic: "openv/setHKLNeigung2"
+      min: 0.0
+      max: 3.5
+      step: 0.1
+      value_template: |-
+        {{ value | round(1) }}
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldNumberTempWWSoll"
+      name: "Warmwassersolltemperatur"
+      state_topic: "openv/getTempWWSoll"
+      command_topic: "openv/setTempWWSoll"
+      min: 10
+      max: 60
+      unit_of_measurement: "°C"
+      value_template: |-
+        {{ value | round(0) }}
+      device_class: temperature
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldNumberTempWWSoll2"
+      name: "Warmwassersolltemperatur 2"
+      state_topic: "openv/getTempWWSoll2"
+      command_topic: "openv/setTempWWSoll2"
+      min: 10
+      max: 60
+      unit_of_measurement: "°C"
+      value_template: |-
+        {{ value | round(0) }}
+      device_class: temperature
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+  switch:
+    - unique_id: "vcontroldSwitchHeizwasserDurchlauferhitzer"
+      name: "Freigabe Heizwasser-Durchlauferhitzer"
+      state_topic: "openv/getHeizwasserDurchlauferhitzer"
+      command_topic: "openv/setHeizwasserDurchlauferhitzer"
+      value_template: | 
+        {{ value }}
+      payload_on: "1"
+      payload_off: "0"
+      state_on: "1"
+      state_off: "0"
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldSwitchHeizenMitElektro"
+      name: "Freigabe Heizen mit Elektro"
+      state_topic: "openv/getHeizenMitElektro"
+      command_topic: "openv/setHeizenMitElektro"
+      value_template: | 
+        {{ value }}
+      payload_on: "1"
+      payload_off: "0"
+      state_on: "1"
+      state_off: "0"
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldSwitchEinschaltoptimierungWW"
+      name: "Einschaltoptimierung fuer Warmwasser"
+      state_topic: "openv/getEinschaltoptimierungWW"
+      command_topic: "openv/setEinschaltoptimierungWW"
+      value_template: | 
+        {{ value }}
+      payload_on: "1"
+      payload_off: "0"
+      state_on: "1"
+      state_off: "0"
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldSwitchAusschaltoptimierungWW"
+      name: "Ausschaltoptimierung fuer Warmwasser"
+      state_topic: "openv/getAusschaltoptimierungWW"
+      command_topic: "openv/setAusschaltoptimierungWW"
+      value_template: | 
+        {{ value }}
+      payload_on: "1"
+      payload_off: "0"
+      state_on: "1"
+      state_off: "0"
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldSwitchZweiterSensorWW"
+      name: "Temperatursensor unten im Speicher"
+      state_topic: "openv/getZweiterSensorWW"
+      command_topic: "openv/setZweiterSensorWW"
+      value_template: | 
+        {{ value }}
+      payload_on: "1"
+      payload_off: "0"
+      state_on: "1"
+      state_off: "0"
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldSwitchFreigabeZusatzheizungWW"
+      name: "Freigabe Zusatzheizung fuer WW-Bereitung"
+      state_topic: "openv/getFreigabeZusatzheizungWW"
+      command_topic: "openv/setFreigabeZusatzheizungWW"
+      value_template: | 
+        {{ value }}
+      payload_on: "1"
+      payload_off: "0"
+      state_on: "1"
+      state_off: "0"
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldSwitchFreigabeElektroheizungWW"
+      name: "Freigabe Elektroheizung fuer WW-Bereitung"
+      state_topic: "openv/getFreigabeElektroheizungWW"
+      command_topic: "openv/setFreigabeElektroheizungWW"
+      value_template: | 
+        {{ value }}
+      payload_on: "1"
+      payload_off: "0"
+      state_on: "1"
+      state_off: "0"
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+    - unique_id: "vcontroldSwitchWWEinmal"
+      name: "Einmal WW-Bereitung"
+      state_topic: "openv/getWWEinmal"
+      command_topic: "openv/setWWEinmal"
+      value_template: | 
+        {{ value }}
+      payload_on: "1"
+      payload_off: "0"
+      state_on: "1"
+      state_off: "0"
+      device:
+        identifiers: vcontrold
+        manufacturer: Viessmann
+
+template:
+  - binary_sensor:
+    - unique_id: "heating_pump_status_on_off"
+      name: Heating Pump Status On Off
+      state: >-
+          {{ (not is_state("select.mosquitto_mqtt_broker_betriebsart", "Abschaltbetrieb")) | bool }}
+      availability: "{{ has_value('select.mosquitto_mqtt_broker_betriebsart') }}"
+    - unique_id: "heating_pump_hot_water_mode"
+      name: Heating Pump Hot Water Mode
+      state: >-
+          {{ (is_state("select.mosquitto_mqtt_broker_betriebsart", "Warmwasser") | bool) or (is_state("select.mosquitto_mqtt_broker_betriebsart", "Heizen+WW") | bool) or (is_state("select.mosquitto_mqtt_broker_betriebsart", "Heizen+WW+Party") | bool) or (is_state("select.mosquitto_mqtt_broker_betriebsart", "Heizen+WW+Sparbetrieb") | bool) }}
+      availability: "{{ has_value('select.mosquitto_mqtt_broker_betriebsart') }}"
+    - unique_id: "heating_pump_heating_mode"
+      name: Heating Pump Heating Mode
+      state: >-
+          {{ (is_state("select.mosquitto_mqtt_broker_betriebsart", "Heizen+WW") | bool) or (is_state("select.mosquitto_mqtt_broker_betriebsart", "Heizen+WW+Party") | bool) or (is_state("select.mosquitto_mqtt_broker_betriebsart", "Heizen+WW+Sparbetrieb") | bool) }}
+      availability: "{{ has_value('select.mosquitto_mqtt_broker_betriebsart') }}"
+    - unique_id: "heating_pump_party_mode"
+      name: Heating Pump Party Mode
+      state: >-
+          {{ is_state("select.mosquitto_mqtt_broker_betriebsart", "Heizen+WW+Party") | bool }}
+      availability: "{{ has_value('select.mosquitto_mqtt_broker_betriebsart') }}"
+    - unique_id: "heating_pump_energy_save_mode"
+      name: Heating Pump Energy Save Mode
+      state: >-
+          {{ is_state("select.mosquitto_mqtt_broker_betriebsart", "Heizen+WW+Sparbetrieb") | bool }}
+      availability: "{{ has_value('select.mosquitto_mqtt_broker_betriebsart') }}"
+    - unique_id: "heating_pump_cooling_mode"
+      name: Heating Pump Cooling Mode
+      state: >-
+          {{ false }}
+      availability: "{{ has_value('select.mosquitto_mqtt_broker_betriebsart') }}"
+    - unique_id: "heating_pump_night_mode"
+      name: Heating Pump Night Mode
+      state: >-
+          {{ false }}
+      availability: "{{ has_value('select.mosquitto_mqtt_broker_betriebsart') }}"

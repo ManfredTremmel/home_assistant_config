@@ -1,0 +1,52 @@
+{
+    "forecast": [
+        {
+            "value": null
+        },
+        {
+            "value": 906.79
+        },
+        {
+            "value": 1162.79
+        },
+        {
+            "value": 2110.87
+        },
+        {
+            "value": 3505.27
+        },
+        {
+            "value": 3954.3
+        },
+        {
+            "value": 4374.35
+        },
+        {
+            "value": 4438.81
+        },
+        {
+            "value": 4025.56
+        },
+        {
+            "value": 2488.3
+        },
+        {
+            "value": 1813.55
+        },
+        {
+            "value": 769.53
+        },
+        {
+            "value": 504.22
+        }
+    ],
+    "InstalledSize": 29.645,
+    "Installed_WR1": 6,
+    "Installed_WR2": 20,
+    "Colors":
+        {
+            "Red": 80,
+            "Orange": 95,
+            "Green": 110 
+        }
+}

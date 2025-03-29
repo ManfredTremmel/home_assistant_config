@@ -1,0 +1,85 @@
+# ########## HA Local RCT+SMA helpers to provide total yield values ##########
+#
+# (C) 2025 Manfred Tremmel
+#
+# Summarize yield values from both inverters, I've installed.
+# The solar total result is the generator DC energy from the panels,
+# the inverter total is AC energy produced converted from panels or battery.
+# Both values are provided as total, yearly, monthly and daily results.
+#
+# Dependency: "RCT Power" and "SMA Devices Plus" extensions from HACS
+#
+# Used entities:
+#       sensor.rct_power_storage_all_generators_energy_production_total
+#       sensor.sunny_tripower_x_20_pv_total_power_a
+#       sensor.sunny_tripower_x_20_pv_total_power_b
+#       sensor.sunny_tripower_x_20_pv_total_power_c
+#       sensor.rct_power_storage_inverter_energy_production_total
+#       sensor.sunny_tripower_x_20_total_yield
+#
+# Provided entities:
+#       sensor.solar_total_yield
+#       sensor.solar_yield_daily
+#       sensor.solar_yield_monthly
+#       sensor.solar_yield_yearly
+#       sensor.inverter_total_yield
+#       sensor.inverter_yield_daily
+#       sensor.inverter_yield_monthly
+#       sensor.inverter_yield_yearly
+#
+template:
+  - sensor:
+    - unique_id: "solar_total_yield"
+      name: "Solar Power Generators Total Yield"
+      device_class: "energy"
+      unit_of_measurement: "kWh"
+      state_class: "total_increasing"
+      state: "{{ (((states('sensor.rct_power_storage_all_generators_energy_production_total')|float(0.0)) / 1000) + (states('sensor.sunny_tripower_x_20_pv_total_power_a')|float(0.0)) + (states('sensor.sunny_tripower_x_20_pv_total_power_b')|float(0.0)) + (states('sensor.sunny_tripower_x_20_pv_total_power_c')|float(0.0)))|round(3) }}"
+      availability: "{{ has_value('sensor.rct_power_storage_all_generators_energy_production_total') and has_value('sensor.sunny_tripower_x_20_pv_total_power_a') and has_value('sensor.sunny_tripower_x_20_pv_total_power_b') and has_value('sensor.sunny_tripower_x_20_pv_total_power_c') }}"
+  - sensor:
+    - unique_id: "inverter_total_yield"
+      name: "Inverter Power Total Yield"
+      device_class: "energy"
+      unit_of_measurement: "kWh"
+      state_class: "total_increasing"
+      state: "{{ (((states('sensor.rct_power_storage_inverter_energy_production_total')|float(0.0)) / 1000) + (states('sensor.sunny_tripower_x_20_total_yield')|float(0.0)))|round(3) }}"
+      availability: "{{ has_value('sensor.rct_power_storage_inverter_energy_production_total') and has_value('sensor.sunny_tripower_x_20_total_yield') }}"
+
+
+utility_meter:
+  #
+  # For Inverter Yield
+  #
+  inverter_yield_daily:
+    unique_id: inverter_yield_daily
+    name: "inverter_yield_daily"
+    source: sensor.inverter_total_yield
+    cycle: daily
+  inverter_yield_monthly:
+    unique_id: inverter_yield_monthly
+    name: "inverter_yield_monthly"
+    source: sensor.inverter_total_yield
+    cycle: monthly
+  inverter_yield_yearly:
+    unique_id: inverter_yield_yearly
+    name: "inverter_yield_yearly"
+    source: sensor.inverter_total_yield
+    cycle: yearly
+  #
+  # For Solar Yield
+  #
+  solar_yield_daily:
+    unique_id: solar_yield_daily
+    name: "solar_yield_daily"
+    source: sensor.solar_total_yield
+    cycle: daily
+  solar_yield_monthly:
+    unique_id: solar_yield_monthly
+    name: "solar_yield_monthly"
+    source: sensor.solar_total_yield
+    cycle: monthly
+  solar_yield_yearly:
+    unique_id: solar_yield_yearly
+    name: "solar_yield_yearly"
+    source: sensor.solar_total_yield
+    cycle: yearly
