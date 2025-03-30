@@ -76,9 +76,14 @@ template:
       state_class: "measurement"
       unit_of_measurement: "kW"
       state: >-
-          {% set calc_limit = (((states('sensor.installed_pv_size')|float(29.645)) * (states('input_number.solar_grid_limit')|float(100.0)) / 100) + (((states('sensor.power_consumption')|float(0.0)) -0.05)|round(1))) %}
+          {% set solar_grid_limit = states('input_number.solar_grid_limit')|float(100.0) %}
+          {% set calc_limit = (((states('sensor.installed_pv_size')|float(29.645)) * solar_grid_limit / 100) + (((states('sensor.power_consumption')|float(0.0)) -0.05)|round(1))) %}
           {% set wr_limit = states('sensor.installed_pv_wr_sum')|float(26.0) %}
-          {{ max(0, min(wr_limit, calc_limit)) | round(3) }}
+          {% if solar_grid_limit == 100 -%}
+            {{ wr_limit | round(3) }}
+          {%- else -%}
+            {{ max(0, min(wr_limit, calc_limit)) | round(3) }}
+          {%- endif %}
       availability: "{{ has_value('sensor.installed_pv_size') and has_value('sensor.power_consumption') and has_value('sensor.installed_pv_wr_sum') }}"
 
     #
@@ -90,7 +95,7 @@ template:
       state_class: "measurement"
       unit_of_measurement: "kW"
       state: >-
-          {{ max(0, min((states('sensor.solar_power_grid_limit_soft')|float(20.0)), (states('sensor.installed_pv_wr2')|float(20.0)))) | round(3) }}
+          {{ max(0, min((states('sensor.solar_power_grid_limit_soft')|float(26.0)), (states('sensor.installed_pv_wr2')|float(20.0)))) | round(3) }}
       availability: "{{ has_value('sensor.solar_power_grid_limit_soft') and has_value('sensor.installed_pv_wr2') }}"
 
 input_number:
