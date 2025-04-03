@@ -569,10 +569,14 @@ views:
                   icon: mdi:chart-bar
                   secondary_info: '[kWh/kWp]'
                   entities:
-                    - entity: sensor.forecasted_pv_production_daily_per_kwp
+                    - type: attribute
+                      entity: sensor.forecasted_pv_production_daily
+                      attribute: per_kwp
                       name: 'Tgl:'
                       unit: false
-                    - entity: sensor.forecasted_pv_production_mtd_per_kwp
+                    - type: attribute
+                      entity: sensor.forecasted_pv_production_mtd_neu
+                      attribute: per_kwp
                       name: 'MTD:'
                       unit: false
                     - entity: sensor.forecasted_pv_production_monthly_per_kwp
