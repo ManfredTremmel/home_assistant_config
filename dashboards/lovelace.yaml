@@ -693,9 +693,13 @@ views:
                   name: Ausblick
                   icon: m3o:chart-data
                   entities:
-                    - entity: sensor.pv_notwendige_erzeugung_pro_tag_per_kwp
+                    - type: attribute
+                      entity: sensor.pv_notwendige_erzeugung_pro_tag
+                      attribute: per_kwp
                       name: Notwendig pro Tag
-                    - entity: sensor.pv_extrapolierter_ertrag_per_kwp
+                    - type: attribute
+                      entity: sensor.pv_extrapolierter_ertrag
+                      attribute: per_kwp
                       name: Hochrechnung
                     - entity: sensor.pv_extrapolierte_zielerreichung
                       name: Zielerreichung
