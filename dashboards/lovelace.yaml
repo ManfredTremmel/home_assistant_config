@@ -454,7 +454,7 @@ views:
                     - entity: sensor.forecasted_pv_production_daily
                       name: 'Tgl:'
                       unit: false
-                    - entity: sensor.forecasted_pv_production_mtd_neu
+                    - entity: sensor.forecasted_pv_production_mtd
                       name: 'MTD:'
                       unit: false
                     - entity: sensor.forecasted_pv_production_pvsol
@@ -575,7 +575,7 @@ views:
                       name: 'Tgl:'
                       unit: false
                     - type: attribute
-                      entity: sensor.forecasted_pv_production_mtd_neu
+                      entity: sensor.forecasted_pv_production_mtd
                       attribute: per_kwp
                       name: 'MTD:'
                       unit: false
