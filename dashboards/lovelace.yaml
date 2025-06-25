@@ -206,74 +206,116 @@ views:
             vertical: false
             name: Netzwerkverbindung (eth3)
             hide_state: false
-          - type: custom:bar-card
-            positions:
-              icon: outside
-              name: inside
+          - type: entities
+            card_mod:
+              style:
+                hui-sensor-entity-row:
+                  $: |
+                    hui-generic-entity-row {
+                      height: 3em;
+                      padding: 0px 6px 0px 0px;
+                      border-radius: 8px;
+                      border: 1px groove #4d4d4d;
+                    }
+                    hui-generic-entity-row::after {
+                      font-weight: 400;
+                      font-size: 0.72em;
+                      font-style: italic;
+                      text-wrap-mode: nowrap;
+                      color: #b4b4b4;
+                      padding-left: 0.6em;
+                    }
+                .: |
+                  .card-content {
+                    background:
+                      {% set dark = is_state('binary_sensor.donker_thema','on') %}
+                      {% if not dark %} var(--ha-color) {% endif %};
+                  }
+                  ha-card {
+                    color: white;
+                    --card-mod-icon-color: white;
+                    --mdc-icon-size: 24px;
+                    font-weight: 500;
+                  }
             entities:
-              - entity: sensor.nasqnap671_verwendetes_volume_datavol1
+              - entity: sensor.nasqnap671_volume_nutzung_datavol1
                 name: Plattenbelegung
-                icon: mdi:chart-pie
-                decimal: 1
-                severity:
-                  - color: Red
-                    from: 99
-                    to: 100
-                  - color: Orange
-                    from: 96
-                    to: 98
-                  - color: Green
-                    from: 0
-                    to: 95
+                card_mod:
+                  style: |
+                    hui-generic-entity-row {
+                      background:
+                        {% set value = states(config.entity) | int %}
+                        {% set maxvalue = 100 | int %}
+                        /* ! Convert Range to the needed 0-100% values ! */
+                        {% if value >= 99 %} {% set bar = '255, 0, 0' %}
+                        {% elif value >= 95 %} {% set bar = '255, 105, 0' %}
+                        {% else %} {% set bar = '0, 128, 0' %}
+                        {% endif %}
+                        linear-gradient(90deg, 
+                        rgba({{bar}},0.9) 0%, 
+                        rgba({{bar}},0.9) {{value}}%,
+                        rgba({{bar}},0.5) {{value}}%, 
+                        rgba({{bar}},0.15) 100%);
+                    }
               - entity: sensor.nasqnap671_arbeitsspeicherauslastung
                 name: Speicher
-                icon: mdi:memory
-                decimal: 1
-                severity:
-                  - color: Red
-                    from: 91
-                    to: 100
-                  - color: Orange
-                    from: 81
-                    to: 90
-                  - color: Green
-                    from: 0
-                    to: 80
+                card_mod:
+                  style: |
+                    hui-generic-entity-row {
+                      background:
+                        {% set value = states(config.entity) | int %}
+                        {% set maxvalue = 100 | int %}
+                        /* ! Convert Range to the needed 0-100% values ! */
+                        {% if value >= 91 %} {% set bar = '255, 0, 0' %}
+                        {% elif value >= 81 %} {% set bar = '255, 105, 0' %}
+                        {% else %} {% set bar = '0, 128, 0' %}
+                        {% endif %}
+                        linear-gradient(90deg, 
+                        rgba({{bar}},0.9) 0%, 
+                        rgba({{bar}},0.9) {{value}}%,
+                        rgba({{bar}},0.5) {{value}}%, 
+                        rgba({{bar}},0.15) 100%);
+                    }
               - entity: sensor.nasqnap671_cpu_auslastung
                 name: CPU
                 icon: mdi:chip
-                decimal: 1
-                severity:
-                  - color: Red
-                    from: 91
-                    to: 100
-                  - color: Orange
-                    from: 81
-                    to: 90
-                  - color: Green
-                    from: 0
-                    to: 80
+                card_mod:
+                  style: |
+                    hui-generic-entity-row {
+                      background:
+                        {% set value = states(config.entity) | int %}
+                        {% set maxvalue = 100 | int %}
+                        /* ! Convert Range to the needed 0-100% values ! */
+                        {% if value >= 91 %} {% set bar = '255, 0, 0' %}
+                        {% elif value >= 81 %} {% set bar = '255, 105, 0' %}
+                        {% else %} {% set bar = '0, 128, 0' %}
+                        {% endif %}
+                        linear-gradient(90deg, 
+                        rgba({{bar}},0.9) 0%, 
+                        rgba({{bar}},0.9) {{value}}%,
+                        rgba({{bar}},0.5) {{value}}%, 
+                        rgba({{bar}},0.15) 100%);
+                    }
               - entity: sensor.nasqnap671_systemtemperatur
                 name: Systemtemperatur
                 icon: mdi:thermometer
-                decimal: 1
-                severity:
-                  - color: Red
-                    from: 61
-                    to: 100
-                  - color: Orange
-                    from: 41
-                    to: 60
-                  - color: Green
-                    from: 0
-                    to: 40
-            grid_options:
-              columns: 12
-              rows: auto
-            visibility:
-              - condition: state
-                entity: sensor.nasqnap671_status
-                state_not: unavailable
+                card_mod:
+                  style: |
+                    hui-generic-entity-row {
+                    background:
+                        {% set value = states(config.entity) | int %}
+                        {% set maxvalue = 100 | int %}
+                        /* ! Convert Range to the needed 0-100% values ! */
+                        {% if value >= 61 %} {% set bar = '255, 0, 0' %}
+                        {% elif value >= 41 %} {% set bar = '255, 105, 0' %}
+                        {% else %} {% set bar = '0, 128, 0' %}
+                        {% endif %}
+                        linear-gradient(90deg, 
+                        rgba({{bar}},0.9) 0%, 
+                        rgba({{bar}},0.9) {{value}}%,
+                        rgba({{bar}},0.5) {{value}}%, 
+                        rgba({{bar}},0.15) 100%);
+                    }
     cards: []
     type: sections
     max_columns: 3
@@ -388,45 +430,56 @@ views:
             card:
               type: entities
               card_mod:
-                style: |
-                  ha-card {
-                  box-shadow: none !important; 
-                  padding: 0px !important;
-                  background: none !important;
-                  }
+                style:
+                  hui-sensor-entity-row:
+                    $: |
+                      hui-generic-entity-row {
+                        height: 3em;
+                        padding: 0px 6px 0px 0px;
+                        border-radius: 8px;
+                        border: 1px groove #4d4d4d;
+                      }
+                      hui-generic-entity-row::after {
+                        font-weight: 400;
+                        font-size: 0.72em;
+                        font-style: italic;
+                        text-wrap-mode: nowrap;
+                        color: #b4b4b4;
+                        padding-left: 0.6em;
+                      }
+                  .: |
+                    .card-content {
+                      background:
+                        {% set dark = is_state('binary_sensor.donker_thema','on') %}
+                        {% if not dark %} var(--ha-color) {% endif %};
+                    }
+                    ha-card {
+                      color: white;
+                      --card-mod-icon-color: white;
+                      --mdc-icon-size: 24px;
+                      font-weight: 500;
+                    }
               entities:
-                - type: custom:mushroom-chips-card
-                - type: custom:bar-card
+                - entity: sensor.pv_abgelaufener_monat_prozent
+                  name: Monat
+                  icon: mdi:calendar
                   card_mod:
                     style: |
-                      ha-card {
-                      border: none !important;
-                      box-shadow: none !important; 
-                      padding: -5px !important;
-                      background: none !important;
+                      hui-generic-entity-row {
+                        background:
+                          {% set value = states(config.entity) | int %}
+                          {% set maxvalue = 100 | int %}
+                          /* ! Convert Range to the needed 0-100% values ! */
+                          {% if value <=33 %} {% set bar = '255, 0, 0' %}
+                          {% elif value <= 66 %} {% set bar = '255, 105, 0' %}
+                          {% else %} {% set bar = '0, 128, 0' %}
+                          {% endif %}
+                          linear-gradient(90deg, 
+                          rgba({{bar}},0.9) 0%, 
+                          rgba({{bar}},0.9) {{value}}%,
+                          rgba({{bar}},0.5) {{value}}%, 
+                          rgba({{bar}},0.15) 100%);
                       }
-                  positions:
-                    icon: 'off'
-                    indicator: inside
-                    name: outside
-                  width: 80%
-                  height: 15px
-                  text-align: right
-                  padding-left: 4px
-                  bar-card-border-radius: 2px
-                  entities:
-                    - entity: sensor.pv_abgelaufener_monat_prozent
-                      name: Monat
-                      severity:
-                        - color: Red
-                          from: 0
-                          to: 33
-                        - color: Orange
-                          from: 34
-                          to: 66
-                        - color: Green
-                          from: 67
-                          to: 100
           - type: conditional
             conditions:
               - condition: state
@@ -437,10 +490,30 @@ views:
               card_mod:
                 style: |
                   ha-card {
-                  box-shadow: none !important; 
-                  padding: 0px !important;
-                  background: none !important;
+                    box-shadow: none !important; 
+                    padding: 0px !important;
+                    background: none !important;
                   }
+                  hui-sensor-entity-row:
+                    $: |
+                      hui-generic-entity-row {
+                        height: 3em;
+                        padding: 0px 6px 0px 0px;
+                        border-radius: 8px;
+                        border: 1px groove #4d4d4d;
+                      }
+                  .: |
+                    .card-content {
+                      background:
+                        {% set dark = is_state('binary_sensor.donker_thema','on') %}
+                        {% if not dark %} var(--ha-color) {% endif %};
+                    }
+                    ha-card {
+                      color: white;
+                      --card-mod-icon-color: white;
+                      --mdc-icon-size: 24px;
+                      font-weight: 500;
+                    }
               entities:
                 - type: custom:mushroom-chips-card
                 - entity: sensor.forecasted_pv_production_pvsol
@@ -493,59 +566,69 @@ views:
                       name: false
                       format: precision2
                       unit: false
-                - type: custom:bar-card
+                - entity: sensor.pv_zielerreichung_tagesertrag
+                  name: Tag
+                  icon: mdi:calendar-today
                   card_mod:
                     style: |
-                      ha-card {
-                      border: none !important;
-                      box-shadow: none !important; 
-                      padding: -5px !important;
-                      background: none !important;
+                      hui-generic-entity-row {
+                        background:
+                          {% set value = states(config.entity) | int %}
+                          {% set maxvalue = 500 | int %}
+                          /* ! Convert Range to the needed 0-100% values ! */
+                          {% if value >= 200 %} {% set bar = '0, 100, 0' %}
+                          {% elif value >= 95 %} {% set bar = '0, 128, 0' %}
+                          {% elif value >= 80 %} {% set bar = '255, 105, 0' %}
+                          {% else %} {% set bar = '255, 0, 0' %}
+                          {% endif %}
+                          linear-gradient(90deg, 
+                          rgba({{bar}},0.9) 0%, 
+                          rgba({{bar}},0.9) {{value}}%,
+                          rgba({{bar}},0.5) {{value}}%, 
+                          rgba({{bar}},0.15) 100%);
                       }
-                  positions:
-                    icon: 'off'
-                    indicator: inside
-                    name: outside
-                  animation:
-                    state: 'on'
-                    speed: 5
-                  width: 86%
-                  height: 18px
-                  text-align: right
-                  padding-left: 0px
-                  bar-card-border-radius: 2px
-                  entities:
-                    - entity: sensor.pv_zielerreichung_tagesertrag
-                      name: Tag
-                      severity:
-                        - color: Red
-                          from: 0
-                          to: 80
-                        - color: Orange
-                          from: 80
-                          to: 95
-                        - color: Green
-                          from: 95
-                          to: 200
-                        - color: Darkgreen
-                          from: 200
-                          to: 500
-                    - entity: sensor.pv_zielerreichung_monatsertrag_mtd
-                      name: MTD
-                      severity:
-                        - color: Red
-                          below: 70
-                        - color: Orange
-                          from: 70
-                          to: 90
-                        - color: Green
-                          from: 90
-                          to: 110
-                        - color: Darkgreen
-                          from: 110
-                          to: 200
-                    - entity: sensor.pv_zielerreichung_monatsertrag
-                      name: Monat
+                - entity: sensor.pv_zielerreichung_monatsertrag_mtd
+                  name: MTD
+                  icon: mdi:calendar-today-outline
+                  card_mod:
+                    style: |
+                      hui-generic-entity-row {
+                        background:
+                          {% set value = states(config.entity) | int %}
+                          {% set maxvalue = 500 | int %}
+                          /* ! Convert Range to the needed 0-100% values ! */
+                          {% if value >= 200 %} {% set bar = '0, 100, 0' %}
+                          {% elif value >= 95 %} {% set bar = '0, 128, 0' %}
+                          {% elif value >= 80 %} {% set bar = '255, 105, 0' %}
+                          {% else %} {% set bar = '255, 0, 0' %}
+                          {% endif %}
+                          linear-gradient(90deg, 
+                          rgba({{bar}},0.9) 0%, 
+                          rgba({{bar}},0.9) {{value}}%,
+                          rgba({{bar}},0.5) {{value}}%, 
+                          rgba({{bar}},0.15) 100%);
+                      }
+                - entity: sensor.pv_zielerreichung_monatsertrag
+                  name: Monat
+                  icon: mdi:calendar-month
+                  card_mod:
+                    style: |
+                      hui-generic-entity-row {
+                        background:
+                          {% set value = states(config.entity) | int %}
+                          {% set maxvalue = 500 | int %}
+                          /* ! Convert Range to the needed 0-100% values ! */
+                          {% if value >= 200 %} {% set bar = '0, 100, 0' %}
+                          {% elif value >= 95 %} {% set bar = '0, 128, 0' %}
+                          {% elif value >= 80 %} {% set bar = '255, 105, 0' %}
+                          {% else %} {% set bar = '255, 0, 0' %}
+                          {% endif %}
+                          linear-gradient(90deg, 
+                          rgba({{bar}},0.9) 0%, 
+                          rgba({{bar}},0.9) {{value}}%,
+                          rgba({{bar}},0.5) {{value}}%, 
+                          rgba({{bar}},0.15) 100%);
+                      }
           - type: conditional
             conditions:
               - condition: state
@@ -556,10 +639,30 @@ views:
               card_mod:
                 style: |
                   ha-card {
-                  box-shadow: none !important; 
-                  padding: 0px !important;
-                  background: none !important;
+                    box-shadow: none !important; 
+                    padding: 0px !important;
+                    background: none !important;
                   }
+                  hui-sensor-entity-row:
+                    $: |
+                      hui-generic-entity-row {
+                        height: 3em;
+                        padding: 0px 6px 0px 0px;
+                        border-radius: 8px;
+                        border: 1px groove #4d4d4d;
+                      }
+                  .: |
+                    .card-content {
+                      background:
+                        {% set dark = is_state('binary_sensor.donker_thema','on') %}
+                        {% if not dark %} var(--ha-color) {% endif %};
+                    }
+                    ha-card {
+                      color: white;
+                      --card-mod-icon-color: white;
+                      --mdc-icon-size: 24px;
+                      font-weight: 500;
+                    }
               entities:
                 - type: custom:mushroom-chips-card
                 - entity: sensor.forecasted_pv_production_pvsol
@@ -612,55 +715,69 @@ views:
                     - entity: sensor.pv_zielerreichung_monatsertrag
                       name: false
                       unit: false
-                - type: custom:bar-card
+                - entity: sensor.pv_zielerreichung_tagesertrag
+                  name: Tag
+                  icon: mdi:calendar-today
                   card_mod:
                     style: |
-                      ha-card {
-                      border: none !important;
-                      box-shadow: none !important; 
-                      padding: -5px !important;
-                      background: none !important;
+                      hui-generic-entity-row {
+                        background:
+                          {% set value = states(config.entity) | int %}
+                          {% set maxvalue = 500 | int %}
+                          /* ! Convert Range to the needed 0-100% values ! */
+                          {% if value >= 200 %} {% set bar = '0, 100, 0' %}
+                          {% elif value >= 95 %} {% set bar = '0, 128, 0' %}
+                          {% elif value >= 80 %} {% set bar = '255, 105, 0' %}
+                          {% else %} {% set bar = '255, 0, 0' %}
+                          {% endif %}
+                          linear-gradient(90deg, 
+                          rgba({{bar}},0.9) 0%, 
+                          rgba({{bar}},0.9) {{value}}%,
+                          rgba({{bar}},0.5) {{value}}%, 
+                          rgba({{bar}},0.15) 100%);
                       }
-                  positions:
-                    icon: 'off'
-                    indicator: inside
-                    name: outside
-                  animations:
-                    state: 'on'
-                    speed: 5
-                  width: 85%
-                  height: 18px
-                  text-align: right
-                  padding-left: 0px
-                  bar-card-border-radius: 5px
-                  entities:
-                    - entity: sensor.pv_zielerreichung_tagesertrag
-                      name: Tag
-                      severity:
-                        - color: Red
-                          from: 0
-                          to: 80
-                        - color: Orange
-                          from: 80
-                          to: 95
-                        - color: Green
-                          from: 95
-                          to: 300
-                        - color: DarkGreen
-                          above: 110
-                    - entity: sensor.pv_zielerreichung_monatsertrag_mtd
-                      name: MTD
-                      severity:
-                        - color: Red
-                          below: 70
-                        - color: Orange
-                          from: 70
-                          to: 90
-                        - color: Green
-                          from: 90
-                          to: 300
-                    - entity: sensor.pv_zielerreichung_monatsertrag
-                      name: Monat
+                - entity: sensor.pv_zielerreichung_monatsertrag_mtd
+                  name: MTD
+                  icon: mdi:calendar-today-outline
+                  card_mod:
+                    style: |
+                      hui-generic-entity-row {
+                        background:
+                          {% set value = states(config.entity) | int %}
+                          {% set maxvalue = 500 | int %}
+                          /* ! Convert Range to the needed 0-100% values ! */
+                          {% if value >= 200 %} {% set bar = '0, 100, 0' %}
+                          {% elif value >= 95 %} {% set bar = '0, 128, 0' %}
+                          {% elif value >= 80 %} {% set bar = '255, 105, 0' %}
+                          {% else %} {% set bar = '255, 0, 0' %}
+                          {% endif %}
+                          linear-gradient(90deg, 
+                          rgba({{bar}},0.9) 0%, 
+                          rgba({{bar}},0.9) {{value}}%,
+                          rgba({{bar}},0.5) {{value}}%, 
+                          rgba({{bar}},0.15) 100%);
+                      }
+                - entity: sensor.pv_zielerreichung_monatsertrag
+                  name: Monat
+                  icon: mdi:calendar-month
+                  card_mod:
+                    style: |
+                      hui-generic-entity-row {
+                        background:
+                          {% set value = states(config.entity) | int %}
+                          {% set maxvalue = 500 | int %}
+                          /* ! Convert Range to the needed 0-100% values ! */
+                          {% if value >= 200 %} {% set bar = '0, 100, 0' %}
+                          {% elif value >= 95 %} {% set bar = '0, 128, 0' %}
+                          {% elif value >= 80 %} {% set bar = '255, 105, 0' %}
+                          {% else %} {% set bar = '255, 0, 0' %}
+                          {% endif %}
+                          linear-gradient(90deg, 
+                          rgba({{bar}},0.9) 0%, 
+                          rgba({{bar}},0.9) {{value}}%,
+                          rgba({{bar}},0.5) {{value}}%, 
+                          rgba({{bar}},0.15) 100%);
+                      }
           - type: conditional
             conditions:
               - condition: state
@@ -703,42 +820,52 @@ views:
                       name: Hochrechnung
                     - entity: sensor.pv_extrapolierte_zielerreichung
                       name: Zielerreichung
-                - type: custom:bar-card
+                - entity: sensor.forecasted_pv_production_pvsol
+                  card_mod:
+                    style:
+                      hui-generic-entity-row:
+                        $: |
+                          state-badge {
+                            display: none;
+                          }
+                          .info {
+                            margin-left:0 !important;
+                          }
+                  type: custom:multiple-entity-row
+                  show_state: false
+                  name: Forecast
+                  icon: m3o:chart-data
+                  entities:
+                    - entity: sensor.solcast_forecast_heute_pro_kwp
+                      name: heute
+                      format: precision2
+                    - entity: sensor.solcast_zielerreichung_heute
+                      name: Zielerreichung
+                      format: precision2
+                    - entity: sensor.solcast_forecast_morgen_pro_kwp
+                      name: morgen
+                      format: precision2
+                - entity: sensor.pv_extrapolierte_zielerreichung
+                  name: Zielerreichung
+                  icon: mdi:target
                   card_mod:
                     style: |
-                      ha-card {
-                      border: none !important;
-                      box-shadow: none !important; 
-                      padding: 0px !important;
-                      background: none !important;
+                      hui-generic-entity-row {
+                        background:
+                          {% set value = states(config.entity) | int %}
+                          {% set maxvalue = 130 | int %}
+                          /* ! Convert Range to the needed 0-100% values ! */
+                          {% if value >= 110 %} {% set bar = '0, 100, 0' %}
+                          {% elif value >= 95 %} {% set bar = '0, 128, 0' %}
+                          {% elif value >= 80 %} {% set bar = '255, 105, 0' %}
+                          {% else %} {% set bar = '255, 0, 0' %}
+                          {% endif %}
+                          linear-gradient(90deg, 
+                          rgba({{bar}},0.9) 0%, 
+                          rgba({{bar}},0.9) {{value}}%,
+                          rgba({{bar}},0.5) {{value}}%, 
+                          rgba({{bar}},0.15) 100%);
                       }
-                  positions:
-                    icon: 'off'
-                    indicator: inside
-                    name: outside
-                  animation:
-                    state: 'on'
-                    speed: 5
-                  width: 75%
-                  height: 15px
-                  text-align: right
-                  padding-left: 4px
-                  bar-card-border-radius: 10px
-                  entities:
-                    - entity: sensor.pv_extrapolierte_zielerreichung
-                      name: Zielerreichung
-                      severity:
-                        - color: Red
-                          from: 0
-                          to: 80
-                        - color: Orange
-                          from: 80
-                          to: 95
-                        - color: Green
-                          from: 95
-                          to: 110
-                        - color: DarkGreen
-                          above: 110
           - type: conditional
             conditions:
               - condition: state
@@ -793,51 +920,36 @@ views:
                   name: Forecast
                   icon: m3o:chart-data
                   entities:
-                    - entity: sensor.solcast_pv_forecast_prognose_heute
+                    - entity: sensor.energy_production_today_total
                       name: heute
                       format: precision2
-                    - entity: sensor.solcast_pv_forecast_prognose_fur_morgen
+                    - entity: sensor.solcast_zielerreichung_heute
+                      name: Zielerreichung
+                      format: precision2
+                    - entity: sensor.energy_production_tomorrow_total
                       name: morgen
                       format: precision2
-                    - entity: sensor.solcast_pv_forecast_vorhersage_tag_3
-                      name: übermorgen
-                      format: precision2
-                - type: custom:bar-card
+                - entity: sensor.pv_extrapolierte_zielerreichung
+                  name: Zielerreichung
+                  icon: mdi:target
                   card_mod:
                     style: |
-                      ha-card {
-                      border: none !important;
-                      box-shadow: none !important; 
-                      padding: -5px !important;
-                      background: none !important;
+                      hui-generic-entity-row {
+                        background:
+                          {% set value = states(config.entity) | int %}
+                          {% set maxvalue = 130 | int %}
+                          /* ! Convert Range to the needed 0-100% values ! */
+                          {% if value >= 110 %} {% set bar = '0, 100, 0' %}
+                          {% elif value >= 95 %} {% set bar = '0, 128, 0' %}
+                          {% elif value >= 80 %} {% set bar = '255, 105, 0' %}
+                          {% else %} {% set bar = '255, 0, 0' %}
+                          {% endif %}
+                          linear-gradient(90deg, 
+                          rgba({{bar}},0.9) 0%, 
+                          rgba({{bar}},0.9) {{value}}%,
+                          rgba({{bar}},0.5) {{value}}%, 
+                          rgba({{bar}},0.15) 100%);
                       }
-                  positions:
-                    icon: 'off'
-                    indicator: inside
-                    name: outside
-                  animation:
-                    state: 'on'
-                    speed: 5
-                  width: 75%
-                  height: 15px
-                  text-align: right
-                  padding-left: 4px
-                  bar-card-border-radius: 2px
-                  entities:
-                    - entity: sensor.pv_extrapolierte_zielerreichung
-                      name: Zielerreichung
-                      severity:
-                        - color: Red
-                          from: 0
-                          to: 80
-                        - color: Orange
-                          from: 80
-                          to: 95
-                        - color: Green
-                          from: 95
-                          to: 110
-                        - color: DarkGreen
-                          above: 110
     subview: true
     cards: []
     icon: mdi:transmission-tower
