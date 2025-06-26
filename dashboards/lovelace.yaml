@@ -488,12 +488,7 @@ views:
             card:
               type: entities
               card_mod:
-                style: |
-                  ha-card {
-                    box-shadow: none !important; 
-                    padding: 0px !important;
-                    background: none !important;
-                  }
+                style:
                   hui-sensor-entity-row:
                     $: |
                       hui-generic-entity-row {
@@ -501,6 +496,14 @@ views:
                         padding: 0px 6px 0px 0px;
                         border-radius: 8px;
                         border: 1px groove #4d4d4d;
+                      }
+                      hui-generic-entity-row::after {
+                        font-weight: 400;
+                        font-size: 0.72em;
+                        font-style: italic;
+                        text-wrap-mode: nowrap;
+                        color: #b4b4b4;
+                        padding-left: 0.6em;
                       }
                   .: |
                     .card-content {
@@ -513,6 +516,9 @@ views:
                       --card-mod-icon-color: white;
                       --mdc-icon-size: 24px;
                       font-weight: 500;
+                      box-shadow: none !important; 
+                      padding: 0px !important;
+                      background: none !important;
                     }
               entities:
                 - type: custom:mushroom-chips-card
@@ -637,12 +643,7 @@ views:
             card:
               type: entities
               card_mod:
-                style: |
-                  ha-card {
-                    box-shadow: none !important; 
-                    padding: 0px !important;
-                    background: none !important;
-                  }
+                style:
                   hui-sensor-entity-row:
                     $: |
                       hui-generic-entity-row {
@@ -650,6 +651,14 @@ views:
                         padding: 0px 6px 0px 0px;
                         border-radius: 8px;
                         border: 1px groove #4d4d4d;
+                      }
+                      hui-generic-entity-row::after {
+                        font-weight: 400;
+                        font-size: 0.72em;
+                        font-style: italic;
+                        text-wrap-mode: nowrap;
+                        color: #b4b4b4;
+                        padding-left: 0.6em;
                       }
                   .: |
                     .card-content {
@@ -662,6 +671,9 @@ views:
                       --card-mod-icon-color: white;
                       --mdc-icon-size: 24px;
                       font-weight: 500;
+                      box-shadow: none !important; 
+                      padding: 0px !important;
+                      background: none !important;
                     }
               entities:
                 - type: custom:mushroom-chips-card
@@ -786,12 +798,38 @@ views:
             card:
               type: entities
               card_mod:
-                style: |
-                  ha-card {
-                  box-shadow: none !important; 
-                  padding: 0px !important;
-                  background: none !important;
-                  }
+                style:
+                  hui-sensor-entity-row:
+                    $: |
+                      hui-generic-entity-row {
+                        height: 3em;
+                        padding: 0px 6px 0px 0px;
+                        border-radius: 8px;
+                        border: 1px groove #4d4d4d;
+                      }
+                      hui-generic-entity-row::after {
+                        font-weight: 400;
+                        font-size: 0.72em;
+                        font-style: italic;
+                        text-wrap-mode: nowrap;
+                        color: #b4b4b4;
+                        padding-left: 0.6em;
+                      }
+                  .: |
+                    .card-content {
+                      background:
+                        {% set dark = is_state('binary_sensor.donker_thema','on') %}
+                        {% if not dark %} var(--ha-color) {% endif %};
+                    }
+                    ha-card {
+                      color: white;
+                      --card-mod-icon-color: white;
+                      --mdc-icon-size: 24px;
+                      font-weight: 500;
+                      box-shadow: none !important; 
+                      padding: 0px !important;
+                      background: none !important;
+                    }
               entities:
                 - type: custom:mushroom-chips-card
                 - entity: sensor.forecasted_pv_production_pvsol
@@ -874,12 +912,38 @@ views:
             card:
               type: entities
               card_mod:
-                style: |
-                  ha-card {
-                  box-shadow: none !important; 
-                  padding: 0px !important;
-                  background: none !important;
-                  }
+                style:
+                  hui-sensor-entity-row:
+                    $: |
+                      hui-generic-entity-row {
+                        height: 3em;
+                        padding: 0px 6px 0px 0px;
+                        border-radius: 8px;
+                        border: 1px groove #4d4d4d;
+                      }
+                      hui-generic-entity-row::after {
+                        font-weight: 400;
+                        font-size: 0.72em;
+                        font-style: italic;
+                        text-wrap-mode: nowrap;
+                        color: #b4b4b4;
+                        padding-left: 0.6em;
+                      }
+                  .: |
+                    .card-content {
+                      background:
+                        {% set dark = is_state('binary_sensor.donker_thema','on') %}
+                        {% if not dark %} var(--ha-color) {% endif %};
+                    }
+                    ha-card {
+                      color: white;
+                      --card-mod-icon-color: white;
+                      --mdc-icon-size: 24px;
+                      font-weight: 500;
+                      box-shadow: none !important; 
+                      padding: 0px !important;
+                      background: none !important;
+                    }
               entities:
                 - type: custom:mushroom-chips-card
                 - entity: sensor.forecasted_pv_production_pvsol
