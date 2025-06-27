@@ -316,6 +316,10 @@ views:
                         rgba({{bar}},0.5) {{value}}%, 
                         rgba({{bar}},0.15) 100%);
                     }
+            visibility:
+              - condition: state
+                entity: sensor.nasqnap671_status
+                state_not: unavailable
     cards: []
     type: sections
     max_columns: 3
