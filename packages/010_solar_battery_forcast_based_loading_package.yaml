@@ -267,10 +267,10 @@ automation rct_soc_min_max:
     mode: single
 
   #
-  # 45 minutes before sunrise, when calibration discharging is active,
+  # 30 minutes before sunrise, when calibration discharging is active,
   # unload to grid. The battery capacity of last calibration run and current
   # soc is used to calculate current entry of battery, try to unload it in
-  # one hour, but ensure unload is limited to 6000 W.
+  # one hour, but limit to 4000 W.
   #
   - id: "pv_batery_start_unload_to_grid_on_calibration"
     alias: "RCT Batterie Kalibrierung, Entladen ins Netz starten"
@@ -278,7 +278,7 @@ automation rct_soc_min_max:
     triggers:
       - trigger: sun
         event: sunrise
-        offset: "-00:45:00"
+        offset: "-00:30:00"
     conditions:
       - condition: state
         entity_id: "sensor.rct_power_storage_battery_status"
@@ -288,7 +288,7 @@ automation rct_soc_min_max:
         data:
           action: set
           parameter: p_rec_lim[1]
-          value: '{{ min(6000, ((states(''sensor.rct_battery_capacity_unload_calibration'')|float(0.0)) * (states(''sensor.rct_power_storage_battery_state_of_charge'')|float(0.0)))|multiply(10)|round(0)) }}'
+          value: '{{ min(4000, ((states(''sensor.rct_battery_capacity_unload_calibration'')|float(0.0)) * (states(''sensor.rct_power_storage_battery_state_of_charge'')|float(0.0)))|multiply(10)|round(0)) }}'
     mode: single
 
   #
