@@ -410,7 +410,18 @@ views:
           - type: horizontal-stack
             cards:
               - type: markdown
-                content: <center><h4>{{ now().strftime('%A,&nbsp;%-d&nbsp;%b')}}
+                content: >-
+                  <center><h4>{{ now().strftime('%A,&nbsp;%-d&nbsp;%b')}}</h4>
+
+                  <b>{{ states('sensor.wechselrichter_yield_daily_per_kwp')
+                  }}</b> / {{
+                  state_attr('sensor.forecasted_pv_production_daily',
+                  'per_kwp')  }} TS {% if
+                  states('sensor.wechselrichter_yield_daily_per_kwp') | float(0)
+                  < state_attr('sensor.forecasted_pv_production_daily',
+                  'per_kwp') | float(0) %}❌{%- else -%}✅{%- endif %} ({{
+                  states('sensor.pv_zielerreichung_tagesertrag', with_unit=True)
+                  }})
                 card_mod:
                   style: |
                     ha-card {
@@ -419,6 +430,10 @@ views:
                     background: none !important;
                     }
               - type: entities
+                entities:
+                  - entity: input_boolean.pv_monitoring_absolute_relativ
+                    name: Abs/Rel
+                show_header_toggle: false
                 card_mod:
                   style: |
                     ha-card {
@@ -426,9 +441,6 @@ views:
                     padding: 0px !important;
                     background: none !important;
                     }
-                entities:
-                  - entity: input_boolean.pv_monitoring_absolute_relativ
-                    name: Abs/Rel
           - type: conditional
             conditions: []
             card:
