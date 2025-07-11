@@ -409,11 +409,11 @@ template:
         state_class: "measurement"
         unit_of_measurement: "kWh/kWp"
         state: >-
-          {% set pfv = states("sensor.energy_production_today_remaining_total") | float(0) %}
+          {% set pfv = states("sensor.energy_production_today_total") | float(0) %}
           {% set ips = states("sensor.installed_pv_size") | float(0) %}
           {{ (pfv/ips) | round(2) }}
         availability: >-
-          {{ has_value("sensor.energy_production_today_remaining_total")
+          {{ has_value("sensor.energy_production_today_total")
           and has_value("sensor.installed_pv_size") }}
 
       - unique_id: "solcast_pv_forecast_morgen_pro_kwp"
