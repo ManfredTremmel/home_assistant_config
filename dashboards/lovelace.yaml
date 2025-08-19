@@ -100,7 +100,7 @@ views:
             show_precipitation_amounts: false
             show_precipitation_probability: false
             icons: true
-            name: Wetter die nächsten Stunden
+            name: Wetter, die nächsten Stunden
       - type: grid
         cards:
           - type: heading
@@ -329,7 +329,7 @@ views:
       size: cover
       repeat: repeat
       attachment: fixed
-      image: /api/image/serve/e878b99eac87ae118400013840acf974/original
+      image: /api/image/serve/7da56310ee6bc3e48f04499f4e676b5a/original
     icon: mdi:white-balance-sunny
   - type: sections
     max_columns: 2
@@ -393,7 +393,7 @@ views:
             vertical: false
             name: PV Einspeiselimit Soft SMA
           - type: tile
-            entity: sensor.sunny_tripower_x_20_inverter_power_limit
+            entity: sensor.stp_20_50_inverter_power_limit
             name: SMA gesetztes Power Limit
           - type: tile
             entity: sensor.rct_power_storage_grid_power
@@ -411,17 +411,18 @@ views:
             cards:
               - type: markdown
                 content: >-
-                  <center><h4>{{ now().strftime('%A,&nbsp;%-d&nbsp;%b')}}</h4>
+                  <center><h4>{{ now().day }}.{{ now().month }}.{{ now().year
+                  }}</h4>
 
-                  <b>{{ states('sensor.wechselrichter_yield_daily_per_kwp')
-                  }}</b> / {{
-                  state_attr('sensor.forecasted_pv_production_daily',
-                  'per_kwp')  }} TS {% if
+                  <b>{{ states('sensor.wechselrichter_yield_daily_per_kwp') |
+                  regex_replace('\.', ',') }}</b> / {{
+                  state_attr('sensor.forecasted_pv_production_daily', 'per_kwp')
+                  | regex_replace('\.', ',')  }} TS {% if
                   states('sensor.wechselrichter_yield_daily_per_kwp') | float(0)
                   < state_attr('sensor.forecasted_pv_production_daily',
                   'per_kwp') | float(0) %}❌{%- else -%}✅{%- endif %} ({{
                   states('sensor.pv_zielerreichung_tagesertrag', with_unit=True)
-                  }})
+                  | regex_replace('\.', ',') }})
                 card_mod:
                   style: |
                     ha-card {
@@ -1228,11 +1229,11 @@ views:
                 name: PV
               - entity: sensor.rct_power_storage_generator_a_power
                 name: Gar. (WR1S1)
-              - entity: sensor.sunny_tripower_x_20_pv_power_a
+              - entity: sensor.stp_20_50_pv_power_a
                 name: Süd (WR2S1)
-              - entity: sensor.sunny_tripower_x_20_pv_power_b
+              - entity: sensor.stp_20_50_pv_power_b
                 name: Süd (WR2S2+3)
-              - entity: sensor.sunny_tripower_x_20_pv_power_c
+              - entity: sensor.stp_20_50_pv_power_c
                 name: Nord (WR2S4)
               - entity: sensor.power_consumption
                 name: Verbrauch
@@ -1320,27 +1321,27 @@ views:
             features_position: bottom
             vertical: false
           - type: tile
-            entity: sensor.sunny_tripower_x_20_pv_power
+            entity: sensor.stp_20_50_pv_power
             name: Generatorleistung
             icon: mdi:solar-panel
             color: yellow
           - type: tile
-            entity: sensor.sunny_tripower_x_20_grid_power
+            entity: sensor.stp_20_50_grid_power
             name: Wechselstromleistung
             icon: mdi:transmission-tower-export
           - type: tile
-            entity: sensor.sunny_tripower_x_20_insulation_residual_current
+            entity: sensor.stp_20_50_insulation_residual_current
             name: Isolationsleekstrom
           - type: tile
-            entity: sensor.sunny_tripower_x_20_temp_a
+            entity: sensor.stp_20_50_temp_a
             name: Temperatur A
             color: red
           - type: tile
-            entity: sensor.sunny_tripower_x_20_temp_b
+            entity: sensor.stp_20_50_temp_b
             name: Temperatur B
             color: red
           - type: tile
-            entity: sensor.sunny_tripower_x_20_temp_c
+            entity: sensor.stp_20_50_temp_c
             name: Temperatur C
             color: red
   - type: sections

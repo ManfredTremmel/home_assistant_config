@@ -13,9 +13,9 @@
 # Dependency: "SMA Devices Plus" extension from HACS
 #
 # Used entities:
-#       sensor.sunny_tripower_x_20_grid_relay_status
-#       sensor.sunny_tripower_x_20_operating_status_general
-#       sensor.sunny_tripower_x_20_status
+#       sensor.stp_20_50_grid_relay_status
+#       sensor.stp_20_50_operating_status_general
+#       sensor.stp_20_50_status
 #
 # Provided entities:
 #       sensor.sma_grid_relay_status
@@ -37,9 +37,9 @@ template:
           {% set mapper =  {
                '51' : 'geschlossen',
                '311' : 'offen' } %}
-          {% set state =  states.sensor.sunny_tripower_x_20_grid_relay_status.state %}
+          {% set state =  states.sensor.stp_20_50_grid_relay_status.state %}
           {{ mapper[state] if state in mapper else 'Unbekannt' }}
-      availability: "{{ has_value('sensor.sunny_tripower_x_20_grid_relay_status') }}"
+      availability: "{{ has_value('sensor.stp_20_50_grid_relay_status') }}"
 
     #
     # the general status about the operating of the inverter has following entries:
@@ -57,9 +57,9 @@ template:
                '569' : 'Eingeschaltet',
                '1295' : 'Standby',
                '1795' : 'Verriegelt' } %}
-          {% set state =  states.sensor.sunny_tripower_x_20_operating_status_general.state %}
+          {% set state =  states.sensor.stp_20_50_operating_status_general.state %}
           {{ mapper[state] if state in mapper else 'Unbekannt' }}
-      availability: "{{ has_value('sensor.sunny_tripower_x_20_operating_status_general') }}"
+      availability: "{{ has_value('sensor.stp_20_50_operating_status_general') }}"
 
     #
     # the status provides correct operation or possible inverter error messages:
@@ -87,6 +87,6 @@ template:
                '1650' : 'Teil-String x hat geringe Leistung',
                '1692' : 'String deaktiviert wegen Leistungsreduzierung',
                '1693' : 'Kein String angeschlossen' } %}
-          {% set state =  states.sensor.sunny_tripower_x_20_status.state %}
+          {% set state =  states.sensor.stp_20_50_status.state %}
           {{ mapper[state] if state in mapper else 'Unbekannt' }}
-      availability: "{{ has_value('sensor.sunny_tripower_x_20_status') }}"
+      availability: "{{ has_value('sensor.stp_20_50_status') }}"

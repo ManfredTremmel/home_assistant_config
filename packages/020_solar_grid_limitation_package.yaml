@@ -10,15 +10,15 @@
 #       "010_solar_monitoring_package.yaml"
 #
 # Used entities:
-#       sensor.sunny_tripower_x_20_grid_power
+#       sensor.stp_20_50_grid_power
 #       sensor.rct_power_storage_grid_power
 #       sensor.rct_power_storage_inverter_ac_power
 #       sensor.installed_pv_wr1
 #       sensor.installed_pv_wr2
 #       sensor.rct_power_storage_all_generators_power
-#       sensor.sunny_tripower_x_20_pv_power_a
-#       sensor.sunny_tripower_x_20_pv_power_b
-#       sensor.sunny_tripower_x_20_pv_power_c
+#       sensor.stp_20_50_pv_power_a
+#       sensor.stp_20_50_pv_power_b
+#       sensor.stp_20_50_pv_power_c
 #       sensor.installed_pv_size
 #
 # Provided entities:
@@ -40,8 +40,8 @@ template:
       state_class: "measurement"
       unit_of_measurement: "kW"
       state: >-
-          {{ ((states('sensor.sunny_tripower_x_20_grid_power')|float(0.0)) + (states('sensor.rct_power_storage_grid_power')|float(0.0)) + (states('sensor.rct_power_storage_inverter_ac_power')|float(0.0)))|multiply(0.001)|round(3) }}
-      availability: "{{ has_value('sensor.sunny_tripower_x_20_grid_power') and has_value('sensor.rct_power_storage_grid_power') and has_value('sensor.rct_power_storage_inverter_ac_power') }}"
+          {{ ((states('sensor.stp_20_50_grid_power')|float(0.0)) + (states('sensor.rct_power_storage_grid_power')|float(0.0)) + (states('sensor.rct_power_storage_inverter_ac_power')|float(0.0)))|multiply(0.001)|round(3) }}
+      availability: "{{ has_value('sensor.stp_20_50_grid_power') and has_value('sensor.rct_power_storage_grid_power') and has_value('sensor.rct_power_storage_inverter_ac_power') }}"
 
     #
     # Summarize capacity of all inverters.
@@ -64,8 +64,8 @@ template:
       state_class: "measurement"
       unit_of_measurement: "W"
       state: >-
-          {{ ((states('sensor.rct_power_storage_all_generators_power')|float(0.0)) + (states('sensor.sunny_tripower_x_20_pv_power_a')|float(0.0)) + (states('sensor.sunny_tripower_x_20_pv_power_b')|float(0.0)) + (states('sensor.sunny_tripower_x_20_pv_power_c')|float(0.0)))|round(0) }}
-      availability: "{{ has_value('sensor.rct_power_storage_all_generators_power') and has_value('sensor.sunny_tripower_x_20_pv_power_a') and has_value('sensor.sunny_tripower_x_20_pv_power_b') and has_value('sensor.sunny_tripower_x_20_pv_power_c') }}"
+          {{ ((states('sensor.rct_power_storage_all_generators_power')|float(0.0)) + (states('sensor.stp_20_50_pv_power_a')|float(0.0)) + (states('sensor.stp_20_50_pv_power_b')|float(0.0)) + (states('sensor.stp_20_50_pv_power_c')|float(0.0)))|round(0) }}
+      availability: "{{ has_value('sensor.rct_power_storage_all_generators_power') and has_value('sensor.stp_20_50_pv_power_a') and has_value('sensor.stp_20_50_pv_power_b') and has_value('sensor.stp_20_50_pv_power_c') }}"
 
     #
     # Calculate the allowed grid power.
@@ -163,6 +163,6 @@ automation grid_power_limitation:
       - action: pysmaplus.set_value
         metadata: {}
         data:
-          entity_id: sensor.sunny_tripower_x_20_inverter_power_limit
+          entity_id: sensor.stp_20_50_inverter_power_limit
           value: '{{ states(''sensor.solar_power_grid_limit_soft_sma'')|float(20.0)|multiply(1000)|round(0) }}'
     mode: single

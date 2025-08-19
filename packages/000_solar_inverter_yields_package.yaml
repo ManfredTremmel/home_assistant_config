@@ -11,11 +11,11 @@
 #
 # Used entities:
 #       sensor.rct_power_storage_all_generators_energy_production_total
-#       sensor.sunny_tripower_x_20_pv_total_power_a
-#       sensor.sunny_tripower_x_20_pv_total_power_b
-#       sensor.sunny_tripower_x_20_pv_total_power_c
+#       sensor.stp_20_50_pv_total_power_a
+#       sensor.stp_20_50_pv_total_power_b
+#       sensor.stp_20_50_pv_total_power_c
 #       sensor.rct_power_storage_inverter_energy_production_total
-#       sensor.sunny_tripower_x_20_total_yield
+#       sensor.stp_20_50_total_yield
 #
 # Provided entities:
 #       sensor.solar_total_yield
@@ -34,16 +34,16 @@ template:
       device_class: "energy"
       unit_of_measurement: "kWh"
       state_class: "total_increasing"
-      state: "{{ (((states('sensor.rct_power_storage_all_generators_energy_production_total')|float(0.0)) / 1000) + (states('sensor.sunny_tripower_x_20_pv_total_power_a')|float(0.0)) + (states('sensor.sunny_tripower_x_20_pv_total_power_b')|float(0.0)) + (states('sensor.sunny_tripower_x_20_pv_total_power_c')|float(0.0)))|round(3) }}"
-      availability: "{{ has_value('sensor.rct_power_storage_all_generators_energy_production_total') and has_value('sensor.sunny_tripower_x_20_pv_total_power_a') and has_value('sensor.sunny_tripower_x_20_pv_total_power_b') and has_value('sensor.sunny_tripower_x_20_pv_total_power_c') }}"
+      state: "{{ (((states('sensor.rct_power_storage_all_generators_energy_production_total')|float(0.0)) / 1000) + (states('sensor.stp_20_50_pv_total_power_a')|float(0.0)) + (states('sensor.stp_20_50_pv_total_power_b')|float(0.0)) + (states('sensor.stp_20_50_pv_total_power_c')|float(0.0)))|round(3) }}"
+      availability: "{{ has_value('sensor.rct_power_storage_all_generators_energy_production_total') and has_value('sensor.stp_20_50_pv_total_power_a') and has_value('sensor.stp_20_50_pv_total_power_b') and has_value('sensor.stp_20_50_pv_total_power_c') }}"
   - sensor:
     - unique_id: "inverter_total_yield"
       name: "Inverter Power Total Yield"
       device_class: "energy"
       unit_of_measurement: "kWh"
       state_class: "total_increasing"
-      state: "{{ (((states('sensor.rct_power_storage_inverter_energy_production_total')|float(0.0)) / 1000) + (states('sensor.sunny_tripower_x_20_total_yield')|float(0.0)))|round(3) }}"
-      availability: "{{ has_value('sensor.rct_power_storage_inverter_energy_production_total') and has_value('sensor.sunny_tripower_x_20_total_yield') }}"
+      state: "{{ (((states('sensor.rct_power_storage_inverter_energy_production_total')|float(0.0)) / 1000) + (states('sensor.stp_20_50_total_yield')|float(0.0)))|round(3) }}"
+      availability: "{{ has_value('sensor.rct_power_storage_inverter_energy_production_total') and has_value('sensor.stp_20_50_total_yield') }}"
 
 
 utility_meter:
