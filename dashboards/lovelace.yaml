@@ -67,32 +67,32 @@ views:
             heatingPumpPartyMode: binary_sensor.heating_pump_party_mode
             heatingPumpEnergySaveMode: binary_sensor.heating_pump_energy_save_mode
             heatingPumpNightMode: binary_sensor.heating_pump_night_mode
-            outdoorTemperature: sensor.mosquitto_mqtt_broker_aussentemperatur
-            ambientTemperatureNormal: number.mosquitto_mqtt_broker_raumsolltemperatur_normal
-            ambientTemperatureReduced: number.mosquitto_mqtt_broker_raumsolltemperatur_reduziert
-            ambientTemperatureParty: number.mosquitto_mqtt_broker_raumsolltemperatur_party
-            supplyTemperature: sensor.mosquitto_mqtt_broker_anlagenvorlauftemperatur
-            hpRunning: binary_sensor.mosquitto_mqtt_broker_status_primaerquelle
-            compressorRunning: binary_sensor.mosquitto_mqtt_broker_status_verdichter
-            heatingCircuitPumpRunning: binary_sensor.mosquitto_mqtt_broker_heizkreispumpe
-            circulatingPumpRunning: binary_sensor.mosquitto_mqtt_broker_warmwasser_zirkulationspumpe
-            tankTempHPUp: sensor.mosquitto_mqtt_broker_pufferspeichertemperatur
+            outdoorTemperature: sensor.mosquitto_broker_aussentemperatur
+            ambientTemperatureNormal: number.mosquitto_broker_raumsolltemperatur_normal
+            ambientTemperatureReduced: number.mosquitto_broker_raumsolltemperatur_reduziert
+            ambientTemperatureParty: number.mosquitto_broker_raumsolltemperatur_party
+            supplyTemperature: sensor.mosquitto_broker_anlagenvorlauftemperatur
+            hpRunning: binary_sensor.mosquitto_broker_status_primaerquelle
+            compressorRunning: binary_sensor.mosquitto_broker_status_verdichter
+            heatingCircuitPumpRunning: binary_sensor.mosquitto_broker_heizkreispumpe
+            circulatingPumpRunning: binary_sensor.mosquitto_broker_warmwasser_zirkulationspumpe
+            tankTempHPUp: sensor.mosquitto_broker_pufferspeichertemperatur
             tankTempHPMiddle: ''
             tankTempHPDown: ''
-            tankTempWWUp: sensor.mosquitto_mqtt_broker_warmwassertemperatur_oben
+            tankTempWWUp: sensor.mosquitto_broker_warmwassertemperatur_oben
             tankTempWWMiddle: ''
             tankTempWWDown: ''
-            supplyTemperatureHeating: sensor.mosquitto_mqtt_broker_vorlauftemperatur_heizkreis
+            supplyTemperatureHeating: sensor.mosquitto_broker_vorlauftemperatur_heizkreis
             refluxTemperatureHeating: ''
-            evaporatorPressure: sensor.mosquitto_mqtt_broker_druck_im_verdampfer
-            evaporatorTemperature: sensor.mosquitto_mqtt_broker_temperatur_verdampfer
-            condenserPressure: sensor.mosquitto_mqtt_broker_druck_im_kondensator
-            wwHeatingValve: binary_sensor.mosquitto_mqtt_broker_status_warmwasserventil
+            evaporatorPressure: sensor.mosquitto_broker_druck_im_verdampfer
+            evaporatorTemperature: sensor.mosquitto_broker_temperatur_verdampfer
+            condenserPressure: sensor.mosquitto_broker_druck_im_kondensator
+            wwHeatingValve: binary_sensor.mosquitto_broker_status_warmwasserventil
             heaterRodWW: >-
-              switch.mosquitto_mqtt_broker_freigabe_elektroheizung_fuer_ww_bereitung
-            heaterRodHP: switch.mosquitto_mqtt_broker_freigabe_heizen_mit_elektro
-            heaterRodLevel1: binary_sensor.mosquitto_mqtt_broker_status_heizstab_stufe_1
-            heaterRodLevel2: binary_sensor.mosquitto_mqtt_broker_status_heizstab_stufe_2
+              switch.mosquitto_broker_freigabe_elektroheizung_fuer_ww_bereitung
+            heaterRodHP: switch.mosquitto_broker_freigabe_heizen_mit_elektro
+            heaterRodLevel1: binary_sensor.mosquitto_broker_status_heizstab_stufe_1
+            heaterRodLevel2: binary_sensor.mosquitto_broker_status_heizstab_stufe_2
             linkDetails: /lovelace/hp-details
             linkSettings: /lovelace/hp-settings
           - type: custom:hourly-weather
@@ -1360,7 +1360,7 @@ views:
           - graph: line
             type: sensor
             detail: 1
-            entity: sensor.mosquitto_mqtt_broker_aussentemperatur
+            entity: sensor.mosquitto_broker_aussentemperatur
             name: Außentemperatur
             grid_options:
               columns: full
@@ -1368,7 +1368,7 @@ views:
           - features:
               - type: select-options
             type: tile
-            entity: select.mosquitto_mqtt_broker_betriebsart
+            entity: select.mosquitto_broker_betriebsart
             grid_options:
               columns: full
             vertical: true
@@ -1383,7 +1383,7 @@ views:
             icon: mdi:heating-coil
           - graph: line
             type: sensor
-            entity: sensor.mosquitto_mqtt_broker_pufferspeichertemperatur
+            entity: sensor.mosquitto_broker_pufferspeichertemperatur
             detail: 1
             name: Pufferspeicher
             grid_options:
@@ -1393,7 +1393,7 @@ views:
               - style: slider
                 type: numeric-input
             type: tile
-            entity: number.mosquitto_mqtt_broker_raumsolltemperatur_normal
+            entity: number.mosquitto_broker_raumsolltemperatur_normal
             name: Raumsolltemp. normal
             hide_state: false
             vertical: false
@@ -1401,28 +1401,28 @@ views:
               - style: slider
                 type: numeric-input
             type: tile
-            entity: number.mosquitto_mqtt_broker_raumsolltemperatur_reduziert
+            entity: number.mosquitto_broker_raumsolltemperatur_reduziert
             name: Raumsolltemp. reduziert
           - type: tile
-            entity: number.mosquitto_mqtt_broker_raumsolltemperatur_party
+            entity: number.mosquitto_broker_raumsolltemperatur_party
             name: Raumsolltemp. Party
             features:
               - style: slider
                 type: numeric-input
           - type: tile
-            entity: switch.mosquitto_mqtt_broker_freigabe_heizen_mit_elektro
+            entity: switch.mosquitto_broker_freigabe_heizen_mit_elektro
             name: Freigabe Heizstab
           - type: tile
-            entity: switch.mosquitto_mqtt_broker_freigabe_heizwasser_durchlauferhitzer
+            entity: switch.mosquitto_broker_freigabe_heizwasser_durchlauferhitzer
             name: Freigabe Durchlauferhitzer
           - type: tile
-            entity: number.mosquitto_mqtt_broker_niveau_der_heizkennlinie
+            entity: number.mosquitto_broker_niveau_der_heizkennlinie
             name: Niveau der Heizkennlinie
             features:
               - style: slider
                 type: numeric-input
           - type: tile
-            entity: number.mosquitto_mqtt_broker_neigung_der_heizkennlinie
+            entity: number.mosquitto_broker_neigung_der_heizkennlinie
             name: Neigung der Heizkennlinie
             features:
               - style: slider
@@ -1436,7 +1436,7 @@ views:
           - graph: line
             type: sensor
             detail: 1
-            entity: sensor.mosquitto_mqtt_broker_warmwassertemperatur_oben
+            entity: sensor.mosquitto_broker_warmwassertemperatur_oben
             name: Warmwassertank
             hours_to_show: 24
             grid_options:
@@ -1444,11 +1444,11 @@ views:
           - graph: line
             type: sensor
             detail: 1
-            entity: sensor.mosquitto_mqtt_broker_warmwassertemperatur_unten
+            entity: sensor.mosquitto_broker_warmwassertemperatur_unten
             visibility:
               - condition: state
                 entity: >-
-                  switch.mosquitto_mqtt_broker_temperatursensor_unten_im_speicher
+                  switch.mosquitto_broker_temperatursensor_unten_im_speicher
                 state: 'on'
             grid_options:
               columns: full
@@ -1458,35 +1458,35 @@ views:
               - style: slider
                 type: numeric-input
             type: tile
-            entity: number.mosquitto_mqtt_broker_warmwassersolltemperatur
+            entity: number.mosquitto_broker_warmwassersolltemperatur
             name: Solltemperatur
             features_position: bottom
             vertical: false
           - type: tile
-            entity: number.mosquitto_mqtt_broker_warmwassersolltemperatur_2
+            entity: number.mosquitto_broker_warmwassersolltemperatur_2
             name: Solltemperatur 2
             features:
               - style: slider
                 type: numeric-input
           - type: tile
-            entity: switch.mosquitto_mqtt_broker_einschaltoptimierung_fuer_warmwasser
+            entity: switch.mosquitto_broker_einschaltoptimierung_fuer_warmwasser
             name: Einschaltoptimierung
           - type: tile
-            entity: switch.mosquitto_mqtt_broker_ausschaltoptimierung_fuer_warmwasser
+            entity: switch.mosquitto_broker_ausschaltoptimierung_fuer_warmwasser
             name: Ausschaltoptimierung
           - type: tile
             entity: >-
-              switch.mosquitto_mqtt_broker_freigabe_zusatzheizung_fuer_ww_bereitung
+              switch.mosquitto_broker_freigabe_zusatzheizung_fuer_ww_bereitung
             name: Freigabe Zusatzheizung
           - type: tile
             entity: >-
-              switch.mosquitto_mqtt_broker_freigabe_elektroheizung_fuer_ww_bereitung
+              switch.mosquitto_broker_freigabe_elektroheizung_fuer_ww_bereitung
             name: Freigabe Heizstab
           - type: tile
-            entity: switch.mosquitto_mqtt_broker_temperatursensor_unten_im_speicher
+            entity: switch.mosquitto_broker_temperatursensor_unten_im_speicher
             name: Temperatursensor unten im Speicher
           - type: tile
-            entity: switch.mosquitto_mqtt_broker_einmal_ww_bereitung
+            entity: switch.mosquitto_broker_einmal_ww_bereitung
             name: 1x Aufbereitung starten
   - type: sections
     max_columns: 3
@@ -1504,106 +1504,106 @@ views:
           - graph: line
             type: sensor
             detail: 1
-            entity: sensor.mosquitto_mqtt_broker_aussentemperatur
+            entity: sensor.mosquitto_broker_aussentemperatur
             name: Außentemperatur
             grid_options:
               columns: full
             hours_to_show: 24
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_anlagentyp
+            entity: sensor.mosquitto_broker_anlagentyp
             name: Typ
             grid_options:
               columns: full
           - type: tile
-            entity: binary_sensor.mosquitto_mqtt_broker_status_primaerquelle
+            entity: binary_sensor.mosquitto_broker_status_primaerquelle
             name: Status Primärquelle
           - type: tile
-            entity: binary_sensor.mosquitto_mqtt_broker_status_sekundaerquelle
+            entity: binary_sensor.mosquitto_broker_status_sekundaerquelle
             name: Status Sekundärquelle
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_vorlauftemperatur_primaerquelle
+            entity: sensor.mosquitto_broker_vorlauftemperatur_primaerquelle
             name: Vorlauftemperatur Primärquelle
             features_position: bottom
             vertical: false
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_ruecklauftemperatur_primaerquelle
+            entity: sensor.mosquitto_broker_ruecklauftemperatur_primaerquelle
             name: Rücklauftemperatur Primärquelle
             features_position: bottom
             vertical: false
           - type: tile
-            entity: binary_sensor.mosquitto_mqtt_broker_status_heizstab_stufe_1
+            entity: binary_sensor.mosquitto_broker_status_heizstab_stufe_1
             name: Status Heizstab Stufe 1
           - type: tile
-            entity: binary_sensor.mosquitto_mqtt_broker_status_heizstab_stufe_2
+            entity: binary_sensor.mosquitto_broker_status_heizstab_stufe_2
             name: Status Heizstab Stufe 2
           - type: tile
-            entity: binary_sensor.mosquitto_mqtt_broker_status_verdichter
+            entity: binary_sensor.mosquitto_broker_status_verdichter
             name: Status Verdichter
           - type: tile
-            entity: binary_sensor.mosquitto_mqtt_broker_status_sammelmeldung
+            entity: binary_sensor.mosquitto_broker_status_sammelmeldung
             name: Status Sammelmeldungen
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_anlagenvorlauftemperatur
+            entity: sensor.mosquitto_broker_anlagenvorlauftemperatur
             name: Anlagenvorlauftemperatur
             features_position: bottom
             vertical: false
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_jahresarbeitszahl
+            entity: sensor.mosquitto_broker_jahresarbeitszahl
             name: JAZ
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_einschaltungen_primaerquelle
+            entity: sensor.mosquitto_broker_einschaltungen_primaerquelle
             name: Einschaltungen Primärquelle
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_betriebsstunden_primaerquelle
+            entity: sensor.mosquitto_broker_betriebsstunden_primaerquelle
             name: Betriebsstunden Primärquelle
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_einschaltungen_sekundaerquelle
+            entity: sensor.mosquitto_broker_einschaltungen_sekundaerquelle
             name: Einschaltungen Sekundärquelle
             features_position: bottom
             vertical: false
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_betriebsstunden_sekundaerquelle
+            entity: sensor.mosquitto_broker_betriebsstunden_sekundaerquelle
             name: Betriebsstunden Sekundärquell
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_einschaltungen_verdichter
+            entity: sensor.mosquitto_broker_einschaltungen_verdichter
             name: Einschaltungen Verdichter
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_betriebsstunden_verdichter
+            entity: sensor.mosquitto_broker_betriebsstunden_verdichter
             name: Betriebsstunden Verdichter
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_einschaltungen_heizstab_stufe_1
+            entity: sensor.mosquitto_broker_einschaltungen_heizstab_stufe_1
             name: Einschaltungen Heizstab Stufe 1
             features_position: bottom
             vertical: false
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_betriebsstunden_heizstab_stufe_1
+            entity: sensor.mosquitto_broker_betriebsstunden_heizstab_stufe_1
             name: Betriebsstunden Heizstab Stufe 1
             features_position: bottom
             vertical: false
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_einschaltungen_heizstab_stufe_2
+            entity: sensor.mosquitto_broker_einschaltungen_heizstab_stufe_2
             name: Einschaltungen Heizstab Stufe 2
             features_position: bottom
             vertical: false
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_betriebsstunden_heizstab_stufe_2
+            entity: sensor.mosquitto_broker_betriebsstunden_heizstab_stufe_2
             name: Betriebsstunden Heizstab Stufe 2
             features_position: bottom
             vertical: false
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_einschaltungen_sammelmeldung
+            entity: sensor.mosquitto_broker_einschaltungen_sammelmeldung
             name: Einschaltungen Sammelmeldung
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_betriebsstunden_sammelmeldung
+            entity: sensor.mosquitto_broker_betriebsstunden_sammelmeldung
             name: Betriebsstunden Sammelmeldung
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_druck_im_verdampfer
+            entity: sensor.mosquitto_broker_druck_im_verdampfer
             name: Druck im Verdampfer
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_temperatur_verdampfer
+            entity: sensor.mosquitto_broker_temperatur_verdampfer
             name: Temperatur im Verdampfer
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_druck_im_kondensator
+            entity: sensor.mosquitto_broker_druck_im_kondensator
             name: Druck im Kondensator
       - type: grid
         cards:
@@ -1613,22 +1613,22 @@ views:
             icon: mdi:heating-coil
           - graph: line
             type: sensor
-            entity: sensor.mosquitto_mqtt_broker_pufferspeichertemperatur
+            entity: sensor.mosquitto_broker_pufferspeichertemperatur
             detail: 1
             name: Pufferspeicher
             grid_options:
               columns: full
             hours_to_show: 24
           - type: tile
-            entity: binary_sensor.mosquitto_mqtt_broker_heizkreispumpe
+            entity: binary_sensor.mosquitto_broker_heizkreispumpe
             name: Heizkreispumpe
             features_position: bottom
             vertical: false
           - type: tile
-            entity: binary_sensor.mosquitto_mqtt_broker_status_speicherladepumpe
+            entity: binary_sensor.mosquitto_broker_status_speicherladepumpe
             name: Status Speicherladepumpe
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_vorlauftemperatur_heizkreis
+            entity: sensor.mosquitto_broker_vorlauftemperatur_heizkreis
             name: Vorlauftemperatur Heizkreis
             features_position: bottom
             vertical: false
@@ -1636,42 +1636,42 @@ views:
             name: Raumtemperatur ist Heizkreis
             features_position: bottom
             vertical: false
-            entity: sensor.mosquitto_mqtt_broker_raumtemperatur_ist_heizkreis
+            entity: sensor.mosquitto_broker_raumtemperatur_ist_heizkreis
           - type: tile
             name: Raumtemperatur soll Heizkreis
             features_position: bottom
             vertical: false
-            entity: sensor.mosquitto_mqtt_broker_raumtemperatur_soll_heizkreis
+            entity: sensor.mosquitto_broker_raumtemperatur_soll_heizkreis
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_jahresarbeitszahl_heizen
+            entity: sensor.mosquitto_broker_jahresarbeitszahl_heizen
             name: JAZ
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_einschaltungen_speicherladepumpe
+            entity: sensor.mosquitto_broker_einschaltungen_speicherladepumpe
             name: Einschaltungen Speicherladepumpe
           - type: tile
             name: Betriebsstunden Speicherladepumpe
             features_position: bottom
             vertical: false
-            entity: sensor.mosquitto_mqtt_broker_betriebsstunden_speicherladepumpe
+            entity: sensor.mosquitto_broker_betriebsstunden_speicherladepumpe
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_einschaltungen_heizkreis
+            entity: sensor.mosquitto_broker_einschaltungen_heizkreis
             name: Einschaltungen Heizkreis
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_betriebsstunden_pumpe_heizkreis
+            entity: sensor.mosquitto_broker_betriebsstunden_pumpe_heizkreis
             name: Betriebsstunden Pumpe Heizkreis
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_waermeenergie_heizen_woche
+            entity: sensor.mosquitto_broker_waermeenergie_heizen_woche
             name: Wärmeenergie Woche
             icon: mdi:heat-wave
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_elektroenergie_heizen_woche
+            entity: sensor.mosquitto_broker_elektroenergie_heizen_woche
             name: Elektrische Energie Woche
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_waermeenergie_heizen_jahr
+            entity: sensor.mosquitto_broker_waermeenergie_heizen_jahr
             name: Wärmeenergie Jahr
             icon: mdi:heat-wave
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_elektroenergie_heizen_jahr
+            entity: sensor.mosquitto_broker_elektroenergie_heizen_jahr
             name: Elektrische Energie Jahr
       - type: grid
         cards:
@@ -1682,7 +1682,7 @@ views:
           - graph: line
             type: sensor
             detail: 1
-            entity: sensor.mosquitto_mqtt_broker_warmwassertemperatur_oben
+            entity: sensor.mosquitto_broker_warmwassertemperatur_oben
             name: Warmwassertank
             hours_to_show: 24
             grid_options:
@@ -1693,48 +1693,48 @@ views:
             visibility:
               - condition: state
                 entity: >-
-                  switch.mosquitto_mqtt_broker_temperatursensor_unten_im_speicher
+                  switch.mosquitto_broker_temperatursensor_unten_im_speicher
                 state: 'on'
             grid_options:
               columns: full
             name: Warmwassertemperatur unten
             hours_to_show: 24
-            entity: sensor.mosquitto_mqtt_broker_warmwassertemperatur_unten
+            entity: sensor.mosquitto_broker_warmwassertemperatur_unten
           - type: tile
             name: Zirkulationspumpe
             features_position: bottom
             vertical: false
-            entity: binary_sensor.mosquitto_mqtt_broker_warmwasser_zirkulationspumpe
+            entity: binary_sensor.mosquitto_broker_warmwasser_zirkulationspumpe
           - type: tile
             name: Warmwasserventil
             icon: mdi:pipe-valve
             features_position: bottom
             vertical: false
-            entity: binary_sensor.mosquitto_mqtt_broker_status_warmwasserventil
+            entity: binary_sensor.mosquitto_broker_status_warmwasserventil
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_jahresarbeitszahl_ww
+            entity: sensor.mosquitto_broker_jahresarbeitszahl_ww
             name: Jahresarbeitszahl
             grid_options:
               columns: full
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_einschaltungen_warmwasserventil
+            entity: sensor.mosquitto_broker_einschaltungen_warmwasserventil
             name: Einschaltungen Warmwasserventil
           - type: tile
             name: Betriebsstunden Warmwasserventil
             features_position: bottom
             vertical: false
-            entity: sensor.mosquitto_mqtt_broker_betriebsstunden_warmwasserventil
+            entity: sensor.mosquitto_broker_betriebsstunden_warmwasserventil
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_waermeenergie_warmwasser_woche
+            entity: sensor.mosquitto_broker_waermeenergie_warmwasser_woche
             name: Wärmeenergie Woche
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_elektroenergie_warmwasser_woche
+            entity: sensor.mosquitto_broker_elektroenergie_warmwasser_woche
             name: Elektrische Energie Woche
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_waermeenergie_warmwasser_jahr
+            entity: sensor.mosquitto_broker_waermeenergie_warmwasser_jahr
             name: Wärmeenergie Jahr
           - type: tile
-            entity: sensor.mosquitto_mqtt_broker_elektroenergie_warmwasser_jahr
+            entity: sensor.mosquitto_broker_elektroenergie_warmwasser_jahr
             name: Elektrische Energie Jahr
           - show_current: true
             show_forecast: true

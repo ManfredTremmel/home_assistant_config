@@ -834,35 +834,35 @@ template:
     - unique_id: "heating_pump_status_on_off"
       name: Heating Pump Status On Off
       state: >-
-          {{ (not is_state("select.mosquitto_mqtt_broker_betriebsart", "Abschaltbetrieb")) | bool }}
-      availability: "{{ has_value('select.mosquitto_mqtt_broker_betriebsart') }}"
+          {{ (not is_state("select.mosquitto_broker_betriebsart", "Abschaltbetrieb")) | bool }}
+      availability: "{{ has_value('select.mosquitto_broker_betriebsart') }}"
     - unique_id: "heating_pump_hot_water_mode"
       name: Heating Pump Hot Water Mode
       state: >-
-          {{ (is_state("select.mosquitto_mqtt_broker_betriebsart", "Warmwasser") | bool) or (is_state("select.mosquitto_mqtt_broker_betriebsart", "Heizen+WW") | bool) or (is_state("select.mosquitto_mqtt_broker_betriebsart", "Heizen+WW+Party") | bool) or (is_state("select.mosquitto_mqtt_broker_betriebsart", "Heizen+WW+Sparbetrieb") | bool) }}
-      availability: "{{ has_value('select.mosquitto_mqtt_broker_betriebsart') }}"
+          {{ (is_state("select.mosquitto_broker_betriebsart", "Warmwasser") | bool) or (is_state("select.mosquitto_broker_betriebsart", "Heizen+WW") | bool) or (is_state("select.mosquitto_broker_betriebsart", "Heizen+WW+Party") | bool) or (is_state("select.mosquitto_broker_betriebsart", "Heizen+WW+Sparbetrieb") | bool) }}
+      availability: "{{ has_value('select.mosquitto_broker_betriebsart') }}"
     - unique_id: "heating_pump_heating_mode"
       name: Heating Pump Heating Mode
       state: >-
-          {{ (is_state("select.mosquitto_mqtt_broker_betriebsart", "Heizen+WW") | bool) or (is_state("select.mosquitto_mqtt_broker_betriebsart", "Heizen+WW+Party") | bool) or (is_state("select.mosquitto_mqtt_broker_betriebsart", "Heizen+WW+Sparbetrieb") | bool) }}
-      availability: "{{ has_value('select.mosquitto_mqtt_broker_betriebsart') }}"
+          {{ (is_state("select.mosquitto_broker_betriebsart", "Heizen+WW") | bool) or (is_state("select.mosquitto_broker_betriebsart", "Heizen+WW+Party") | bool) or (is_state("select.mosquitto_broker_betriebsart", "Heizen+WW+Sparbetrieb") | bool) }}
+      availability: "{{ has_value('select.mosquitto_broker_betriebsart') }}"
     - unique_id: "heating_pump_party_mode"
       name: Heating Pump Party Mode
       state: >-
-          {{ is_state("select.mosquitto_mqtt_broker_betriebsart", "Heizen+WW+Party") | bool }}
-      availability: "{{ has_value('select.mosquitto_mqtt_broker_betriebsart') }}"
+          {{ is_state("select.mosquitto_broker_betriebsart", "Heizen+WW+Party") | bool }}
+      availability: "{{ has_value('select.mosquitto_broker_betriebsart') }}"
     - unique_id: "heating_pump_energy_save_mode"
       name: Heating Pump Energy Save Mode
       state: >-
-          {{ is_state("select.mosquitto_mqtt_broker_betriebsart", "Heizen+WW+Sparbetrieb") | bool }}
-      availability: "{{ has_value('select.mosquitto_mqtt_broker_betriebsart') }}"
+          {{ is_state("select.mosquitto_broker_betriebsart", "Heizen+WW+Sparbetrieb") | bool }}
+      availability: "{{ has_value('select.mosquitto_broker_betriebsart') }}"
     - unique_id: "heating_pump_cooling_mode"
       name: Heating Pump Cooling Mode
       state: >-
           {{ false }}
-      availability: "{{ has_value('select.mosquitto_mqtt_broker_betriebsart') }}"
+      availability: "{{ has_value('select.mosquitto_broker_betriebsart') }}"
     - unique_id: "heating_pump_night_mode"
       name: Heating Pump Night Mode
       state: >-
           {{ false }}
-      availability: "{{ has_value('select.mosquitto_mqtt_broker_betriebsart') }}"
+      availability: "{{ has_value('select.mosquitto_broker_betriebsart') }}"

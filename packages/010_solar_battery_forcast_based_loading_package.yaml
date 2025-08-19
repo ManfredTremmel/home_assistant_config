@@ -42,7 +42,7 @@
 #       sensor.rct_battery_capacity_unload_calibration
 #       sensor.rct_power_storage_battery_state_of_charge
 #       sensor.rct_power_storage_battery_minimum_state_of_charge_2
-#       sensor.mosquitto_mqtt_broker_aussentemperatur
+#       sensor.mosquitto_broker_aussentemperatur
 #       sensor.heating_pump_heating_mode
 #
 # Provided entities:
@@ -69,7 +69,7 @@ template:
             {% set before_noon_minus_one = ((states('sensor.sun_next_noon') | as_datetime() | as_local()).day == now().day) and (now() + timedelta( hours = 1 )) < (states('sensor.sun_next_noon') | as_datetime() | as_local()) %}
             {% set after_sunrise = (((states('sensor.sun_next_rising') | as_datetime() | as_local()).day == now().day) and (now() < (states('sensor.sun_next_rising')) | as_datetime() | as_local()) | bool) == false %}
             {% set hold_phase = after_sunrise and before_noon_minus_one %}
-            {% set temperature = (states('sensor.mosquitto_mqtt_broker_aussentemperatur')|float(0.0)) %}
+            {% set temperature = (states('sensor.mosquitto_broker_aussentemperatur')|float(0.0)) %}
             {% if ((epr_today > 40 and heating_on) or (epr_today > 20 and heating_on == false)) and hold_phase -%}
                 27
             {%- elif ((epr_today > 30 and heating_on) or (epr_today > 15 and heating_on == false)) and hold_phase -%}
@@ -90,7 +90,7 @@ template:
           {%- else -%}
             {{ states('sensor.calculated_maximum_battery_soc') }}
           {%- endif %}
-      availability: "{{ has_value('sensor.energy_production_today_remaining_total') and has_value('sensor.energy_production_tomorrow_total') and has_value('binary_sensor.heating_pump_heating_mode') and has_value('sensor.sun_next_noon') and has_value('sensor.sun_next_rising') and has_value('sensor.mosquitto_mqtt_broker_aussentemperatur') }}"
+      availability: "{{ has_value('sensor.energy_production_today_remaining_total') and has_value('sensor.energy_production_tomorrow_total') and has_value('binary_sensor.heating_pump_heating_mode') and has_value('sensor.sun_next_noon') and has_value('sensor.sun_next_rising') and has_value('sensor.mosquitto_broker_aussentemperatur') }}"
 
 input_number:
 

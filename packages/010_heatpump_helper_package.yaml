@@ -14,9 +14,9 @@
 #       sensor.energy_production_today_remaining_total
 #       binary_sensor.heating_pump_heating_mode
 #       binary_sensor.heating_pump_party_mode
-#       select.mosquitto_mqtt_broker_betriebsart
-#       sensor.mosquitto_mqtt_broker_warmwassertemperatur_oben
-#       number.mosquitto_mqtt_broker_warmwassersolltemperatur_2
+#       select.mosquitto_broker_betriebsart
+#       sensor.mosquitto_broker_warmwassertemperatur_oben
+#       number.mosquitto_broker_warmwassersolltemperatur_2
 #
 # Provided entities:
 #       none
@@ -53,7 +53,7 @@ automation heating_pump_helpers:
         data:
           option: Heizen+WW+Party
         target:
-          entity_id: select.mosquitto_mqtt_broker_betriebsart
+          entity_id: select.mosquitto_broker_betriebsart
     mode: single
 
   #
@@ -78,7 +78,7 @@ automation heating_pump_helpers:
         data:
           option: Heizen+WW
         target:
-          entity_id: select.mosquitto_mqtt_broker_betriebsart
+          entity_id: select.mosquitto_broker_betriebsart
     mode: single
 
   #
@@ -91,18 +91,18 @@ automation heating_pump_helpers:
     triggers:
       - trigger: numeric_state
         entity_id:
-        - sensor.mosquitto_mqtt_broker_warmwassertemperatur_oben
-        above: number.mosquitto_mqtt_broker_warmwassersolltemperatur_2
+        - sensor.mosquitto_broker_warmwassertemperatur_oben
+        above: number.mosquitto_broker_warmwassersolltemperatur_2
     conditions:
       - condition: state
-        entity_id: switch.mosquitto_mqtt_broker_einmal_ww_bereitung
+        entity_id: switch.mosquitto_broker_einmal_ww_bereitung
         state: 'on'
     actions:
       - action: switch.turn_off
         metadata: {}
         data: {}
         target:
-          entity_id: switch.mosquitto_mqtt_broker_einmal_ww_bereitung
+          entity_id: switch.mosquitto_broker_einmal_ww_bereitung
     mode: single
 
   #
@@ -117,15 +117,15 @@ automation heating_pump_helpers:
         at: '13:30:00'
     conditions:
       - condition: numeric_state
-        entity_id: sensor.mosquitto_mqtt_broker_warmwassertemperatur_oben
+        entity_id: sensor.mosquitto_broker_warmwassertemperatur_oben
         below: 45
       - condition: state
-        entity_id: binary_sensor.mosquitto_mqtt_broker_status_warmwasserventil
+        entity_id: binary_sensor.mosquitto_broker_status_warmwasserventil
         state: 'off'
     actions:
       - action: switch.turn_on
         metadata: {}
         data: {}
         target:
-          entity_id: switch.mosquitto_mqtt_broker_einmal_ww_bereitung
+          entity_id: switch.mosquitto_broker_einmal_ww_bereitung
     mode: single
