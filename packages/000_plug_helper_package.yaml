@@ -1,0 +1,90 @@
+# ############ HA helpers for power plugs ############
+#
+# (C) 2025 Manfred Tremmel
+#
+# I've installed some Zigbee power plugs and sensors and
+# here are some helpers defined
+#
+# Used entities:
+#       sensor.steckdose_ug_waschmaschine_power
+#       sensor.steckdose_eg_geschirrspuhler_power
+#
+# Provided entities:
+#       binary_sensor.waschmaschine
+#       binary_sensor.geschirrspuelmaschine
+#
+#
+template:
+  - binary_sensor:
+
+    # sensor indicates washing machine is running or not
+    - unique_id: "waschmaschine"
+      name: "Waschmaschine"
+      state: ""
+      device_class: running
+      icon: mdi:washing-machine
+    # sensor indicates dishwasher is running or not
+    - unique_id: "geschirrspulmaschine"
+      name: "Geschirrspülmaschine"
+      state: ""
+      device_class: running
+      icon: mdi:dishwasher
+
+automation power_plug_helpers:
+  - id: 'waschmaschine_statusbenachrichtigung'
+    alias: Waschmaschine Statusbenachrichtigung
+    description: ''
+    use_blueprint:
+      path: sbyx/notify-or-do-something-when-an-appliance-like-a-dishwasher-or-washing-machine-finishes.yaml
+      input:
+        power_sensor: sensor.steckdose_ug_waschmaschine_power
+        starting_threshold: 20
+        finishing_threshold: 15
+        actions:
+        - action: notify.notify
+          metadata: {}
+          data:
+            message: 'Die Waschmaschine kann geleert werden'
+            title: 'Die Waschmaschine ist fertig'
+        - action: python_script.set_state
+          data:
+            entity_id: binary_sensor.waschmaschine
+            state: 'off'
+        pre_actions:
+        - action: notify.notify
+          metadata: {}
+          data:
+            message: 'Die Waschmaschine läuft'
+            title: 'Die Waschmaschine wurde gestartet'
+        - action: python_script.set_state
+          data:
+            entity_id: binary_sensor.waschmaschine
+            state: 'on'
+  - id: 'geschirrspulmaschine_statusbenachrichtigung'
+    alias: Geschirrspülmaschine Statusbenachrichtigung
+    description: ''
+    use_blueprint:
+      path: sbyx/notify-or-do-something-when-an-appliance-like-a-dishwasher-or-washing-machine-finishes.yaml
+      input:
+        power_sensor: sensor.steckdose_eg_geschirrspuhler_power
+        starting_threshold: 10
+        actions:
+        - action: notify.notify
+          metadata: {}
+          data:
+            message: 'Die Geschirrspülmaschine kann geleert werden'
+            title: 'Die Geschirrspülmaschine ist fertig'
+        - action: python_script.set_state
+          data:
+            entity_id: binary_sensor.geschirrspulmaschine
+            state: 'off'
+        pre_actions:
+        - action: notify.notify
+          metadata: {}
+          data:
+            title: 'Die Geschirrspülmaschine ist gestartet'
+            message: 'Die Geschirrspülmaschine läuft'
+        - action: python_script.set_state
+          data:
+            entity_id: binary_sensor.geschirrspulmaschine
+            state: 'on'
