@@ -5,6 +5,10 @@
 # I've installed some Zigbee power plugs and sensors and
 # here are some helpers defined
 #
+# Dependencies:
+#       "kodi" extension
+#       "000_kodi_package.yaml" (not in git repository contains user and password)
+#
 # Used entities:
 #       sensor.steckdose_ug_waschmaschine_power
 #       sensor.steckdose_eg_geschirrspuhler_power
@@ -39,23 +43,29 @@ automation power_plug_helpers:
       input:
         power_sensor: sensor.steckdose_ug_waschmaschine_power
         starting_threshold: 20
-        finishing_threshold: 15
+        starting_hysteresis: 3
+        finishing_threshold: 50
+        finishing_hysteresis: 4
         actions:
-        - action: notify.notify
-          metadata: {}
+        - action: notify.kodi_t470
           data:
-            message: 'Die Waschmaschine kann geleert werden'
             title: 'Die Waschmaschine ist fertig'
+            message: 'Die Waschmaschine kann geleert werden'
+            data:
+              displaytime: 20000
+              icon: "info"
         - action: python_script.set_state
           data:
             entity_id: binary_sensor.waschmaschine
             state: 'off'
         pre_actions:
-        - action: notify.notify
-          metadata: {}
+        - action: notify.kodi_t470
           data:
-            message: 'Die Waschmaschine läuft'
             title: 'Die Waschmaschine wurde gestartet'
+            message: 'Die Waschmaschine läuft'
+            data:
+              displaytime: 20000
+              icon: "info"
         - action: python_script.set_state
           data:
             entity_id: binary_sensor.waschmaschine
@@ -68,22 +78,29 @@ automation power_plug_helpers:
       input:
         power_sensor: sensor.steckdose_eg_geschirrspuhler_power
         starting_threshold: 10
+        starting_hysteresis: 3
+        finishing_threshold: 20
+        finishing_hysteresis: 2
         actions:
-        - action: notify.notify
-          metadata: {}
+        - action: notify.kodi_t470
           data:
-            message: 'Die Geschirrspülmaschine kann geleert werden'
             title: 'Die Geschirrspülmaschine ist fertig'
+            message: 'Die Geschirrspülmaschine kann geleert werden'
+            data:
+              displaytime: 20000
+              icon: "info"
         - action: python_script.set_state
           data:
             entity_id: binary_sensor.geschirrspulmaschine
             state: 'off'
         pre_actions:
-        - action: notify.notify
-          metadata: {}
+        - action: notify.kodi_t470
           data:
             title: 'Die Geschirrspülmaschine ist gestartet'
             message: 'Die Geschirrspülmaschine läuft'
+            data:
+              displaytime: 20000
+              icon: "info"
         - action: python_script.set_state
           data:
             entity_id: binary_sensor.geschirrspulmaschine
