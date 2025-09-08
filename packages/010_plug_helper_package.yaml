@@ -83,8 +83,8 @@ automation power_plug_helpers:
         power_sensor: sensor.steckdose_eg_geschirrspuhler_power
         starting_threshold: 10
         starting_hysteresis: 3
-        finishing_threshold: 20
-        finishing_hysteresis: 2
+        finishing_threshold: 10
+        finishing_hysteresis: 3
         actions:
         - action: notify.kodi_t470
           data:
