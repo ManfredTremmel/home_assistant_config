@@ -35,9 +35,11 @@ template:
       icon: mdi:dishwasher
 
 automation power_plug_helpers:
-  - id: 'waschmaschine_statusbenachrichtigung'
-    alias: Waschmaschine Statusbenachrichtigung
-    description: ''
+
+  # prüfe, ob die Waschmaschine läuft
+  - id: "waschmaschine_statusbenachrichtigung"
+    alias: "Waschmaschine Statusbenachrichtigung"
+    description: ""
     use_blueprint:
       path: sbyx/notify-or-do-something-when-an-appliance-like-a-dishwasher-or-washing-machine-finishes.yaml
       input:
@@ -49,30 +51,32 @@ automation power_plug_helpers:
         actions:
         - action: notify.kodi_t470
           data:
-            title: 'Die Waschmaschine ist fertig'
-            message: 'Die Waschmaschine kann geleert werden'
+            title: "Waschmaschine ist fertig"
+            message: "Die Waschmaschine kann geleert werden"
+            data:
+              displaytime: 20000
+              icon: "info"
+        - action: notify.kodi_libreelec_eg2
+          data:
+            title: "Waschmaschine ist fertig"
+            message: "Die Waschmaschine kann geleert werden"
             data:
               displaytime: 20000
               icon: "info"
         - action: python_script.set_state
           data:
             entity_id: binary_sensor.waschmaschine
-            state: 'off'
+            state: "off"
         pre_actions:
-        - action: notify.kodi_t470
-          data:
-            title: 'Die Waschmaschine wurde gestartet'
-            message: 'Die Waschmaschine läuft'
-            data:
-              displaytime: 20000
-              icon: "info"
         - action: python_script.set_state
           data:
             entity_id: binary_sensor.waschmaschine
-            state: 'on'
-  - id: 'geschirrspulmaschine_statusbenachrichtigung'
-    alias: Geschirrspülmaschine Statusbenachrichtigung
-    description: ''
+            state: "on"
+
+  # Prüfe, ob die Geschirrspülmaschine läuft
+  - id: "geschirrspulmaschine_statusbenachrichtigung"
+    alias: "Geschirrspülmaschine Statusbenachrichtigung"
+    description: ""
     use_blueprint:
       path: sbyx/notify-or-do-something-when-an-appliance-like-a-dishwasher-or-washing-machine-finishes.yaml
       input:
@@ -84,24 +88,196 @@ automation power_plug_helpers:
         actions:
         - action: notify.kodi_t470
           data:
-            title: 'Die Geschirrspülmaschine ist fertig'
-            message: 'Die Geschirrspülmaschine kann geleert werden'
+            title: "Geschirrspüler ist fertig"
+            message: "Die Geschirrspülmaschine kann geleert werden"
+            data:
+              displaytime: 20000
+              icon: "info"
+        - action: notify.kodi_libreelec_eg2
+          data:
+            title: "Geschirrspüler ist fertig"
+            message: "Die Geschirrspülmaschine kann geleert werden"
             data:
               displaytime: 20000
               icon: "info"
         - action: python_script.set_state
           data:
             entity_id: binary_sensor.geschirrspulmaschine
-            state: 'off'
+            state: "off"
         pre_actions:
-        - action: notify.kodi_t470
-          data:
-            title: 'Die Geschirrspülmaschine ist gestartet'
-            message: 'Die Geschirrspülmaschine läuft'
-            data:
-              displaytime: 20000
-              icon: "info"
         - action: python_script.set_state
           data:
             entity_id: binary_sensor.geschirrspulmaschine
-            state: 'on'
+            state: "on"
+
+  # Sende Meldungen, wenn einer der Wasser-Sensoren im Keller Alarm schlägt
+  - id: "wasser_im_keller_technikraum"
+    alias: "Wasser im Keller Technikraum"
+    description: "Der Wassersensor meldet Wasser im Technikraum"
+    triggers:
+    - trigger: state
+      entity_id:
+      - binary_sensor.wassersensor_ug_technikraum_water_leak
+      to: "on"
+    actions:
+      - action: notify.kodi_t470
+        data:
+          title: 'Wasser im Keller'
+          message: 'Der Wassersensor im Technikraum meldet Wasser!'
+          data:
+            displaytime: 50000
+            icon: error
+      - action: notify.kodi_libreelecmanfred
+        data:
+          title: 'Wasser im Keller'
+          message: 'Der Wassersensor im Technikraum meldet Wasser!'
+          data:
+            displaytime: 50000
+            icon: error
+      - action: notify.kodi_libreelec_eg2
+        data:
+          title: 'Wasser im Keller'
+          message: 'Der Wassersensor im Technikraum meldet Wasser!'
+          data:
+            displaytime: 50000
+            icon: error
+      - action: button.press
+        target:
+          entity_id: button.anrufhomeassistanterrormessage
+
+  - id: "wasser_im_keller_kellerraum"
+    alias: "Wasser im Keller Kellerraum"
+    description: "Der Wassersensor meldet Wasser im Kellerraum"
+    triggers:
+    - trigger: state
+      entity_id:
+      - binary_sensor.wassersensor_ug_kellerraum_water_leak
+      to: "on"
+    actions:
+      - action: notify.kodi_t470
+        data:
+          title: 'Wasser im Keller'
+          message: 'Der Wassersensor im Kellerraum meldet Wasser!'
+          data:
+            displaytime: 50000
+            icon: error
+      - action: notify.kodi_libreelecmanfred
+        data:
+          title: 'Wasser im Keller'
+          message: 'Der Wassersensor im Kellerraum meldet Wasser!'
+          data:
+            displaytime: 50000
+            icon: error
+      - action: notify.kodi_libreelec_eg2
+        data:
+          title: 'Wasser im Keller'
+          message: 'Der Wassersensor im Kellerraum meldet Wasser!'
+          data:
+            displaytime: 50000
+            icon: error
+      - action: button.press
+        target:
+          entity_id: button.anrufhomeassistanterrormessage
+
+  - id: "wasser_im_keller_fittnesraum"
+    alias: "Wasser im Keller Fittnesraum"
+    description: "Der Wassersensor meldet Wasser im Fittnesraum"
+    triggers:
+    - trigger: state
+      entity_id:
+      - binary_sensor.wassersensor_ug_fittnesraum_water_leak
+      to: "on"
+    actions:
+      - action: notify.kodi_t470
+        data:
+          title: 'Wasser im Keller'
+          message: 'Der Wassersensor im Fittnesraum meldet Wasser!'
+          data:
+            displaytime: 50000
+            icon: error
+      - action: notify.kodi_libreelecmanfred
+        data:
+          title: 'Wasser im Keller'
+          message: 'Der Wassersensor im Fittnesraum meldet Wasser!'
+          data:
+            displaytime: 50000
+            icon: error
+      - action: notify.kodi_libreelec_eg2
+        data:
+          title: 'Wasser im Keller'
+          message: 'Der Wassersensor im Fittnesraum meldet Wasser!'
+          data:
+            displaytime: 50000
+            icon: error
+      - action: button.press
+        target:
+          entity_id: button.anrufhomeassistanterrormessage
+
+  - id: "wasser_im_keller_werkstatt"
+    alias: "Wasser im Keller Werkstatt"
+    description: "Der Wassersensor meldet Wasser im Werkstatt"
+    triggers:
+    - trigger: state
+      entity_id:
+      - binary_sensor.wassersensor_ug_werkstatt_water_leak
+      to: "on"
+    actions:
+      - action: notify.kodi_t470
+        data:
+          title: 'Wasser im Keller'
+          message: 'Der Wassersensor im Werkstatt meldet Wasser!'
+          data:
+            displaytime: 50000
+            icon: error
+      - action: notify.kodi_libreelecmanfred
+        data:
+          title: 'Wasser im Keller'
+          message: 'Der Wassersensor im Werkstatt meldet Wasser!'
+          data:
+            displaytime: 50000
+            icon: error
+      - action: notify.kodi_libreelec_eg2
+        data:
+          title: 'Wasser im Keller'
+          message: 'Der Wassersensor im Werkstatt meldet Wasser!'
+          data:
+            displaytime: 50000
+            icon: error
+      - action: button.press
+        target:
+          entity_id: button.anrufhomeassistanterrormessage
+
+  # Rauchmelder im Keller hat Alarm geschlagen
+  - id: "rauch_im_keller_fittnesraum"
+    alias: "Rauch im Keller Fittnesraum"
+    description: "Der Rauchmelder meldet Rauch im Fittnesraum"
+    triggers:
+    - trigger: state
+      entity_id:
+      - binary_sensor.rauchmelder_ug_fittnesraum_smoke
+      to: "on"
+    actions:
+      - action: notify.kodi_t470
+        data:
+          title: 'Rauch im Keller'
+          message: 'Der Rauchmelder meldet Rauch im Fittnesraum!'
+          data:
+            displaytime: 50000
+            icon: error
+      - action: notify.kodi_libreelecmanfred
+        data:
+          title: 'Rauch im Keller'
+          message: 'Der Rauchmelder meldet Rauch im Fittnesraum!'
+          data:
+            displaytime: 50000
+            icon: error
+      - action: notify.kodi_libreelec_eg2
+        data:
+          title: 'Rauch im Keller'
+          message: 'Der Rauchmelder meldet Rauch im Fittnesraum!'
+          data:
+            displaytime: 50000
+            icon: error
+      - action: button.press
+        target:
+          entity_id: button.anrufhomeassistanterrormessage
