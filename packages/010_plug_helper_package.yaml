@@ -83,7 +83,7 @@ automation power_plug_helpers:
         power_sensor: sensor.steckdose_eg_geschirrspuhler_power
         starting_threshold: 10
         starting_hysteresis: 3
-        finishing_threshold: 2
+        finishing_threshold: 3
         finishing_hysteresis: 2
         actions:
         - action: notify.kodi_t470
@@ -120,6 +120,9 @@ automation power_plug_helpers:
       - binary_sensor.wassersensor_ug_technikraum_water_leak
       to: "on"
     actions:
+      - action: switch.turn_off
+        target:
+          entity_id: switch.steckdose_ug_waschmaschine
       - action: notify.kodi_t470
         data:
           title: 'Wasser im Keller'
@@ -188,6 +191,9 @@ automation power_plug_helpers:
       - binary_sensor.wassersensor_ug_fittnesraum_water_leak
       to: "on"
     actions:
+      - action: switch.turn_off
+        target:
+          entity_id: switch.steckdose_ug_hauswasserwerk
       - action: notify.kodi_t470
         data:
           title: 'Wasser im Keller'
