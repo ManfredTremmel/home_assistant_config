@@ -106,19 +106,22 @@ automation heating_pump_helpers:
     mode: single
 
   #
-  # At 1:30 PM turn on one time hot water generation, when temperature is below 45 ℃ and
+  # At 1:30 PM turn on one time hot water generation, when temperature is below 40 ℃ and
   # valve is in heating stage.
   #
   - id: 'heating_pump_activate_hot_water'
     alias: 'Wärmepumpe einmal Warmwasseraufbereitung im Party Modus aktivieren'
-    description: 'Um 13:30 Uhr Warmwasseraufbereitung starten, wenn der Tank unter 45 Grad warm ist'
+    description: 'Um 13:30 Uhr Warmwasseraufbereitung starten, wenn der Tank unter 40 Grad warm ist'
     triggers:
       - trigger: time
         at: '13:30:00'
     conditions:
       - condition: numeric_state
         entity_id: sensor.mosquitto_broker_warmwassertemperatur_oben
-        below: 45
+        below: 40
+      - condition: state
+        entity_id: binary_sensor.heating_pump_party_mode
+        state: 'on'
       - condition: state
         entity_id: binary_sensor.mosquitto_broker_status_warmwasserventil
         state: 'off'
