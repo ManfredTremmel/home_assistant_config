@@ -10,7 +10,7 @@
 #       "010_solar_monitoring_package.yaml"
 #
 # Used entities:
-#       sensor.stp_20_50_grid_power
+#       sensor.rct_power_storage_external_generator_s0_power
 #       sensor.rct_power_storage_grid_power
 #       sensor.rct_power_storage_inverter_ac_power
 #       sensor.installed_pv_wr1
@@ -40,8 +40,8 @@ template:
       state_class: "measurement"
       unit_of_measurement: "kW"
       state: >-
-          {{ ((states('sensor.stp_20_50_grid_power')|float(0.0)) + (states('sensor.rct_power_storage_grid_power')|float(0.0)) + (states('sensor.rct_power_storage_inverter_ac_power')|float(0.0)))|multiply(0.001)|round(3) }}
-      availability: "{{ has_value('sensor.stp_20_50_grid_power') and has_value('sensor.rct_power_storage_grid_power') and has_value('sensor.rct_power_storage_inverter_ac_power') }}"
+          {{ ((states('sensor.rct_power_storage_external_generator_s0_power')|float(0.0)) + (states('sensor.rct_power_storage_grid_power')|float(0.0)) + (states('sensor.rct_power_storage_inverter_ac_power')|float(0.0)))|multiply(0.001)|round(3) }}
+      availability: "{{ has_value('sensor.rct_power_storage_external_generator_s0_power') and has_value('sensor.rct_power_storage_grid_power') and has_value('sensor.rct_power_storage_inverter_ac_power') }}"
 
     #
     # Summarize capacity of all inverters.
