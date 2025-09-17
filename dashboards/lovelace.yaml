@@ -88,8 +88,7 @@ views:
             evaporatorTemperature: sensor.mosquitto_broker_temperatur_verdampfer
             condenserPressure: sensor.mosquitto_broker_druck_im_kondensator
             wwHeatingValve: binary_sensor.mosquitto_broker_status_warmwasserventil
-            heaterRodWW: >-
-              switch.mosquitto_broker_freigabe_elektroheizung_fuer_ww_bereitung
+            heaterRodWW: switch.mosquitto_broker_freigabe_elektroheizung_fuer_ww_bereitung
             heaterRodHP: switch.mosquitto_broker_freigabe_heizen_mit_elektro
             heaterRodLevel1: binary_sensor.mosquitto_broker_status_heizstab_stufe_1
             heaterRodLevel2: binary_sensor.mosquitto_broker_status_heizstab_stufe_2
@@ -101,8 +100,89 @@ views:
             show_precipitation_probability: false
             icons: true
             name: Wetter, die nächsten Stunden
+          - type: tile
+            entity: binary_sensor.waschmaschine
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: binary_sensor.geschirrspulmaschine
+            features_position: bottom
+            vertical: false
       - type: grid
         cards:
+          - type: heading
+            icon: mdi:alarm-light
+            heading: Warnungen
+            heading_style: title
+          - type: tile
+            entity: binary_sensor.wassersensor_ug_kellerraum_water_leak
+            features_position: bottom
+            vertical: false
+            name: Wasser Kellerraum
+            visibility:
+              - condition: state
+                entity: binary_sensor.wassersensor_ug_kellerraum_water_leak
+                state: 'on'
+              - condition: or
+                conditions:
+                  - condition: numeric_state
+                    entity: sensor.wassersensor_ug_kellerraum_battery
+                    below: 5
+          - type: tile
+            entity: binary_sensor.wassersensor_ug_werkstatt_water_leak
+            features_position: bottom
+            vertical: false
+            name: Wasser Werkstatt
+            visibility:
+              - condition: state
+                entity: binary_sensor.wassersensor_ug_werkstatt_water_leak
+                state: 'on'
+              - condition: or
+                conditions:
+                  - condition: numeric_state
+                    entity: sensor.wassersensor_ug_werkstatt_battery
+                    below: 5
+          - type: tile
+            entity: binary_sensor.wassersensor_ug_fittnesraum_water_leak
+            features_position: bottom
+            vertical: false
+            name: Wasser Fittnesraum
+            visibility:
+              - condition: state
+                entity: binary_sensor.wassersensor_ug_fittnesraum_water_leak
+                state: 'on'
+              - condition: or
+                conditions:
+                  - condition: numeric_state
+                    entity: sensor.wassersensor_ug_fittnesraum_battery
+                    below: 5
+          - type: tile
+            entity: binary_sensor.wassersensor_ug_technikraum_water_leak
+            features_position: bottom
+            vertical: false
+            name: Wasser Technikraum
+            visibility:
+              - condition: state
+                entity: binary_sensor.wassersensor_ug_technikraum_water_leak
+                state: 'on'
+              - condition: or
+                conditions:
+                  - condition: numeric_state
+                    entity: sensor.wassersensor_ug_technikraum_battery
+                    below: 5
+          - type: tile
+            entity: binary_sensor.rauchmelder_ug_fittnesraum_smoke
+            features_position: bottom
+            vertical: false
+            visibility:
+              - condition: state
+                entity: binary_sensor.rauchmelder_ug_fittnesraum_smoke
+                state: 'on'
+              - condition: or
+                conditions:
+                  - condition: numeric_state
+                    entity: sensor.rauchmelder_ug_fittnesraum_battery
+                    below: 5
           - type: heading
             heading: Entsorgung
             heading_style: title
@@ -418,9 +498,9 @@ views:
                   regex_replace('\.', ',') }}</b> / {{
                   state_attr('sensor.forecasted_pv_production_daily', 'per_kwp')
                   | regex_replace('\.', ',')  }} TS {% if
-                  states('sensor.wechselrichter_yield_daily_per_kwp') | float(0)
-                  < state_attr('sensor.forecasted_pv_production_daily',
-                  'per_kwp') | float(0) %}❌{%- else -%}✅{%- endif %} ({{
+                  states('sensor.pv_zielerreichung_tagesertrag') | float(0) < 80
+                  %}❌{%- elif states('sensor.pv_zielerreichung_tagesertrag') |
+                  float(0) < 100 -%}👍{%- else -%}✅{%- endif %} ({{
                   states('sensor.pv_zielerreichung_tagesertrag', with_unit=True)
                   | regex_replace('\.', ',') }})
                 card_mod:
@@ -1447,8 +1527,7 @@ views:
             entity: sensor.mosquitto_broker_warmwassertemperatur_unten
             visibility:
               - condition: state
-                entity: >-
-                  switch.mosquitto_broker_temperatursensor_unten_im_speicher
+                entity: switch.mosquitto_broker_temperatursensor_unten_im_speicher
                 state: 'on'
             grid_options:
               columns: full
@@ -1475,12 +1554,10 @@ views:
             entity: switch.mosquitto_broker_ausschaltoptimierung_fuer_warmwasser
             name: Ausschaltoptimierung
           - type: tile
-            entity: >-
-              switch.mosquitto_broker_freigabe_zusatzheizung_fuer_ww_bereitung
+            entity: switch.mosquitto_broker_freigabe_zusatzheizung_fuer_ww_bereitung
             name: Freigabe Zusatzheizung
           - type: tile
-            entity: >-
-              switch.mosquitto_broker_freigabe_elektroheizung_fuer_ww_bereitung
+            entity: switch.mosquitto_broker_freigabe_elektroheizung_fuer_ww_bereitung
             name: Freigabe Heizstab
           - type: tile
             entity: switch.mosquitto_broker_temperatursensor_unten_im_speicher
@@ -1692,8 +1769,7 @@ views:
             detail: 1
             visibility:
               - condition: state
-                entity: >-
-                  switch.mosquitto_broker_temperatursensor_unten_im_speicher
+                entity: switch.mosquitto_broker_temperatursensor_unten_im_speicher
                 state: 'on'
             grid_options:
               columns: full
