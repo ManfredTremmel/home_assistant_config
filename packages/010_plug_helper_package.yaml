@@ -83,7 +83,7 @@ automation power_plug_helpers:
         power_sensor: sensor.steckdose_eg_geschirrspuhler_power
         starting_threshold: 10
         starting_hysteresis: 3
-        finishing_threshold: 3
+        finishing_threshold: 2
         finishing_hysteresis: 2
         actions:
         - action: notify.kodi_t470
@@ -146,7 +146,7 @@ automation power_plug_helpers:
             icon: error
       - action: button.press
         target:
-          entity_id: button.anrufhomeassistanterrormessage
+          entity_id: button.anrufhawasserugtechnik
 
   - id: "wasser_im_keller_kellerraum"
     alias: "Wasser im Keller Kellerraum"
@@ -180,7 +180,7 @@ automation power_plug_helpers:
             icon: error
       - action: button.press
         target:
-          entity_id: button.anrufhomeassistanterrormessage
+          entity_id: button.anrufhawasserugkeller
 
   - id: "wasser_im_keller_fittnesraum"
     alias: "Wasser im Keller Fittnesraum"
@@ -217,7 +217,7 @@ automation power_plug_helpers:
             icon: error
       - action: button.press
         target:
-          entity_id: button.anrufhomeassistanterrormessage
+          entity_id: button.anrufhawasserugfitness
 
   - id: "wasser_im_keller_werkstatt"
     alias: "Wasser im Keller Werkstatt"
@@ -251,7 +251,7 @@ automation power_plug_helpers:
             icon: error
       - action: button.press
         target:
-          entity_id: button.anrufhomeassistanterrormessage
+          entity_id: button.anrufhawasserugwerkstatt
 
   # Rauchmelder im Keller hat Alarm geschlagen
   - id: "rauch_im_keller_fittnesraum"
@@ -286,4 +286,4 @@ automation power_plug_helpers:
             icon: error
       - action: button.press
         target:
-          entity_id: button.anrufhomeassistanterrormessage
+          entity_id: button.anrufharauchugfitness
