@@ -7,15 +7,29 @@
 #
 # Dependencies:
 #       "kodi" extension
+#       "AVM FRITZ!SmartHome" extension
+#       "Appliance has finished" blueprint
 #       "000_kodi_package.yaml" (not in git repository contains user and password)
+#       "020_solar_grid_limitation_package.yaml"
 #
 # Used entities:
 #       sensor.steckdose_ug_waschmaschine_power
 #       sensor.steckdose_eg_geschirrspuhler_power
+#       sensor.steckdose_garage_power
+#       switch.steckdose_ug_waschmaschine
+#       switch.steckdose_eg_geschirrspuhler
+#       switch.steckdose_garage
+#       binary_sensor.wassersensor_ug_technikraum_water_leak
+#       binary_sensor.wassersensor_ug_kellerraum_water_leak
+#       binary_sensor.wassersensor_ug_fittnesraum_water_leak
+#       binary_sensor.wassersensor_ug_werkstatt_water_leak
+#       binary_sensor.rauchmelder_ug_fittnesraum_smoke
+#       sensor.solar_power_generators_sum
 #
 # Provided entities:
 #       binary_sensor.waschmaschine
 #       binary_sensor.geschirrspuelmaschine
+#       binary_sensor.eroller
 #
 #
 template:
@@ -33,6 +47,12 @@ template:
       state: ""
       device_class: running
       icon: mdi:dishwasher
+    # sensor indicates electric mpoed is loading or not
+    - unique_id: "eroller"
+      name: "eRoller"
+      state: ""
+      device_class: running
+      icon: mdi:moped-electric
 
 automation power_plug_helpers:
 
@@ -108,6 +128,43 @@ automation power_plug_helpers:
         - action: python_script.set_state
           data:
             entity_id: binary_sensor.geschirrspulmaschine
+            state: "on"
+
+  # Prüfe, ob der eRoller gerade geladen wird
+  - id: "eroller_statusbenachrichtigung"
+    alias: "eRoller Statusbenachrichtigung"
+    description: ""
+    use_blueprint:
+      path: sbyx/notify-or-do-something-when-an-appliance-like-a-dishwasher-or-washing-machine-finishes.yaml
+      input:
+        power_sensor: sensor.steckdose_garage_power
+        starting_threshold: 3
+        starting_hysteresis: 2
+        finishing_threshold: 3
+        finishing_hysteresis: 2
+        actions:
+        - action: notify.kodi_t470
+          data:
+            title: "Roller ist geladen"
+            message: "Der eRoller ist fertig geladen"
+            data:
+              displaytime: 20000
+              icon: "info"
+        - action: notify.kodi_libreelec_eg2
+          data:
+            title: "Roller ist geladen"
+            message: "Der eRoller ist fertig geladen"
+            data:
+              displaytime: 20000
+              icon: "info"
+        - action: python_script.set_state
+          data:
+            entity_id: binary_sensor.eroller
+            state: "off"
+        pre_actions:
+        - action: python_script.set_state
+          data:
+            entity_id: binary_sensor.eroller
             state: "on"
 
   # Sende Meldungen, wenn einer der Wasser-Sensoren im Keller Alarm schlägt
@@ -287,3 +344,39 @@ automation power_plug_helpers:
       - action: button.press
         target:
           entity_id: button.anrufharauchugfitness
+
+  # Turn on garage plug, when pv power is more then 2 kW
+  - id: "turn_on_garage_plug_when_sun_shines"
+    alias: "Turn on garage plug when sun shines"
+    description: "Sobald mehr als 2 kW PV Leistung anliegt, Garagen Plug aktivieren"
+    triggers:
+      - trigger: numeric_state
+        entity_id:
+        - sensor.solar_power_generators_sum
+        above: 2000
+        for:
+          hours: 0
+          minutes: 5
+          seconds: 0
+    actions:
+      - action: switch.turn_on
+        target:
+          entity_id: switch.steckdose_garage
+
+  # Turn off garage plug, when pv power is less then 1.5 kW
+  - id: "turn_off_garage_plug_when_sun_doesnt_shines"
+    alias: "Turn off garage plug when sun doesnt shines"
+    description: "Sobald weniger als 1,5 kW PV Leistung anliegt, Garagen Plug deaktivieren"
+    triggers:
+      - trigger: numeric_state
+        entity_id:
+        - sensor.solar_power_generators_sum
+        below: 1500
+        for:
+          hours: 0
+          minutes: 5
+          seconds: 0
+    actions:
+      - action: switch.turn_off
+        target:
+          entity_id: switch.steckdose_garage
