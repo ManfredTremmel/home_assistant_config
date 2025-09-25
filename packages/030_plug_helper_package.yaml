@@ -51,7 +51,7 @@ template:
     - unique_id: "eroller"
       name: "eRoller"
       state: ""
-      device_class: running
+      device_class: battery_charging
       icon: mdi:moped-electric
 
 automation power_plug_helpers:
