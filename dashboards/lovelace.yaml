@@ -108,6 +108,10 @@ views:
             entity: binary_sensor.geschirrspulmaschine
             features_position: bottom
             vertical: false
+          - type: tile
+            entity: binary_sensor.eroller
+            features_position: bottom
+            vertical: false
       - type: grid
         cards:
           - type: heading
@@ -500,7 +504,11 @@ views:
                   | regex_replace('\.', ',')  }} TS {% if
                   states('sensor.pv_zielerreichung_tagesertrag') | float(0) < 80
                   %}❌{%- elif states('sensor.pv_zielerreichung_tagesertrag') |
-                  float(0) < 100 -%}👍{%- else -%}✅{%- endif %} ({{
+                  float(0) < 100 -%}👍{%- elif
+                  states('sensor.pv_zielerreichung_tagesertrag') | float(0) <
+                  200 -%}✅{%- elif
+                  states('sensor.pv_zielerreichung_tagesertrag') | float(0) <
+                  300 -%}✅✅{%- else -%}✅✅✅{%- endif %} ({{
                   states('sensor.pv_zielerreichung_tagesertrag', with_unit=True)
                   | regex_replace('\.', ',') }})
                 card_mod:
