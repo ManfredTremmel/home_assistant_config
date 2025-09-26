@@ -358,10 +358,15 @@ automation power_plug_helpers:
           hours: 0
           minutes: 5
           seconds: 0
+    conditions:
+      - condition: state
+        entity_id: "switch.steckdose_garage"
+        state: "off"
     actions:
       - action: switch.turn_on
         target:
-          entity_id: switch.steckdose_garage
+          entity_id: "switch.steckdose_garage"
+    mode: single
 
   # Turn off garage plug, when pv power is less then 1.5 kW
   - id: "turn_off_garage_plug_when_sun_doesnt_shines"
@@ -376,7 +381,12 @@ automation power_plug_helpers:
           hours: 0
           minutes: 5
           seconds: 0
+    conditions:
+      - condition: state
+        entity_id: "switch.steckdose_garage"
+        state: "on"
     actions:
       - action: switch.turn_off
         target:
-          entity_id: switch.steckdose_garage
+          entity_id: "switch.steckdose_garage"
+    mode: single
