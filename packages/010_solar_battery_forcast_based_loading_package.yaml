@@ -267,6 +267,30 @@ automation rct_soc_min_max:
     mode: single
 
   #
+  # 1 hour before sunrise, when calibration discharging is active, and soc
+  # is > 40% start heating pump hot water generating.
+  #
+  - id: "pv_batery_start_heat_pump_hot_water_on_calibration"
+    alias: "RCT Batterie Kalibrierung, Wärmepumpe Warmwasseraufbereitung aktivieren"
+    description: "RCT Batterie Kalibrierung, vor Sonnenaufgang Warmwasseraufbereitung aktivieren um die Batterie leer zu bekommen"
+    triggers:
+      - trigger: sun
+        event: sunrise
+        offset: "-01:00:00"
+    conditions:
+      - condition: state
+        entity_id: "sensor.rct_power_storage_battery_status"
+        state: "discharging"
+      - condition: numeric_state
+        entity_id: "sensor.rct_power_storage_battery_state_of_charge"
+        above: 40
+    actions:
+      - action: switch.turn_on
+        target:
+          entity_id: switch.mosquitto_broker_einmal_ww_bereitung
+    mode: single
+
+  #
   # 30 minutes before sunrise, when calibration discharging is active,
   # unload to grid. The battery capacity of last calibration run and current
   # soc is used to calculate current entry of battery, try to unload it in
@@ -310,4 +334,7 @@ automation rct_soc_min_max:
           action: set
           parameter: p_rec_lim[1]
           value: 0
+      - action: switch.turn_off
+        target:
+          entity_id: switch.mosquitto_broker_einmal_ww_bereitung
     mode: single
