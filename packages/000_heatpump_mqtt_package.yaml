@@ -864,5 +864,4 @@ template:
     - unique_id: "heating_pump_night_mode"
       name: Heating Pump Night Mode
       state: >-
-          {{ false }}
-      availability: "{{ has_value('select.mosquitto_broker_betriebsart') }}"
+          {{ (930 < now().strftime('%H%M')|int(0) < 2200) == False }}
