@@ -69,13 +69,13 @@ automation power_plug_helpers:
         finishing_threshold: 50
         finishing_hysteresis: 4
         actions:
-        - action: notify.kodi_t470
+        - action: notify.mobile_app_t470
           data:
             title: "Waschmaschine ist fertig"
             message: "Die Waschmaschine kann geleert werden"
             data:
               displaytime: 20000
-              icon: "info"
+              urgency: normal
         - action: notify.kodi_libreelec_eg2
           data:
             title: "Waschmaschine ist fertig"
@@ -106,13 +106,13 @@ automation power_plug_helpers:
         finishing_threshold: 2
         finishing_hysteresis: 2
         actions:
-        - action: notify.kodi_t470
+        - action: notify.mobile_app_t470
           data:
             title: "Geschirrspüler ist fertig"
             message: "Die Geschirrspülmaschine kann geleert werden"
             data:
               displaytime: 20000
-              icon: "info"
+              urgency: normal
         - action: notify.kodi_libreelec_eg2
           data:
             title: "Geschirrspüler ist fertig"
@@ -143,13 +143,13 @@ automation power_plug_helpers:
         finishing_threshold: 3
         finishing_hysteresis: 2
         actions:
-        - action: notify.kodi_t470
+        - action: notify.mobile_app_t470
           data:
             title: "Roller ist geladen"
             message: "Der eRoller ist fertig geladen"
             data:
               displaytime: 20000
-              icon: "info"
+              urgency: normal
         - action: notify.kodi_libreelec_eg2
           data:
             title: "Roller ist geladen"
@@ -180,13 +180,13 @@ automation power_plug_helpers:
       - action: switch.turn_off
         target:
           entity_id: switch.steckdose_ug_waschmaschine
-      - action: notify.kodi_t470
+      - action: notify.mobile_app_t470
         data:
           title: 'Wasser im Keller'
           message: 'Der Wassersensor im Technikraum meldet Wasser!'
           data:
             displaytime: 50000
-            icon: error
+            urgency: critical
       - action: notify.kodi_libreelecmanfred
         data:
           title: 'Wasser im Keller'
@@ -214,13 +214,13 @@ automation power_plug_helpers:
       - binary_sensor.wassersensor_ug_kellerraum_water_leak
       to: "on"
     actions:
-      - action: notify.kodi_t470
+      - action: notify.mobile_app_t470
         data:
           title: 'Wasser im Keller'
           message: 'Der Wassersensor im Kellerraum meldet Wasser!'
           data:
             displaytime: 50000
-            icon: error
+            urgency: critical
       - action: notify.kodi_libreelecmanfred
         data:
           title: 'Wasser im Keller'
@@ -251,13 +251,13 @@ automation power_plug_helpers:
       - action: switch.turn_off
         target:
           entity_id: switch.steckdose_ug_hauswasserwerk
-      - action: notify.kodi_t470
+      - action: notify.mobile_app_t470
         data:
           title: 'Wasser im Keller'
           message: 'Der Wassersensor im Fittnesraum meldet Wasser!'
           data:
             displaytime: 50000
-            icon: error
+            urgency: critical
       - action: notify.kodi_libreelecmanfred
         data:
           title: 'Wasser im Keller'
@@ -285,13 +285,13 @@ automation power_plug_helpers:
       - binary_sensor.wassersensor_ug_werkstatt_water_leak
       to: "on"
     actions:
-      - action: notify.kodi_t470
+      - action: notify.mobile_app_t470
         data:
           title: 'Wasser im Keller'
           message: 'Der Wassersensor im Werkstatt meldet Wasser!'
           data:
             displaytime: 50000
-            icon: error
+            urgency: critical
       - action: notify.kodi_libreelecmanfred
         data:
           title: 'Wasser im Keller'
@@ -320,13 +320,13 @@ automation power_plug_helpers:
       - binary_sensor.rauchmelder_ug_fittnesraum_smoke
       to: "on"
     actions:
-      - action: notify.kodi_t470
+      - action: notify.mobile_app_t470
         data:
           title: 'Rauch im Keller'
           message: 'Der Rauchmelder meldet Rauch im Fittnesraum!'
           data:
             displaytime: 50000
-            icon: error
+            urgency: critical
       - action: notify.kodi_libreelecmanfred
         data:
           title: 'Rauch im Keller'
