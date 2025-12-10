@@ -424,7 +424,7 @@ automation power_plug_helpers:
           data:
             displaytime: 20000
             icon: "info"
-       - action: button.press
-          target:
-            entity_id: button.anrufhakatzenklingel
+      - action: button.press
+        target:
+          entity_id: button.anrufhakatzenklingel
     mode: single
