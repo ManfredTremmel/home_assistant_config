@@ -390,3 +390,41 @@ automation power_plug_helpers:
         target:
           entity_id: "switch.steckdose_garage"
     mode: single
+
+  # cat bell, send message when sensor detects cat in front of the door
+  - id: cat_bell_message
+    alias: "Cat Bell Message"
+    description: "Katzenklingelbenachrichtigung"
+    triggers:
+      - trigger: state
+        entity_id:
+        - binary_sensor.katzenklingel_water_leak
+      to:
+        - "on"
+      from:
+        - "off"
+      for:
+        hours: 0
+        minutes: 0
+        seconds: 3
+    conditions: []
+    actions:
+      - action: notify.mobile_app_t470
+        metadata: {}
+        data:
+          message: "Miko steht vor der Türe"
+          title: "Katzenklingel"
+          data:
+            displaytime: 20000
+            urgency: normal
+      - action: notify.kodi_libreelec_eg2
+        data:
+          message: "Miko steht vor der Türe"
+          title: "Katzenklingel"
+          data:
+            displaytime: 20000
+            icon: "info"
+       - action: button.press
+          target:
+            entity_id: button.anrufhakatzenklingel
+    mode: single
