@@ -1,0 +1,60 @@
+# ############ HA helpers for power plugs ############
+#
+# (C) 2025 Manfred Tremmel
+#
+# Check solar battery temperature, when goes above 40℃, stop loading and send error
+#
+# Dependencies:
+#       "RCT Power" extension from HACS
+#       "kodi" extension
+#       "AVM FRITZ!SmartHome" extension
+#       "000_kodi_package.yaml" (not in git repository contains user and password)
+#
+#
+
+automation solar_battery_temperature_check:
+
+  # Stop loading and send error message when solar battery temperature goes above 40℃
+  - id: "solar_battery_temperature_to_high"
+    alias: "Solar battery temperature to high"
+    description: "RCT Batterie auf > 40℃ Temperatur prüfen"
+    triggers:
+      - trigger: numeric_state
+        entity_id:
+        - sensor.rct_power_storage_battery_temperature
+        above: 40
+        for:
+          hours: 0
+          minutes: 0
+          seconds: 10
+    actions:
+      - action: pyscript.rct_ha_call
+        data:
+          parameter: power_mng.soc_max
+          value: '7.00'
+      - action: notify.mobile_app_t470
+        data:
+          title: 'PV-Batterie zu warm'
+          message: 'Gefahr, die PV-Batterie hat > 40℃!'
+          data:
+            expire: 50000
+            urgency: critical
+            icon: battery
+      - action: notify.kodi_libreelecmanfred
+        data:
+          title: 'PV-Batterie zu warm'
+          message: 'Gefahr, die PV-Batterie hat > 40℃!'
+          data:
+            displaytime: 50000
+            icon: error
+      - action: notify.kodi_libreelec_eg2
+        data:
+          title: 'PV-Batterie zu warm'
+          message: 'Gefahr, die PV-Batterie hat > 40℃!'
+          data:
+            displaytime: 50000
+            icon: error
+      - action: button.press
+        target:
+          entity_id: button.anrufhapvbatterie
+    mode: single
