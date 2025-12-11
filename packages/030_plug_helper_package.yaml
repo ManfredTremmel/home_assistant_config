@@ -74,8 +74,9 @@ automation power_plug_helpers:
             title: "Waschmaschine ist fertig"
             message: "Die Waschmaschine kann geleert werden"
             data:
-              displaytime: 20000
+              expire: 20000
               urgency: normal
+              icon: dialog-information
         - action: notify.kodi_libreelec_eg2
           data:
             title: "Waschmaschine ist fertig"
@@ -111,8 +112,9 @@ automation power_plug_helpers:
             title: "Geschirrspüler ist fertig"
             message: "Die Geschirrspülmaschine kann geleert werden"
             data:
-              displaytime: 20000
+              expire: 20000
               urgency: normal
+              icon: dialog-information
         - action: notify.kodi_libreelec_eg2
           data:
             title: "Geschirrspüler ist fertig"
@@ -148,8 +150,9 @@ automation power_plug_helpers:
             title: "Roller ist geladen"
             message: "Der eRoller ist fertig geladen"
             data:
-              displaytime: 20000
+              expire: 20000
               urgency: normal
+              icon: dialog-information
         - action: notify.kodi_libreelec_eg2
           data:
             title: "Roller ist geladen"
@@ -185,8 +188,9 @@ automation power_plug_helpers:
           title: 'Wasser im Keller'
           message: 'Der Wassersensor im Technikraum meldet Wasser!'
           data:
-            displaytime: 50000
+            expire: 50000
             urgency: critical
+            icon: help-browser
       - action: notify.kodi_libreelecmanfred
         data:
           title: 'Wasser im Keller'
@@ -219,8 +223,9 @@ automation power_plug_helpers:
           title: 'Wasser im Keller'
           message: 'Der Wassersensor im Kellerraum meldet Wasser!'
           data:
-            displaytime: 50000
+            expire: 50000
             urgency: critical
+            icon: help-browser
       - action: notify.kodi_libreelecmanfred
         data:
           title: 'Wasser im Keller'
@@ -256,8 +261,9 @@ automation power_plug_helpers:
           title: 'Wasser im Keller'
           message: 'Der Wassersensor im Fittnesraum meldet Wasser!'
           data:
-            displaytime: 50000
+            expire: 50000
             urgency: critical
+            icon: help-browser
       - action: notify.kodi_libreelecmanfred
         data:
           title: 'Wasser im Keller'
@@ -290,8 +296,9 @@ automation power_plug_helpers:
           title: 'Wasser im Keller'
           message: 'Der Wassersensor im Werkstatt meldet Wasser!'
           data:
-            displaytime: 50000
+            expire: 50000
             urgency: critical
+            icon: help-browser
       - action: notify.kodi_libreelecmanfred
         data:
           title: 'Wasser im Keller'
@@ -325,8 +332,9 @@ automation power_plug_helpers:
           title: 'Rauch im Keller'
           message: 'Der Rauchmelder meldet Rauch im Fittnesraum!'
           data:
-            displaytime: 50000
+            expire: 50000
             urgency: critical
+            icon: k3b
       - action: notify.kodi_libreelecmanfred
         data:
           title: 'Rauch im Keller'
@@ -415,8 +423,9 @@ automation power_plug_helpers:
           message: "Miko steht vor der Türe"
           title: "Katzenklingel"
           data:
-            displaytime: 20000
+            expire: 20000
             urgency: normal
+            icon: cat
       - action: notify.kodi_libreelec_eg2
         data:
           message: "Miko steht vor der Türe"
