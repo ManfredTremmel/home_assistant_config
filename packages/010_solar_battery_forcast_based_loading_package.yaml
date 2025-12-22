@@ -41,7 +41,7 @@
 #       sensor.sun_next_rising
 #       sensor.rct_battery_capacity_unload_calibration
 #       sensor.rct_power_storage_battery_state_of_charge
-#       sensor.rct_power_storage_battery_minimum_state_of_charge_2
+#       sensor.rct_power_storage_battery_minimum_state_of_charge
 #       sensor.mosquitto_broker_aussentemperatur
 #       sensor.heating_pump_heating_mode
 #
@@ -206,7 +206,7 @@ automation rct_soc_min_max:
     triggers:
       - trigger: state
         entity_id:
-        - sensor.rct_power_storage_battery_minimum_state_of_charge_2
+        - sensor.rct_power_storage_battery_minimum_state_of_charge
         not_from:
         - unknown
         - unavailable
@@ -218,7 +218,7 @@ automation rct_soc_min_max:
       - action: input_number.set_value
         metadata: {}
         data:
-          value: '{{ states(''sensor.rct_power_storage_battery_minimum_state_of_charge_2'')|float(7.0) }}'
+          value: '{{ states(''sensor.rct_power_storage_battery_minimum_state_of_charge'')|float(7.0) }}'
         target:
           entity_id: input_number.rct_power_storage_battery_minimum_state_of_charge
     mode: single

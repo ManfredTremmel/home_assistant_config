@@ -130,6 +130,14 @@ views:
             entity: binary_sensor.eroller
             features_position: bottom
             vertical: false
+          - type: tile
+            entity: binary_sensor.katzenklingel_water_leak
+            name: Katzenklingel
+            icon: mdi:cat
+            show_entity_picture: true
+            state_content: state
+            vertical: false
+            features_position: bottom
       - type: grid
         cards:
           - type: heading
@@ -1232,12 +1240,14 @@ views:
               columns: full
             show_entity_picture: false
           - type: tile
-            entity: sensor.rct_power_storage_battery_minimum_state_of_charge
+            grid_options:
+              columns: full
+            entity: sensor.rct_power_storage_battery_minimum_state_of_charge_island
             name: Min. SOC Zielwert Insel
             icon: mdi:battery-10
             color: yellow
-            grid_options:
-              columns: full
+            vertical: false
+            features_position: bottom
           - features:
               - style: slider
                 type: numeric-input
