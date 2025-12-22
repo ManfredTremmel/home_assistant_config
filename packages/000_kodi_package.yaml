@@ -1,0 +1,27 @@
+# ############ HA notify configurations on kodi ############
+#
+# (C) 2025 Manfred Tremmel
+#
+# define all kodi instances for notification
+#
+
+
+notify:
+  - platform: kodi
+    name: kodi_t470
+    host: t470.fritz.box
+    port: 8099
+    username: !secret kodi_t470_username
+    password: !secret kodi_t470_password
+  - platform: kodi
+    name: kodi_libreelecmanfred
+    host: libreelecmanfred2.fritz.box
+    port: 8099
+    username: !secret kodi_libreelecmanfred_username
+    password: !secret kodi_libreelecmanfred_password
+  - platform: kodi
+    name: kodi_libreelec_eg2
+    host: libreelec-eg2.fritz.box
+    port: 8099
+    username: !secret kodi_libreelec_eg2_username
+    password: !secret kodi_libreelec_eg2_password

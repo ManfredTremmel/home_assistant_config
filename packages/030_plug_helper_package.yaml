@@ -9,7 +9,7 @@
 #       "kodi" extension
 #       "AVM FRITZ!SmartHome" extension
 #       "Appliance has finished" blueprint
-#       "000_kodi_package.yaml" (not in git repository contains user and password)
+#       "000_kodi_package.yaml"
 #       "020_solar_grid_limitation_package.yaml"
 #
 # Used entities:
