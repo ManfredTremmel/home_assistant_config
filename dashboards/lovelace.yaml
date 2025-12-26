@@ -337,13 +337,11 @@ views:
                     }
                 .: |
                   .card-content {
-                    background:
-                      {% set dark = is_state('binary_sensor.donker_thema','on') %}
-                      {% if not dark %} var(--ha-color) {% endif %};
+                    background: var(--card-background-color);
                   }
                   ha-card {
-                    color: white;
-                    --card-mod-icon-color: white;
+                    color: var(--primary-text-color);
+                    --card-mod-icon-color: var(--primary-text-color);
                     --mdc-icon-size: 24px;
                     font-weight: 500;
                   }
@@ -580,13 +578,11 @@ views:
                       }
                   .: |
                     .card-content {
-                      background:
-                        {% set dark = is_state('binary_sensor.donker_thema','on') %}
-                        {% if not dark %} var(--ha-color) {% endif %};
+                      background: var(--card-background-color);
                     }
                     ha-card {
-                      color: white;
-                      --card-mod-icon-color: white;
+                      color: var(--primary-text-color);
+                      --card-mod-icon-color: var(--primary-text-color);
                       --mdc-icon-size: 24px;
                       font-weight: 500;
                     }
@@ -638,13 +634,11 @@ views:
                       }
                   .: |
                     .card-content {
-                      background:
-                        {% set dark = is_state('binary_sensor.donker_thema','on') %}
-                        {% if not dark %} var(--ha-color) {% endif %};
+                      background: var(--card-background-color);
                     }
                     ha-card {
-                      color: white;
-                      --card-mod-icon-color: white;
+                      color: var(--primary-text-color);
+                      --card-mod-icon-color: var(--primary-text-color);
                       --mdc-icon-size: 24px;
                       font-weight: 500;
                       box-shadow: none !important; 
@@ -793,13 +787,11 @@ views:
                       }
                   .: |
                     .card-content {
-                      background:
-                        {% set dark = is_state('binary_sensor.donker_thema','on') %}
-                        {% if not dark %} var(--ha-color) {% endif %};
+                      background: var(--card-background-color);
                     }
                     ha-card {
-                      color: white;
-                      --card-mod-icon-color: white;
+                      color: var(--primary-text-color);
+                      --card-mod-icon-color: var(--primary-text-color);
                       --mdc-icon-size: 24px;
                       font-weight: 500;
                       box-shadow: none !important; 
@@ -948,13 +940,11 @@ views:
                       }
                   .: |
                     .card-content {
-                      background:
-                        {% set dark = is_state('binary_sensor.donker_thema','on') %}
-                        {% if not dark %} var(--ha-color) {% endif %};
+                      background: var(--card-background-color);
                     }
                     ha-card {
-                      color: white;
-                      --card-mod-icon-color: white;
+                      color: var(--primary-text-color);
+                      --card-mod-icon-color: var(--primary-text-color);
                       --mdc-icon-size: 24px;
                       font-weight: 500;
                       box-shadow: none !important; 
@@ -1062,13 +1052,11 @@ views:
                       }
                   .: |
                     .card-content {
-                      background:
-                        {% set dark = is_state('binary_sensor.donker_thema','on') %}
-                        {% if not dark %} var(--ha-color) {% endif %};
+                      background: var(--card-background-color);
                     }
                     ha-card {
-                      color: white;
-                      --card-mod-icon-color: white;
+                      color: var(--primary-text-color);;
+                      --card-mod-icon-color: var(--primary-text-color);;
                       --mdc-icon-size: 24px;
                       font-weight: 500;
                       box-shadow: none !important; 
