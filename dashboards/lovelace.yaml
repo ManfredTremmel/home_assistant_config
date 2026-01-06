@@ -71,7 +71,7 @@ views:
             heatingPumpPartyMode: binary_sensor.heating_pump_party_mode
             heatingPumpEnergySaveMode: binary_sensor.heating_pump_energy_save_mode
             heatingPumpNightMode: binary_sensor.heating_pump_night_mode
-            warning: ''
+            warning: binary_sensor.mosquitto_broker_status_sammelmeldung
             error: ''
             defrostMode: ''
             outdoorTemperature: sensor.mosquitto_broker_aussentemperatur
@@ -82,19 +82,20 @@ views:
             hpRunning: binary_sensor.mosquitto_broker_status_primaerquelle
             compressorRunning: binary_sensor.mosquitto_broker_status_verdichter
             circulatingPumpRunning: binary_sensor.mosquitto_broker_warmwasser_zirkulationspumpe
+            tankHP: true
             tankTempHPUp: sensor.mosquitto_broker_pufferspeichertemperatur
             tankTempHPMiddle: ''
             tankTempHPDown: ''
+            tankWW: true
             tankTempWWUp: sensor.mosquitto_broker_warmwassertemperatur_oben
             tankTempWWMiddle: ''
             tankTempWWDown: ''
-            heatingCircuitType1: underfloor
-            heatingCircuitPumpRunning: binary_sensor.mosquitto_broker_heizkreispumpe
-            supplyTemperatureHeating: sensor.mosquitto_broker_vorlauftemperatur_heizkreis
+            heatingCircuitType1: 'off'
+            heatingCircuitPumpBeforeValve: false
             refluxTemperatureHeating: ''
-            heatingCircuitType2: 'off'
-            heatingCircuitPumpRunning2: ''
-            supplyTemperatureHeating2: ''
+            heatingCircuitType2: underfloor
+            heatingCircuitPumpRunning2: binary_sensor.mosquitto_broker_heizkreispumpe
+            supplyTemperatureHeating2: sensor.mosquitto_broker_vorlauftemperatur_heizkreis
             refluxTemperatureHeating2: ''
             heatingCircuitType3: 'off'
             heatingCircuitPumpRunning3: ''
@@ -1649,8 +1650,10 @@ views:
             features_position: bottom
             vertical: false
           - type: tile
-            entity: sensor.mosquitto_broker_jahresarbeitszahl
+            entity: sensor.heating_pump_jaz
             name: JAZ
+            vertical: false
+            features_position: bottom
           - type: tile
             entity: sensor.mosquitto_broker_einschaltungen_primaerquelle
             name: Einschaltungen Primärquelle
@@ -1744,8 +1747,10 @@ views:
             vertical: false
             entity: sensor.mosquitto_broker_raumtemperatur_soll_heizkreis
           - type: tile
-            entity: sensor.mosquitto_broker_jahresarbeitszahl_heizen
+            entity: sensor.heating_pump_jaz_heating
             name: JAZ
+            vertical: false
+            features_position: bottom
           - type: tile
             entity: sensor.mosquitto_broker_einschaltungen_speicherladepumpe
             name: Einschaltungen Speicherladepumpe
@@ -1812,10 +1817,12 @@ views:
             vertical: false
             entity: binary_sensor.mosquitto_broker_status_warmwasserventil
           - type: tile
-            entity: sensor.mosquitto_broker_jahresarbeitszahl_ww
-            name: Jahresarbeitszahl
             grid_options:
               columns: full
+            entity: sensor.heating_pump_jaz_hotwater
+            name: Jahresarbeitszahl
+            vertical: false
+            features_position: bottom
           - type: tile
             entity: sensor.mosquitto_broker_einschaltungen_warmwasserventil
             name: Einschaltungen Warmwasserventil
