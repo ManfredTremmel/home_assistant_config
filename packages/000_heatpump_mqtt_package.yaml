@@ -865,3 +865,22 @@ template:
       name: Heating Pump Night Mode
       state: >-
           {{ (930 < now().strftime('%H%M')|int(0) < 2200) == False }}
+  - sensor:
+    - unique_id: "heating_pump_jaz"
+      name: "Heating Pump JAZ"
+      state_class: "measurement"
+      state: >-
+          {{ ((states('sensor.mosquitto_broker_waermeenergie_heizen_jahr')|float(0.0)+states('sensor.mosquitto_broker_waermeenergie_warmwasser_jahr')|float(0.0)) / (states('sensor.mosquitto_broker_elektroenergie_heizen_jahr')|float(0.0)+states('sensor.mosquitto_broker_elektroenergie_warmwasser_jahr')|float(0.0))) | round(2) }}
+      availability: "{{ has_value('sensor.mosquitto_broker_waermeenergie_heizen_jahr') and has_value('sensor.mosquitto_broker_elektroenergie_heizen_jahr') and has_value('sensor.mosquitto_broker_waermeenergie_warmwasser_jahr') and has_value('sensor.mosquitto_broker_elektroenergie_warmwasser_jahr') }}"
+    - unique_id: "heating_pump_jaz_heating"
+      name: "Heating Pump JAZ heating"
+      state_class: "measurement"
+      state: >-
+          {{ (states('sensor.mosquitto_broker_waermeenergie_heizen_jahr')|float(0.0) / states('sensor.mosquitto_broker_elektroenergie_heizen_jahr')|float(0.0)) | round(2) }}
+      availability: "{{ has_value('sensor.mosquitto_broker_waermeenergie_heizen_jahr') and has_value('sensor.mosquitto_broker_elektroenergie_heizen_jahr') }}"
+    - unique_id: "heating_pump_jaz_hotwater"
+      name: "Heating Pump JAZ hotwater"
+      state_class: "measurement"
+      state: >-
+          {{ (states('sensor.mosquitto_broker_waermeenergie_warmwasser_jahr')|float(0.0) / states('sensor.mosquitto_broker_elektroenergie_warmwasser_jahr')|float(0.0)) | round(2) }}
+      availability: "{{ has_value('sensor.mosquitto_broker_waermeenergie_warmwasser_jahr') and has_value('sensor.mosquitto_broker_elektroenergie_warmwasser_jahr') }}"
