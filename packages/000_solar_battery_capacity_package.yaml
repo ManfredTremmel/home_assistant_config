@@ -57,7 +57,9 @@ template:
       - trigger: state
         entity_id:
         - sensor.rct_power_storage_battery_status
-        from: charging
+        not_from:
+          - "unknown"
+          - "unavailable"
         to: discharging
     sensor:
       - unique_id: rct_power_storage_battery_used_energy_start
