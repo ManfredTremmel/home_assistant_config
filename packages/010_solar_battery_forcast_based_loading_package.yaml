@@ -153,7 +153,7 @@ automation rct_soc_min_max:
         data:
           value: '{{ states(''sensor.calculated_maximum_battery_soc'')|float(97.0) }}'
         target:
-          entity_id: number_rct_power_storage_battery_maximum_soc
+          entity_id: number.number_rct_power_storage_battery_maximum_soc
     mode: single
 
   #
