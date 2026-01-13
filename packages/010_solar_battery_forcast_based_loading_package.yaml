@@ -158,9 +158,6 @@ automation rct_soc_min_max:
       - trigger: state
         entity_id:
         - sensor.rct_power_storage_battery_maximum_state_of_charge
-        not_from:
-        - unknown
-        - unavailable
         not_to:
         - unknown
         - unavailable
@@ -207,9 +204,6 @@ automation rct_soc_min_max:
       - trigger: state
         entity_id:
         - sensor.rct_power_storage_battery_minimum_state_of_charge
-        not_from:
-        - unknown
-        - unavailable
         not_to:
         - unknown
         - unavailable
