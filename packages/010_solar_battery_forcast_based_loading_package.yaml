@@ -47,8 +47,8 @@
 #
 # Provided entities:
 #       sensor.calculated_maximum_battery_soc
-#       input_number.rct_power_storage_battery_maximum_state_of_charge
-#       input_number.rct_power_storage_battery_minimum_state_of_charge
+#       number.number_rct_power_storage_battery_minimum_soc
+#       number.number_rct_power_storage_battery_maximum_soc
 #
 template:
   - sensor:
@@ -92,38 +92,46 @@ template:
           {%- endif %}
       availability: "{{ has_value('sensor.energy_production_today_remaining_total') and has_value('sensor.energy_production_tomorrow_total') and has_value('binary_sensor.heating_pump_heating_mode') and has_value('sensor.sun_next_noon') and has_value('sensor.sun_next_rising') and has_value('sensor.mosquitto_broker_aussentemperatur') }}"
 
-input_number:
+  - number:
 
-  #
-  # input number field for maximum soc.
-  #
-  rct_power_storage_battery_maximum_state_of_charge:
-    name: "Input RCT Power Storage Battery Maximum SOC"
-    icon: "mdi:battery-charging-wireless-90"
-    unit_of_measurement: "%"
-    mode: slider
-    initial: 97
-    min: 7
-    max: 97
-    step: 1
+      #
+      # number field for minimum soc
+      #
+      - unique_id: number_rct_power_storage_battery_minimum_soc
+        name: "Number RCT Power Storage Battery Minimum SOC"
+        unit_of_measurement: "%"
+        state: "{{ states('sensor.rct_power_storage_battery_minimum_state_of_charge')|float(97.0) }}"
+        set_value:
+          - action: pyscript.rct_ha_call
+            data:
+              parameter: power_mng.soc_min
+              value: "{{ (value * 0.01)|round(2) }}"
+        step: 1
+        min: 7
+        max: 97
+        icon: "mdi:battery-charging-wireless-10"
 
-  #
-  # input number field for minimum soc.
-  #
-  rct_power_storage_battery_minimum_state_of_charge:
-    name: "Input RCT Power Storage Battery Minimum SOC"
-    icon: "mdi:battery-charging-wireless-10"
-    unit_of_measurement: "%"
-    mode: slider
-    initial: 7
-    min: 7
-    max: 97
-    step: 1
+      #
+      # number field for maximum soc
+      #
+      - unique_id: number_rct_power_storage_battery_maximum_soc
+        name: "Number RCT Power Storage Battery Maximum SOC"
+        unit_of_measurement: "%"
+        state: "{{ states('sensor.rct_power_storage_battery_maximum_state_of_charge')|float(97.0) }}"
+        set_value:
+          - action: pyscript.rct_ha_call
+            data:
+              parameter: power_mng.soc_max
+              value: "{{ (value * 0.01)|round(2) }}"
+        step: 1
+        min: 7
+        max: 97
+        icon: "mdi:battery-charging-wireless-90"
 
 automation rct_soc_min_max:
 
   #
-  # write calculated maximum soc value into the corresponding input number field, when changed.
+  # write calculated maximum soc value into the corresponding number field, when changed.
   #
   - id: "pv_battery_calculated_soc_max_to_input"
     alias: "RCT Power SOC Errechnet Max in Input-Feld"
@@ -140,105 +148,12 @@ automation rct_soc_min_max:
         - unavailable
     conditions: []
     actions:
-      - action: input_number.set_value
+      - action: number.set_value
         metadata: {}
         data:
           value: '{{ states(''sensor.calculated_maximum_battery_soc'')|float(97.0) }}'
         target:
-          entity_id: input_number.rct_power_storage_battery_maximum_state_of_charge
-    mode: single
-
-  #
-  # write maximum soc inverter value into the corresponding input number field, when changed.
-  #
-  - id: "pv_battery_soc_max_to_input"
-    alias: "RCT Power SOC Max vom Wechselrichter in Input-Feld"
-    description: "Eingabefeld mit SOC Max Vorgabewert befüllen, wenn dieser sich ändert"
-    triggers:
-      - trigger: state
-        entity_id:
-        - sensor.rct_power_storage_battery_maximum_state_of_charge
-        not_to:
-        - unknown
-        - unavailable
-    conditions: []
-    actions:
-      - action: input_number.set_value
-        metadata: {}
-        data:
-          value: '{{ states(''sensor.rct_power_storage_battery_maximum_state_of_charge'')|float(97.0) }}'
-        target:
-          entity_id: input_number.rct_power_storage_battery_maximum_state_of_charge
-    mode: single
-
-  #
-  # set maximum soc input number value into the inverter, when value has
-  # changed and keeps new value for three seconds.
-  #
-  - id: "pv_battery_soc_max_input_to_inverter"
-    alias: "Eingabe an RCT Power SOC Max des Wechselrichters senden"
-    description: "Den maximalen Ladestand der PV-Batterie anpassen"
-    triggers:
-      - trigger: state
-        entity_id:
-        - input_number.rct_power_storage_battery_maximum_state_of_charge
-        for:
-          hours: 0
-          minutes: 0
-          seconds: 3
-    conditions: []
-    actions:
-      - action: pyscript.rct_ha_call
-        data:
-          parameter: power_mng.soc_max
-          value: '{{ states(''input_number.rct_power_storage_battery_maximum_state_of_charge'')|float(97.0)|multiply(0.01)|round(2) }}'
-    mode: single
-
-  #
-  # write minimum soc inverter value into the corresponding input number field, when changed.
-  #
-  - id: "pv_battery_soc_min_to_input"
-    alias: "RCT Power SOC Min vom Wechselrichter in Input-Feld"
-    description: "Eingabefeld mit SOC Min Vorgabewert befüllen, wenn dieser sich ändert"
-    triggers:
-      - trigger: state
-        entity_id:
-        - sensor.rct_power_storage_battery_minimum_state_of_charge
-        not_to:
-        - unknown
-        - unavailable
-    conditions: []
-    actions:
-      - action: input_number.set_value
-        metadata: {}
-        data:
-          value: '{{ states(''sensor.rct_power_storage_battery_minimum_state_of_charge'')|float(7.0) }}'
-        target:
-          entity_id: input_number.rct_power_storage_battery_minimum_state_of_charge
-    mode: single
-
-  #
-  # set minimum soc input number value into the inverter, when value has
-  # changed and keeps new value for three seconds.
-  #
-  - id: "pv_battery_soc_min_input_to_inverter"
-    alias: "Eingabe an RCT Power SOC Min des Wechselrichters senden"
-    description: "Den minimalen Ladestand der PV-Batterie anpassen"
-    triggers:
-      - trigger: state
-        entity_id:
-        - input_number.rct_power_storage_battery_minimum_state_of_charge
-        for:
-          hours: 0
-          minutes: 0
-          seconds: 3
-    conditions: []
-    actions:
-      - action: pyscript.rct_ha_call
-        data:
-          action: set
-          parameter: power_mng.soc_min
-          value: '{{ states(''input_number.rct_power_storage_battery_minimum_state_of_charge'')|float(7.0)|multiply(0.01)|round(2) }}'
+          entity_id: number_rct_power_storage_battery_maximum_soc
     mode: single
 
   #

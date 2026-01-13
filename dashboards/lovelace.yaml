@@ -1237,31 +1237,31 @@ views:
             color: yellow
             vertical: false
             features_position: bottom
-          - features:
-              - style: slider
-                type: numeric-input
-            type: tile
-            name: Min SOC Zielwert
-            state_content: state
-            icon: mdi:battery-charging-wireless-10
+          - type: tile
             grid_options:
               columns: full
+            entity: number.number_rct_power_storage_battery_minimum_soc
+            name: Min SOC Zielwert
+            icon: mdi:battery-charging-wireless-10
             color: yellow
-            features_position: bottom
+            state_content: state
             vertical: false
-            entity: input_number.rct_power_storage_battery_minimum_state_of_charge
-          - features:
+            features:
               - style: slider
                 type: numeric-input
-            type: tile
+            features_position: bottom
+          - type: tile
+            grid_options:
+              columns: full
+            entity: number.number_rct_power_storage_battery_maximum_soc
             name: Max. SOC Zielwert
             icon: ''
             color: green
-            grid_options:
-              columns: full
-            features_position: bottom
             vertical: false
-            entity: input_number.rct_power_storage_battery_maximum_state_of_charge
+            features:
+              - style: slider
+                type: numeric-input
+            features_position: bottom
           - type: tile
             entity: sensor.rct_power_storage_battery_state_of_charge_target
             name: Aktueller SOC Zielwert
@@ -1729,9 +1729,6 @@ views:
             features_position: bottom
             vertical: false
           - type: tile
-            entity: binary_sensor.mosquitto_broker_status_speicherladepumpe
-            name: Status Speicherladepumpe
-          - type: tile
             entity: sensor.mosquitto_broker_vorlauftemperatur_heizkreis
             name: Vorlauftemperatur Heizkreis
             features_position: bottom
@@ -1751,6 +1748,8 @@ views:
             name: JAZ
             vertical: false
             features_position: bottom
+            grid_options:
+              columns: full
           - type: tile
             entity: sensor.mosquitto_broker_einschaltungen_speicherladepumpe
             name: Einschaltungen Speicherladepumpe
@@ -1811,14 +1810,15 @@ views:
             vertical: false
             entity: binary_sensor.mosquitto_broker_warmwasser_zirkulationspumpe
           - type: tile
+            entity: binary_sensor.mosquitto_broker_status_speicherladepumpe
+            name: Status Speicherladepumpe
+          - type: tile
             name: Warmwasserventil
             icon: mdi:pipe-valve
             features_position: bottom
             vertical: false
             entity: binary_sensor.mosquitto_broker_status_warmwasserventil
           - type: tile
-            grid_options:
-              columns: full
             entity: sensor.heating_pump_jaz_hotwater
             name: Jahresarbeitszahl
             vertical: false
