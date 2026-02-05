@@ -100,7 +100,7 @@ template:
       - unique_id: number_rct_power_storage_battery_minimum_soc
         name: "Number RCT Power Storage Battery Minimum SOC"
         unit_of_measurement: "%"
-        state: "{{ states('sensor.rct_power_storage_battery_minimum_state_of_charge')|float(97.0) }}"
+        state: "{{ states('sensor.rct_power_storage_battery_minimum_state_of_charge')|float(7.0) }}"
         set_value:
           - action: pyscript.rct_ha_call
             data:
@@ -162,7 +162,7 @@ automation rct_soc_min_max:
   #
   - id: "pv_battery_grid_power_enable"
     alias: "Batterie laden mit Energie vom SMA Wechselrichter erlauben"
-    description: "Wenn der RCT Wechselrichter zu wenig produziert, um die Battierie zu laden, SMA dazu schalten"
+    description: "Wenn der RCT Wechselrichter zu wenig produziert, um die Batterie zu laden, SMA dazu schalten"
     triggers:
       - trigger: sun
         event: sunrise

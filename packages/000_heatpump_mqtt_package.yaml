@@ -702,7 +702,7 @@ mqtt:
       state_topic: "openv/getTempWWSoll"
       command_topic: "openv/setTempWWSoll"
       min: 10
-      max: 60
+      max: 50
       unit_of_measurement: "°C"
       value_template: |-
         {{ value | round(0) }}
@@ -715,7 +715,7 @@ mqtt:
       state_topic: "openv/getTempWWSoll2"
       command_topic: "openv/setTempWWSoll2"
       min: 10
-      max: 60
+      max: 50
       unit_of_measurement: "°C"
       value_template: |-
         {{ value | round(0) }}
