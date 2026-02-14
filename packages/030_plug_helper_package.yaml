@@ -24,6 +24,7 @@
 #       binary_sensor.wassersensor_ug_fittnesraum_water_leak
 #       binary_sensor.wassersensor_ug_werkstatt_water_leak
 #       binary_sensor.rauchmelder_ug_fittnesraum_smoke
+#       binary_sensor.rauchmelder_eg_schlafzimmer_smoke
 #       sensor.solar_power_generators_sum
 #
 # Provided entities:
@@ -205,6 +206,12 @@ automation power_plug_helpers:
           data:
             displaytime: 50000
             icon: error
+      - action: select.select_option
+        target:
+          entity_id:
+            - select.rauchmelder_eg_schlafzimmer_buzzer
+        data:
+          option: alarm
       - action: button.press
         target:
           entity_id: button.anrufhawasserugtechnik
@@ -240,6 +247,12 @@ automation power_plug_helpers:
           data:
             displaytime: 50000
             icon: error
+      - action: select.select_option
+        target:
+          entity_id:
+            - select.rauchmelder_eg_schlafzimmer_buzzer
+        data:
+          option: alarm
       - action: button.press
         target:
           entity_id: button.anrufhawasserugkeller
@@ -278,6 +291,12 @@ automation power_plug_helpers:
           data:
             displaytime: 50000
             icon: error
+      - action: select.select_option
+        target:
+          entity_id:
+            - select.rauchmelder_eg_schlafzimmer_buzzer
+        data:
+          option: alarm
       - action: button.press
         target:
           entity_id: button.anrufhawasserugfitness
@@ -313,6 +332,12 @@ automation power_plug_helpers:
           data:
             displaytime: 50000
             icon: error
+      - action: select.select_option
+        target:
+          entity_id:
+            - select.rauchmelder_eg_schlafzimmer_buzzer
+        data:
+          option: alarm
       - action: button.press
         target:
           entity_id: button.anrufhawasserugwerkstatt
@@ -349,9 +374,57 @@ automation power_plug_helpers:
           data:
             displaytime: 50000
             icon: error
+      - action: select.select_option
+        target:
+          entity_id:
+            - select.rauchmelder_eg_schlafzimmer_buzzer
+        data:
+          option: alarm
       - action: button.press
         target:
           entity_id: button.anrufharauchugfitness
+
+  # Rauchmelder im EG Schlafzimmer hat Alarm geschlagen
+  - id: "rauch_im_eg_schlafzimmer"
+    alias: "Rauch im EG Schlafzimmer"
+    description: "Der Rauchmelder meldet Rauch im Erdgeschoss Schlafzimmer"
+    triggers:
+    - trigger: state
+      entity_id:
+      - binary_sensor.rauchmelder_eg_schlafzimmer_smoke
+      to: "on"
+    actions:
+      - action: notify.mobile_app_t470
+        data:
+          title: 'Rauch im EG'
+          message: 'Der Rauchmelder meldet Rauch im Schlafzimmer!'
+          data:
+            expire: 50000
+            urgency: critical
+            icon: k3b
+      - action: notify.kodi_libreelecmanfred
+        data:
+          title: 'Rauch im EG'
+          message: 'Der Rauchmelder meldet Rauch im Schlafzimmer!'
+          data:
+            displaytime: 50000
+            icon: error
+      - action: notify.kodi_libreelec_eg2
+        data:
+          title: 'Rauch im EG'
+          message: 'Der Rauchmelder meldet Rauch im Schlafzimmer!'
+          data:
+            displaytime: 50000
+            icon: error
+      - action: select.select_option
+        target:
+          entity_id:
+            - select.rauchmelder_eg_schlafzimmer_buzzer
+        data:
+          option: alarm
+      - action: button.press
+        target:
+          entity_id: button.anrufharauchegschlafen
 
   # Turn on garage plug, when pv power is more then 2 kW
   - id: "turn_on_garage_plug_when_sun_shines"

@@ -113,6 +113,7 @@ views:
             heaterRodLevel2: binary_sensor.mosquitto_broker_status_heizstab_stufe_2
             linkDetails: /lovelace/hp-details
             linkSettings: /lovelace/hp-settings
+            thermalSolarAvailable: false
           - type: custom:hourly-weather
             entity: weather.forecast_home
             show_precipitation_amounts: false
@@ -146,74 +147,124 @@ views:
             heading: Warnungen
             heading_style: title
           - type: tile
-            entity: binary_sensor.wassersensor_ug_kellerraum_water_leak
-            features_position: bottom
+            entity: sensor.rct_power_storage_battery_temperature
+            name: 🪫🌡️PV Batterie
             vertical: false
-            name: Wasser Kellerraum
+            features_position: bottom
+            visibility:
+              - condition: numeric_state
+                entity: sensor.rct_power_storage_battery_temperature
+                above: 40
+            grid_options:
+              columns: full
+          - type: tile
             visibility:
               - condition: state
                 entity: binary_sensor.wassersensor_ug_kellerraum_water_leak
                 state: 'on'
-              - condition: or
-                conditions:
-                  - condition: numeric_state
-                    entity: sensor.wassersensor_ug_kellerraum_battery
-                    below: 5
-          - type: tile
-            entity: binary_sensor.wassersensor_ug_werkstatt_water_leak
-            features_position: bottom
+            entity: binary_sensor.wassersensor_ug_kellerraum_water_leak
+            name: 💧 UG Kellerraum
             vertical: false
-            name: Wasser Werkstatt
+            features_position: bottom
+          - type: tile
+            entity: sensor.wassersensor_ug_kellerraum_battery
+            name: 💧 UG Kellerraum
+            vertical: false
+            features_position: bottom
+            visibility:
+              - condition: numeric_state
+                entity: sensor.wassersensor_ug_kellerraum_battery
+                below: 5
+          - type: tile
             visibility:
               - condition: state
                 entity: binary_sensor.wassersensor_ug_werkstatt_water_leak
                 state: 'on'
-              - condition: or
-                conditions:
-                  - condition: numeric_state
-                    entity: sensor.wassersensor_ug_werkstatt_battery
-                    below: 5
-          - type: tile
-            entity: binary_sensor.wassersensor_ug_fittnesraum_water_leak
-            features_position: bottom
+            entity: binary_sensor.wassersensor_ug_werkstatt_water_leak
+            name: 💧 UG Werkstatt
             vertical: false
-            name: Wasser Fittnesraum
+            features_position: bottom
+          - type: tile
+            visibility:
+              - condition: numeric_state
+                entity: sensor.wassersensor_ug_werkstatt_battery
+                below: 5
+            entity: sensor.wassersensor_ug_technikraum_battery
+            name: 💧 UG Werkstatt
+            vertical: false
+            features_position: bottom
+          - type: tile
             visibility:
               - condition: state
                 entity: binary_sensor.wassersensor_ug_fittnesraum_water_leak
                 state: 'on'
-              - condition: or
-                conditions:
-                  - condition: numeric_state
-                    entity: sensor.wassersensor_ug_fittnesraum_battery
-                    below: 5
-          - type: tile
-            entity: binary_sensor.wassersensor_ug_technikraum_water_leak
-            features_position: bottom
+            entity: binary_sensor.wassersensor_ug_fittnesraum_water_leak
+            name: 💧 UG Fittnesraum
             vertical: false
-            name: Wasser Technikraum
+            features_position: bottom
+          - type: tile
+            visibility:
+              - condition: numeric_state
+                entity: sensor.wassersensor_ug_fittnesraum_battery
+                below: 5
+            entity: sensor.wassersensor_ug_fittnesraum_battery
+            name: 💧 UG Fittnesraum
+            vertical: false
+            features_position: bottom
+          - type: tile
             visibility:
               - condition: state
                 entity: binary_sensor.wassersensor_ug_technikraum_water_leak
                 state: 'on'
-              - condition: or
-                conditions:
-                  - condition: numeric_state
-                    entity: sensor.wassersensor_ug_technikraum_battery
-                    below: 5
-          - type: tile
-            entity: binary_sensor.rauchmelder_ug_fittnesraum_smoke
-            features_position: bottom
+            entity: binary_sensor.wassersensor_ug_technikraum_water_leak
+            name: 💧 UG Technikraum
             vertical: false
+            features_position: bottom
+          - type: tile
+            entity: sensor.wassersensor_ug_technikraum_battery
+            name: 💧 UG Technikraum
+            vertical: false
+            features_position: bottom
+            visibility:
+              - condition: numeric_state
+                entity: sensor.wassersensor_ug_technikraum_battery
+                below: 5
+          - type: tile
             visibility:
               - condition: state
                 entity: binary_sensor.rauchmelder_ug_fittnesraum_smoke
                 state: 'on'
-              - condition: or
-                conditions:
-                  - condition: numeric_state
-                    entity: sensor.rauchmelder_ug_fittnesraum_battery
-                    below: 5
+            entity: binary_sensor.rauchmelder_ug_fittnesraum_smoke
+            name: 🔥 UG Fittnesraum
+            vertical: false
+            features_position: bottom
+          - type: tile
+            entity: sensor.rauchmelder_ug_fittnesraum_battery
+            name: 🔥 UG Fittnesraum
+            vertical: false
+            features_position: bottom
+            visibility:
+              - condition: numeric_state
+                entity: sensor.rauchmelder_ug_fittnesraum_battery
+                below: 5
+          - type: tile
+            visibility:
+              - condition: state
+                entity: binary_sensor.rauchmelder_eg_schlafzimmer_smoke
+                state: 'on'
+            entity: binary_sensor.rauchmelder_eg_schlafzimmer_smoke
+            name: 🔥 EG Schlafzimmer
+            vertical: false
+            features_position: bottom
+          - type: tile
+            entity: sensor.rauchmelder_eg_schlafzimmer_battery
+            name: 🔥 EG Schlafzimmer
+            vertical: false
+            features_position: bottom
+            visibility:
+              - condition: numeric_state
+                entity: sensor.rauchmelder_eg_schlafzimmer_battery
+                below: 5
           - type: heading
             heading: Entsorgung
             heading_style: title
