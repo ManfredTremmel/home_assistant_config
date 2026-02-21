@@ -10,6 +10,7 @@
 #       "AVM FRITZ!SmartHome" extension
 #       "Appliance has finished" blueprint
 #       "000_kodi_package.yaml"
+#       "010_notify_groups.yaml"
 #       "020_solar_grid_limitation_package.yaml"
 #
 # Used entities:
@@ -70,20 +71,14 @@ automation power_plug_helpers:
         finishing_threshold: 50
         finishing_hysteresis: 4
         actions:
-        - action: notify.mobile_app_t470
+        - action: notify.all_devices
           data:
             title: "Waschmaschine ist fertig"
             message: "Die Waschmaschine kann geleert werden"
             data:
               expire: 20000
-              urgency: normal
-              icon: dialog-information
-        - action: notify.kodi_libreelec_eg2
-          data:
-            title: "Waschmaschine ist fertig"
-            message: "Die Waschmaschine kann geleert werden"
-            data:
               displaytime: 20000
+              urgency: normal
               icon: "info"
         - action: python_script.set_state
           data:
@@ -108,20 +103,14 @@ automation power_plug_helpers:
         finishing_threshold: 2
         finishing_hysteresis: 2
         actions:
-        - action: notify.mobile_app_t470
+        - action: notify.all_devices
           data:
             title: "Geschirrspüler ist fertig"
             message: "Die Geschirrspülmaschine kann geleert werden"
             data:
               expire: 20000
-              urgency: normal
-              icon: dialog-information
-        - action: notify.kodi_libreelec_eg2
-          data:
-            title: "Geschirrspüler ist fertig"
-            message: "Die Geschirrspülmaschine kann geleert werden"
-            data:
               displaytime: 20000
+              urgency: normal
               icon: "info"
         - action: python_script.set_state
           data:
@@ -146,20 +135,14 @@ automation power_plug_helpers:
         finishing_threshold: 3
         finishing_hysteresis: 2
         actions:
-        - action: notify.mobile_app_t470
+        - action: notify.all_devices
           data:
             title: "Roller ist geladen"
             message: "Der eRoller ist fertig geladen"
             data:
               expire: 20000
-              urgency: normal
-              icon: dialog-information
-        - action: notify.kodi_libreelec_eg2
-          data:
-            title: "Roller ist geladen"
-            message: "Der eRoller ist fertig geladen"
-            data:
               displaytime: 20000
+              urgency: normal
               icon: "info"
         - action: python_script.set_state
           data:
@@ -171,166 +154,27 @@ automation power_plug_helpers:
             entity_id: binary_sensor.eroller
             state: "on"
 
-  # Sende Meldungen, wenn einer der Wasser-Sensoren im Keller Alarm schlägt
-  - id: "wasser_im_keller_technikraum"
-    alias: "Wasser im Keller Technikraum"
-    description: "Der Wassersensor meldet Wasser im Technikraum"
-    triggers:
-    - trigger: state
-      entity_id:
-      - binary_sensor.wassersensor_ug_technikraum_water_leak
-      to: "on"
-    actions:
-      - action: switch.turn_off
-        target:
-          entity_id: switch.steckdose_ug_waschmaschine
-      - action: notify.mobile_app_t470
-        data:
-          title: 'Wasser im Keller'
-          message: 'Der Wassersensor im Technikraum meldet Wasser!'
-          data:
-            expire: 50000
-            urgency: critical
-            icon: help-browser
-      - action: notify.kodi_libreelecmanfred
-        data:
-          title: 'Wasser im Keller'
-          message: 'Der Wassersensor im Technikraum meldet Wasser!'
-          data:
-            displaytime: 50000
-            icon: error
-      - action: notify.kodi_libreelec_eg2
-        data:
-          title: 'Wasser im Keller'
-          message: 'Der Wassersensor im Technikraum meldet Wasser!'
-          data:
-            displaytime: 50000
-            icon: error
-      - action: select.select_option
-        target:
-          entity_id:
-            - select.rauchmelder_eg_schlafzimmer_buzzer
-        data:
-          option: alarm
-      - action: button.press
-        target:
-          entity_id: button.anrufhawasserugtechnik
-
-  - id: "wasser_im_keller_kellerraum"
-    alias: "Wasser im Keller Kellerraum"
-    description: "Der Wassersensor meldet Wasser im Kellerraum"
-    triggers:
-    - trigger: state
-      entity_id:
-      - binary_sensor.wassersensor_ug_kellerraum_water_leak
-      to: "on"
-    actions:
-      - action: notify.mobile_app_t470
-        data:
-          title: 'Wasser im Keller'
-          message: 'Der Wassersensor im Kellerraum meldet Wasser!'
-          data:
-            expire: 50000
-            urgency: critical
-            icon: help-browser
-      - action: notify.kodi_libreelecmanfred
-        data:
-          title: 'Wasser im Keller'
-          message: 'Der Wassersensor im Kellerraum meldet Wasser!'
-          data:
-            displaytime: 50000
-            icon: error
-      - action: notify.kodi_libreelec_eg2
-        data:
-          title: 'Wasser im Keller'
-          message: 'Der Wassersensor im Kellerraum meldet Wasser!'
-          data:
-            displaytime: 50000
-            icon: error
-      - action: select.select_option
-        target:
-          entity_id:
-            - select.rauchmelder_eg_schlafzimmer_buzzer
-        data:
-          option: alarm
-      - action: button.press
-        target:
-          entity_id: button.anrufhawasserugkeller
-
-  - id: "wasser_im_keller_fittnesraum"
-    alias: "Wasser im Keller Fittnesraum"
-    description: "Der Wassersensor meldet Wasser im Fittnesraum"
-    triggers:
-    - trigger: state
-      entity_id:
-      - binary_sensor.wassersensor_ug_fittnesraum_water_leak
-      to: "on"
-    actions:
-      - action: switch.turn_off
-        target:
-          entity_id: switch.steckdose_ug_hauswasserwerk
-      - action: notify.mobile_app_t470
-        data:
-          title: 'Wasser im Keller'
-          message: 'Der Wassersensor im Fittnesraum meldet Wasser!'
-          data:
-            expire: 50000
-            urgency: critical
-            icon: help-browser
-      - action: notify.kodi_libreelecmanfred
-        data:
-          title: 'Wasser im Keller'
-          message: 'Der Wassersensor im Fittnesraum meldet Wasser!'
-          data:
-            displaytime: 50000
-            icon: error
-      - action: notify.kodi_libreelec_eg2
-        data:
-          title: 'Wasser im Keller'
-          message: 'Der Wassersensor im Fittnesraum meldet Wasser!'
-          data:
-            displaytime: 50000
-            icon: error
-      - action: select.select_option
-        target:
-          entity_id:
-            - select.rauchmelder_eg_schlafzimmer_buzzer
-        data:
-          option: alarm
-      - action: button.press
-        target:
-          entity_id: button.anrufhawasserugfitness
-
-  - id: "wasser_im_keller_werkstatt"
-    alias: "Wasser im Keller Werkstatt"
-    description: "Der Wassersensor meldet Wasser im Werkstatt"
+  # Wassermelder Alarm
+  - id: "wassermelder_alarm"
+    alias: "Wassermelder Alarm"
+    description: "Einer der Wassermelder schlägt Alarm"
     triggers:
     - trigger: state
       entity_id:
       - binary_sensor.wassersensor_ug_werkstatt_water_leak
+      - binary_sensor.wassersensor_ug_fittnesraum_water_leak
+      - binary_sensor.wassersensor_ug_kellerraum_water_leak
+      - binary_sensor.wassersensor_ug_technikraum_water_leak
       to: "on"
     actions:
-      - action: notify.mobile_app_t470
+      - action: notify.all_devices
         data:
-          title: 'Wasser im Keller'
-          message: 'Der Wassersensor im Werkstatt meldet Wasser!'
+          title: 'Wassermelder Warnung!'
+          message: '💧 Wassermelder {{ trigger.to_state.name }} schlägt Alarm! 💧'
           data:
             expire: 50000
+            displaytime: 50000
             urgency: critical
-            icon: help-browser
-      - action: notify.kodi_libreelecmanfred
-        data:
-          title: 'Wasser im Keller'
-          message: 'Der Wassersensor im Werkstatt meldet Wasser!'
-          data:
-            displaytime: 50000
-            icon: error
-      - action: notify.kodi_libreelec_eg2
-        data:
-          title: 'Wasser im Keller'
-          message: 'Der Wassersensor im Werkstatt meldet Wasser!'
-          data:
-            displaytime: 50000
             icon: error
       - action: select.select_option
         target:
@@ -340,81 +184,27 @@ automation power_plug_helpers:
           option: alarm
       - action: button.press
         target:
-          entity_id: button.anrufhawasserugwerkstatt
+          entity_id: button.anrufhawasser
 
-  # Rauchmelder im Keller hat Alarm geschlagen
-  - id: "rauch_im_keller_fittnesraum"
-    alias: "Rauch im Keller Fittnesraum"
-    description: "Der Rauchmelder meldet Rauch im Fittnesraum"
-    triggers:
-    - trigger: state
-      entity_id:
-      - binary_sensor.rauchmelder_ug_fittnesraum_smoke
-      to: "on"
-    actions:
-      - action: notify.mobile_app_t470
-        data:
-          title: 'Rauch im Keller'
-          message: 'Der Rauchmelder meldet Rauch im Fittnesraum!'
-          data:
-            expire: 50000
-            urgency: critical
-            icon: k3b
-      - action: notify.kodi_libreelecmanfred
-        data:
-          title: 'Rauch im Keller'
-          message: 'Der Rauchmelder meldet Rauch im Fittnesraum!'
-          data:
-            displaytime: 50000
-            icon: error
-      - action: notify.kodi_libreelec_eg2
-        data:
-          title: 'Rauch im Keller'
-          message: 'Der Rauchmelder meldet Rauch im Fittnesraum!'
-          data:
-            displaytime: 50000
-            icon: error
-      - action: select.select_option
-        target:
-          entity_id:
-            - select.rauchmelder_eg_schlafzimmer_buzzer
-        data:
-          option: alarm
-      - action: button.press
-        target:
-          entity_id: button.anrufharauchugfitness
-
-  # Rauchmelder im EG Schlafzimmer hat Alarm geschlagen
-  - id: "rauch_im_eg_schlafzimmer"
-    alias: "Rauch im EG Schlafzimmer"
-    description: "Der Rauchmelder meldet Rauch im Erdgeschoss Schlafzimmer"
+  # Rauchmelder Alarm
+  - id: "rauchmelder_alarm"
+    alias: "Rauchmelder Alarm"
+    description: "Einer der Rauchmelder schlägt Alarm"
     triggers:
     - trigger: state
       entity_id:
       - binary_sensor.rauchmelder_eg_schlafzimmer_smoke
+      - binary_sensor.rauchmelder_ug_fittnesraum_smoke
       to: "on"
     actions:
-      - action: notify.mobile_app_t470
+      - action: notify.all_devices
         data:
-          title: 'Rauch im EG'
-          message: 'Der Rauchmelder meldet Rauch im Schlafzimmer!'
+          title: 'Rauchmelder Warnung!'
+          message: '🔥 Rauchmelder {{ trigger.to_state.name }} schlägt Alarm! 🔥'
           data:
             expire: 50000
+            displaytime: 50000
             urgency: critical
-            icon: k3b
-      - action: notify.kodi_libreelecmanfred
-        data:
-          title: 'Rauch im EG'
-          message: 'Der Rauchmelder meldet Rauch im Schlafzimmer!'
-          data:
-            displaytime: 50000
-            icon: error
-      - action: notify.kodi_libreelec_eg2
-        data:
-          title: 'Rauch im EG'
-          message: 'Der Rauchmelder meldet Rauch im Schlafzimmer!'
-          data:
-            displaytime: 50000
             icon: error
       - action: select.select_option
         target:
@@ -424,7 +214,7 @@ automation power_plug_helpers:
           option: alarm
       - action: button.press
         target:
-          entity_id: button.anrufharauchegschlafen
+          entity_id: button.anrufharauchmelder
 
   # Turn on garage plug, when pv power is more then 2 kW
   - id: "turn_on_garage_plug_when_sun_shines"
@@ -490,19 +280,19 @@ automation power_plug_helpers:
           seconds: 3
     conditions: []
     actions:
-      - action: notify.mobile_app_t470
+      - action: notify.all_mobiles
         metadata: {}
         data:
-          message: "Miko steht vor der Türe"
           title: "Katzenklingel"
+          message: "Miko steht vor der Türe 🐈"
           data:
             expire: 20000
             urgency: normal
             icon: cat
-      - action: notify.kodi_libreelec_eg2
+      - action: notify.all_kodies
         data:
-          message: "Miko steht vor der Türe"
           title: "Katzenklingel"
+          message: "Miko steht vor der Türe"
           data:
             displaytime: 20000
             icon: "info"
