@@ -10,6 +10,7 @@ notify:
     platform: group
     services:
       - action: mobile_app_t470
+      - action: mobile_app_waydroid_t470
   - name: all_kodies
     platform: group
     services:
@@ -20,11 +21,13 @@ notify:
     platform: group
     services:
       - action: mobile_app_t470
+      - action: mobile_app_waydroid_t470
       - action: kodi_t470
   - name: all_devices
     platform: group
     services:
       - action: mobile_app_t470
+      - action: mobile_app_waydroid_t470
       - action: kodi_t470
       - action: kodi_libreelecmanfred
       - action: kodi_libreelec_eg2

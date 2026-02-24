@@ -1,6 +1,6 @@
 # ############ HA helpers for power plugs ############
 #
-# (C) 2025 Manfred Tremmel
+# (C) 2025-2026 Manfred Tremmel
 #
 # Check solar battery temperature, when goes above 40℃, stop loading and send error
 #
@@ -9,6 +9,7 @@
 #       "kodi" extension
 #       "AVM FRITZ!SmartHome" extension
 #       "000_kodi_package.yaml"
+#       "010_notify_groups.yaml"
 #
 #
 
@@ -32,27 +33,14 @@ automation solar_battery_temperature_check:
         data:
           parameter: power_mng.soc_max
           value: '7.00'
-      - action: notify.mobile_app_t470
+      - action: notify.all_devices
         data:
           title: 'PV-Batterie zu warm'
-          message: 'Gefahr, die PV-Batterie hat > 40℃!'
+          message: '☀⌁ Gefahr, die PV-Batterie hat > 40℃!'
           data:
             expire: 50000
+            displaytime: 50000
             urgency: critical
-            icon: battery
-      - action: notify.kodi_libreelecmanfred
-        data:
-          title: 'PV-Batterie zu warm'
-          message: 'Gefahr, die PV-Batterie hat > 40℃!'
-          data:
-            displaytime: 50000
-            icon: error
-      - action: notify.kodi_libreelec_eg2
-        data:
-          title: 'PV-Batterie zu warm'
-          message: 'Gefahr, die PV-Batterie hat > 40℃!'
-          data:
-            displaytime: 50000
             icon: error
       - action: button.press
         target:
