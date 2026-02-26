@@ -1,6 +1,6 @@
 # ############ HA notify configurations on kodi ############
 #
-# (C) 2025 Manfred Tremmel
+# (C) 2025-2026 Manfred Tremmel
 #
 # define all kodi instances for notification
 #
@@ -25,3 +25,9 @@ notify:
     port: 8099
     username: !secret kodi_libreelec_eg2_username
     password: !secret kodi_libreelec_eg2_password
+  - platform: kodi
+    name: kodi_obsmart
+    host: obsmart.fritz.box
+    port: 8099
+    username: !secret kodi_obsmart_username
+    password: !secret kodi_obsmart_password

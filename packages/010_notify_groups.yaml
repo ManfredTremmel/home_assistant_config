@@ -11,12 +11,14 @@ notify:
     services:
       - action: mobile_app_t470
       - action: mobile_app_waydroid_t470
+      - action: mobile_app_orbsmart_soundpad_700
   - name: all_kodies
     platform: group
     services:
       - action: kodi_t470
       - action: kodi_libreelecmanfred
       - action: kodi_libreelec_eg2
+      - action: kodi_obsmart
   - name: all_t470
     platform: group
     services:
@@ -28,6 +30,8 @@ notify:
     services:
       - action: mobile_app_t470
       - action: mobile_app_waydroid_t470
+      - action: mobile_app_orbsmart_soundpad_700
       - action: kodi_t470
       - action: kodi_libreelecmanfred
       - action: kodi_libreelec_eg2
+      - action: kodi_obsmart
