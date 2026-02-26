@@ -1,0 +1,117 @@
+# ################## HA weather station data #################
+#
+# (C) 2026 Manfred Tremmel
+#
+# Using weather station data from nearest https://www.wunderground.com station, based on
+# instructions from https://community.simon42.com/t/aktuelle-lokale-wetterdaten-ohne-eigene-wetterstation-und-ohne-kosten/54015
+#
+
+rest:
+  - resource: https://api.weather.com/v2/pws/observations/current?apiKey=e1f10a1e78da46f5b10a1e78da96f525&stationId=ISCHWI46&numericPrecision=decimal&format=json&units=m
+    scan_interval: 600  # alle 10 Minuten
+    sensor:
+      - name: Wetterstation Aktuell Rohdaten
+        value_template: >
+          {{ value_json.observations[0].metric.temp }}
+        json_attributes:
+          - observations
+
+template:
+  - sensor:
+      - name: Wetter Temperatur
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        state: >
+          {{ state_attr('sensor.wetterstation_aktuell_rohdaten', 'observations')[0].metric.temp }}
+
+      - name: Wetter Hitzeindex
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        state: >
+          {{ state_attr('sensor.wetterstation_aktuell_rohdaten', 'observations')[0].metric.heatIndex }}
+
+      - name: Wetter Taupunkt
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        state: >
+          {{ state_attr('sensor.wetterstation_aktuell_rohdaten', 'observations')[0].metric.dewpt }}
+
+      - name: Wettergefühl (Windchill)
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        state: >
+          {{ state_attr('sensor.wetterstation_aktuell_rohdaten', 'observations')[0].metric.windChill }}
+
+      - name: Wetter Windgeschwindigkeit
+        unit_of_measurement: "km/h"
+        device_class: wind_speed
+        state_class: measurement
+        state: >
+          {{ state_attr('sensor.wetterstation_aktuell_rohdaten', 'observations')[0].metric.windSpeed }}
+
+      - name: Wetter Windböe
+        unit_of_measurement: "km/h"
+        device_class: wind_speed
+        state_class: measurement
+        state: >
+          {{ state_attr('sensor.wetterstation_aktuell_rohdaten', 'observations')[0].metric.windGust }}
+
+      - name: Wetter Luftdruck
+        unit_of_measurement: "hPa"
+        device_class: pressure
+        state_class: measurement
+        state: >
+          {{ state_attr('sensor.wetterstation_aktuell_rohdaten', 'observations')[0].metric.pressure }}
+
+      - name: Wetter Niederschlagsrate
+        unit_of_measurement: "mm/h"
+        device_class: precipitation
+        state_class: measurement # oder total_increasing, je nach API-Verhalten
+        state: >
+          {{ state_attr('sensor.wetterstation_aktuell_rohdaten', 'observations')[0].metric.precipRate }}
+
+      - name: Wetter Niederschlag gesamt
+        unit_of_measurement: "mm"
+        device_class: precipitation
+        state_class: measurement # oder total_increasing, je nach API-Verhalten
+        state: >
+          {{ state_attr('sensor.wetterstation_aktuell_rohdaten', 'observations')[0].metric.precipTotal }}
+
+      - name: Wetter UV Index
+        unit_of_measurement: "UV Index"
+        icon: "mdi:sun-wireless-outline"
+        state_class: measurement
+        state: >
+          {{ state_attr('sensor.wetterstation_aktuell_rohdaten', 'observations')[0].uv }}
+
+      - name: Wetter Solarstrahlung
+        unit_of_measurement: "W/m²"
+        device_class: illuminance # Annäherung
+        state_class: measurement
+        state: >
+          {{ state_attr('sensor.wetterstation_aktuell_rohdaten', 'observations')[0].solarRadiation }}
+
+      - name: Wetter Luftfeuchtigkeit
+        unit_of_measurement: "%"
+        device_class: humidity
+        state_class: measurement
+        state: >
+          {{ state_attr('sensor.wetterstation_aktuell_rohdaten', 'observations')[0].humidity }}
+
+      - name: Wetter Windrichtung
+        unit_of_measurement: "°"
+        icon: "mdi:compass-outline"
+        state: >
+          {{ state_attr('sensor.wetterstation_aktuell_rohdaten', 'observations')[0].winddir }}
+
+      - name: Wetter Ortsteil
+        state: >
+          {{ state_attr('sensor.wetterstation_aktuell_rohdaten', 'observations')[0].neighborhood }}
+
+      - name: Wetter Software Version
+        state: >
+          {{ state_attr('sensor.wetterstation_aktuell_rohdaten', 'observations')[0].softwareType }}
