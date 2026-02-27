@@ -36,6 +36,27 @@ template:
       state_class: "total_increasing"
       state: "{{ (((states('sensor.rct_power_storage_all_generators_energy_production_total')|float(0.0)) / 1000) + (states('sensor.stp_20_50_pv_total_power_a')|float(0.0)) + (states('sensor.stp_20_50_pv_total_power_b')|float(0.0)) + (states('sensor.stp_20_50_pv_total_power_c')|float(0.0)))|round(3) }}"
       availability: "{{ has_value('sensor.rct_power_storage_all_generators_energy_production_total') and has_value('sensor.stp_20_50_pv_total_power_a') and has_value('sensor.stp_20_50_pv_total_power_b') and has_value('sensor.stp_20_50_pv_total_power_c') }}"
+    - unique_id: "solar_house_south_total_yield"
+      name: "Solar House South Total Yield"
+      device_class: "energy"
+      unit_of_measurement: "kWh"
+      state_class: "total_increasing"
+      state: "{{ ((states('sensor.stp_20_50_pv_total_power_a')|float(0.0)) + (states('sensor.stp_20_50_pv_total_power_b')|float(0.0)))|round(3) }}"
+      availability: "{{ has_value('sensor.stp_20_50_pv_total_power_a') and has_value('sensor.stp_20_50_pv_total_power_b') }}"
+    - unique_id: "solar_house_north_total_yield"
+      name: "Solar House North Total Yield"
+      device_class: "energy"
+      unit_of_measurement: "kWh"
+      state_class: "total_increasing"
+      state: "{{ (states('sensor.stp_20_50_pv_total_power_c')|float(0.0))|round(3) }}"
+      availability: "{{ has_value('sensor.stp_20_50_pv_total_power_c') }}"
+    - unique_id: "solar_garage_south_total_yield"
+      name: "Solar Garage South Total Yield"
+      device_class: "energy"
+      unit_of_measurement: "kWh"
+      state_class: "total_increasing"
+      state: "{{ (((states('sensor.rct_power_storage_all_generators_energy_production_total')|float(0.0)) / 1000))|round(3) }}"
+      availability: "{{ has_value('sensor.rct_power_storage_all_generators_energy_production_total') }}"
   - sensor:
     - unique_id: "inverter_total_yield"
       name: "Inverter Power Total Yield"
@@ -83,3 +104,18 @@ utility_meter:
     name: "solar_yield_yearly"
     source: sensor.solar_total_yield
     cycle: yearly
+  solar_yield_daily:
+    unique_id: solar_house_south_yield_daily
+    name: "solar_house_south_yield_daily"
+    source: sensor.solar_house_south_total_yield
+    cycle: daily
+  solar_yield_daily:
+    unique_id: solar_house_north_yield_daily
+    name: "solar_house_north_yield_daily"
+    source: sensor.solar_house_north_total_yield
+    cycle: daily
+  solar_yield_daily:
+    unique_id: solar_garage_south_yield_daily
+    name: "solar_garage_south_yield_daily"
+    source: sensor.solar_garage_south_total_yield
+    cycle: daily
