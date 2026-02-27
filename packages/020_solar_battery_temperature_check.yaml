@@ -42,6 +42,12 @@ automation solar_battery_temperature_check:
             displaytime: 50000
             urgency: critical
             icon: error
+      - action: select.select_option
+        target:
+          entity_id:
+            - select.rauchmelder_eg_schlafzimmer_buzzer
+        data:
+          option: alarm
       - action: button.press
         target:
           entity_id: button.anrufhapvbatterie
