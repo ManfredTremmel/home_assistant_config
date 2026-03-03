@@ -5,13 +5,12 @@
 # Some helper automations 
 #
 # Dependencies:
-#       "000_heatpump_mqtt_package.yaml"
-#       "000_energy_prognostic_helper_package.yaml"
+#       "Solar Forecast ML" extension from HACS
 #       "RCT Power" extension from HACS
 #
 # Used entities:
 #       sensor.rct_power_storage_grid_power
-#       sensor.energy_production_today_remaining_total
+#       sensor.prognose_heute_rest
 #       binary_sensor.heating_pump_heating_mode
 #       binary_sensor.heating_pump_party_mode
 #       select.mosquitto_broker_betriebsart
@@ -42,7 +41,7 @@ automation heating_pump_helpers:
           seconds: 0
     conditions:
       - condition: numeric_state
-        entity_id: sensor.energy_production_today_remaining_total
+        entity_id: sensor.prognose_heute_rest
         above: 30
       - condition: state
         entity_id: binary_sensor.heating_pump_heating_mode
@@ -66,7 +65,7 @@ automation heating_pump_helpers:
     triggers:
       - trigger: numeric_state
         entity_id:
-        - sensor.energy_production_today_remaining_total
+        - sensor.prognose_heute_rest
         below: 20
     conditions:
       - condition: state

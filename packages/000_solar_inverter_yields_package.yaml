@@ -26,6 +26,9 @@
 #       sensor.inverter_yield_daily
 #       sensor.inverter_yield_monthly
 #       sensor.inverter_yield_yearly
+#       sensor.solar_house_south_yield_daily
+#       sensor.solar_house_north_yield_daily
+#       sensor.solar_garage_south_yield_daily
 #
 template:
   - sensor:
