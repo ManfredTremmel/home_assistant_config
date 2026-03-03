@@ -884,25 +884,3 @@ template:
       state: >-
           {{ (states('sensor.mosquitto_broker_waermeenergie_warmwasser_jahr')|float(0.0) / states('sensor.mosquitto_broker_elektroenergie_warmwasser_jahr')|float(0.0)) | round(2) }}
       availability: "{{ has_value('sensor.mosquitto_broker_waermeenergie_warmwasser_jahr') and has_value('sensor.mosquitto_broker_elektroenergie_warmwasser_jahr') }}"
-    - unique_id: "heating_pump_power_heating"
-      name: "Heating Pump power heating"
-      platform: derivative
-      source: sensor.mosquitto_broker_elektroenergie_heizen_woche
-      state_class: "measurement"
-      round: 0
-      unit_prefix: m
-      unit_time: h
-      unit: W
-      time_window: "00:05:00"
-      max_sub_interval: "00:01:00"
-    - unique_id: "heating_pump_power_hotwater"
-      name: "Heating Pump power hotwater"   
-      platform: derivative
-      source: sensor.mosquitto_broker_elektroenergie_warmwasser_woche
-      state_class: "measurement"
-      round: 0
-      unit_prefix: m
-      unit_time: h
-      unit: W
-      time_window: "00:05:00"
-      max_sub_interval: "00:01:00"

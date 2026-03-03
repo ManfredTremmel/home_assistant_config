@@ -1,0 +1,36 @@
+# ############ HA Heat Pump power sensors ###########
+#
+# (C) 2026 Manfred Tremmel
+#
+# My heat pump provides energy sensors, but now power sensors, this should
+# fix this limit.
+#
+# Dependencies:
+#       000_heatpump_mqtt_package.yaml
+#
+# Provided entities:
+#       sensor.heating_pump_power_heating
+#       sensor.heating_pump_power_hotwater
+#
+
+sensor:
+  - platform: derivative
+    source: sensor.mosquitto_broker_elektroenergie_heizen_woche
+    unique_id: "heating_pump_power_heating"
+    name: "Heating Pump power heating"
+    round: 0
+    unit_prefix: m
+    unit_time: h
+    unit: W
+    time_window: "00:05:00"
+    max_sub_interval: "00:01:00"
+  - platform: derivative
+    source: sensor.mosquitto_broker_elektroenergie_warmwasser_woche
+    unique_id: "heating_pump_power_hotwater"
+    name: "Heating Pump power hotwater"   
+    round: 0
+    unit_prefix: m
+    unit_time: h
+    unit: W
+    time_window: "00:05:00"
+    max_sub_interval: "00:01:00"
