@@ -11,6 +11,8 @@
 # Provided entities:
 #       sensor.heating_pump_power_heating
 #       sensor.heating_pump_power_hotwater
+#       sensor.heatpump_power_heating
+#       sensor.heatpump_power_hotwater
 #
 
 sensor:
@@ -34,3 +36,24 @@ sensor:
     unit: W
     time_window: "00:05:00"
     max_sub_interval: "00:01:00"
+
+template:
+  - sensor:
+    - unique_id: "heatpump_power_heating"
+      name: "Heatpump Power Heating"
+      device_class: power
+      icon: "mdi:lightning-bolt"
+      state_class: "measurement"
+      unit_of_measurement: "W"
+      state: >-
+          {{ ((states('sensor.heating_pump_power_heating')|float(0.0)))|round(0) }}
+      availability: "{{ has_value('sensor.heating_pump_power_heating') }}"
+    - unique_id: "heatpump_power_hotwater"
+      name: "Heatpump Power Hotwater"
+      device_class: power
+      icon: "mdi:lightning-bolt"
+      state_class: "measurement"
+      unit_of_measurement: "W"
+      state: >-
+          {{ ((states('sensor.heating_pump_power_hotwater')|float(0.0)))|round(0) }}
+      availability: "{{ has_value('sensor.heating_pump_power_hotwater') }}"
