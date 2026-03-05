@@ -114,12 +114,17 @@ views:
             linkDetails: /lovelace/hp-details
             linkSettings: /lovelace/hp-settings
             thermalSolarAvailable: false
-          - type: custom:hourly-weather
-            entity: weather.forecast_home
-            show_precipitation_amounts: false
-            show_precipitation_probability: false
-            icons: true
-            name: Wetter, die nächsten Stunden
+          - show_current: true
+            show_forecast: true
+            type: weather-forecast
+            entity: weather.ischwi46
+            forecast_type: daily
+            secondary_info_attribute: pressure
+            tap_action:
+              action: more-info
+            double_tap_action:
+              action: navigate
+              navigation_path: /lovelace/wetter
           - type: tile
             entity: binary_sensor.waschmaschine
             features_position: bottom
@@ -480,6 +485,8 @@ views:
               - condition: state
                 entity: sensor.nasqnap671_status
                 state_not: unavailable
+      - type: grid
+        cards: []
     cards: []
     type: sections
     max_columns: 3
@@ -1901,3 +1908,88 @@ views:
             forecast_type: daily
             name: Wettervorhersage
     cards: []
+  - type: sections
+    max_columns: 3
+    subview: true
+    path: wetter
+    title: Wetter Details
+    icon: mdi:weather-partly-cloudy
+    sections:
+      - type: grid
+        cards:
+          - type: entities
+            entities:
+              - entity: sensor.ischwi46_forecast_summary_1n
+                name: Heute
+              - entity: sensor.ischwi46_forecast_summary_2d
+                name: Morgen
+              - entity: sensor.ischwi46_forecast_summary_4d
+                name: Übermorgen
+              - entity: sensor.ischwi46_forecast_summary_6d
+                name: Tag+3
+              - entity: sensor.ischwi46_forecast_summary_8d
+                name: Tag+4
+              - entity: sensor.ischwi46_temperature
+              - entity: sensor.ischwi46_wind_chill
+              - entity: sensor.ischwi46_heat_index
+              - entity: sensor.ischwi46_dewpoint
+              - entity: sensor.ischwi46_solar_radiation
+              - entity: sensor.ischwi46_uv_index
+              - entity: sensor.ischwi46_relative_humidity
+              - entity: sensor.ischwi46_pressure
+              - entity: sensor.ischwi46_precipitation_rate
+              - entity: sensor.ischwi46_precipitation_today
+              - entity: sensor.ischwi46_wind_speed
+              - entity: sensor.ischwi46_wind_gust
+              - entity: sensor.ischwi46_wind_direction_cardinal
+            title: Wetterstation
+      - type: grid
+        cards:
+          - type: entities
+            entities:
+              - entity: sensor.beste_stunde
+              - entity: sensor.solar_forecast_ml_durchschnittlicher_monatsertrag
+              - entity: sensor.solar_forecast_ml_ki_drift_status
+              - entity: sensor.solar_forecast_ml_leistungsverlust_heute
+              - entity: sensor.max_peak_heute
+              - entity: sensor.max_peak_rekord
+              - entity: sensor.solar_forecast_ml_monatsertrag
+              - entity: sensor.solar_forecast_ml_monatsverbrauch
+              - entity: sensor.solar_forecast_ml_o_ertrag_7_tage
+              - entity: sensor.solar_forecast_ml_o_ertrag_30_tage
+              - entity: sensor.solar_forecast_ml_o_genauigkeit_30_tage
+              - entity: sensor.produktionszeit_heute
+              - entity: sensor.prognose_heute_rest
+              - entity: sensor.prognose_heute
+              - entity: sensor.prognose_morgen
+              - entity: sensor.solar_forecast_ml_prognose_nachste_stunde
+              - entity: sensor.prognose_ubermorgen
+              - entity: sensor.solar_forecast_ml_schatten_aktuell
+              - entity: sensor.solar_forecast_ml_schatten_heute
+              - entity: sensor.solar_forecast_ml_system_status
+              - entity: sensor.solar_forecast_ml_wochenertrag
+              - entity: sensor.solar_forecast_ml_wochenverbrauch
+              - entity: sensor.solar_forecast_ml_yield_sensor_state
+            title: Solar Forecast ML
+      - type: grid
+        cards:
+          - type: entities
+            entities:
+              - entity: sensor.solar_forecast_ml_active_prediction_model
+              - entity: sensor.solar_forecast_ml_ai_metrics
+              - entity: sensor.solar_forecast_ml_ai_rmse
+              - entity: sensor.solar_forecast_ml_ai_samples
+              - entity: sensor.solar_forecast_ml_coordinator_health
+              - entity: sensor.solar_forecast_ml_database_status
+              - entity: sensor.solar_forecast_ml_end_of_day_duration
+              - entity: sensor.solar_forecast_ml_external_sensors_status
+              - entity: sensor.solar_forecast_ml_last_ai_training
+              - entity: sensor.solar_forecast_ml_last_update
+              - entity: sensor.solar_forecast_ml_next_production_start
+              - entity: sensor.solar_forecast_ml_next_scheduled_update
+              - entity: sensor.solar_forecast_ml_power_sensor_state
+              - entity: sensor.solar_forecast_ml_wetterstabilitat
+              - entity: sensor.solar_forecast_ml_wolken_trend_1h
+              - entity: sensor.solar_forecast_ml_wolken_trend_3h
+              - entity: sensor.solar_forecast_ml_yesterday_deviation
+            title: Solar Forecast ML
