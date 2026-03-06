@@ -47,6 +47,11 @@ template:
           {%- else -%}
             {{ states('sensor.rct_battery_capacity_unload_calibration')|float() }}
           {%- endif %}
+      availability: >-
+          {{  (states("sensor.rct_power_storage_battery_used_energy_start") | is_number)
+          and (states("sensor.rct_power_storage_battery_used_energy_end") | is_number)
+          and (states("sensor.rct_power_storage_battery_stored_energy_start") | is_number)
+          and (states("sensor.rct_power_storage_battery_stored_energy_end") | is_number) }}
 
   #
   # When the battery has reached 100% SOC in calibration process, the battery

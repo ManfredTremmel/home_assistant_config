@@ -307,7 +307,7 @@ template:
           {% set pfv0 = states("sensor.prognose_heute") | float(0) %}
           {% set pfv1 = states("sensor.prognose_morgen") | float(0) %}
           {% set pfv2 = states("sensor.prognose_ubermorgen") | float(0) %}
-          {% set pfv3 = ((states("sensor.prognose_heute") | float(0) + states("sensor.prognose_morgen") | float(0) + states("sensor.prognose_ubermorgen") | float(0)) / 3) | round(2) %}
+          {% set pfv3 = states("sensor.solar_forecast_ml_durchschnittlicher_monatsertrag") | float(0) %}
           {% set pfv4 = pfv3 %}
           {% set pfv5 = pfv3 %}
           {% set pfv6 = pfv3 %}           
