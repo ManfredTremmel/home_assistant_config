@@ -1,8 +1,8 @@
 tty: /dev/serial/by-id/usb-1a86_USB_Serial-if00-port0
 refresh: 60
-device_id: 204D
+device_id: 2049
 mqtt_topic: openv
-debug: true
+debug: false
 commands:
   - getAnzHeizstabSt1:FLOAT
   - getAnzHeizstabSt2:FLOAT
