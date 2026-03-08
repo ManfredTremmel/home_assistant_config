@@ -1,0 +1,35 @@
+# ########################## HA house energy consumption calculation ########################
+#
+# (C) 2026 Manfred Tremmel
+#
+# Calculate energy consumption of the house out of the power consumption.
+#
+# Dependency:
+#       "010_solar_monitoring_package.yaml"
+#
+# Used entities:
+#       sensor.power_consumption
+#
+# Provided entities:
+#       sensor.energy_consumption_house
+#       sensor.energy_consumption_house_daily
+#
+
+sensor:
+  - platform: integration
+    source: sensor.power_consumption
+    unique_id: "energy_consumption_house"
+    name: "energy_consumption_house"
+    device_class: "energy"
+    unit_of_measurement: "kWh"
+    state_class: "total_increasing"
+    round: 3
+    max_sub_interval:
+      minutes: 5
+
+utility_meter:
+  energy_consumption_house_daily:
+    unique_id: energy_consumption_house_daily
+    name: "energy_consumption_house_daily"
+    source: sensor.energy_consumption_house
+    cycle: daily
