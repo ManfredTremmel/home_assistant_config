@@ -20,9 +20,6 @@ sensor:
     source: sensor.power_consumption
     unique_id: "energy_consumption_house"
     name: "energy_consumption_house"
-    device_class: "energy"
-    unit_of_measurement: "kWh"
-    state_class: "total_increasing"
     round: 3
     max_sub_interval:
       minutes: 5
