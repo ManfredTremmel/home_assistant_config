@@ -1162,13 +1162,13 @@ views:
                   name: Forecast
                   icon: m3o:chart-data
                   entities:
-                    - entity: sensor.energy_production_today_total
+                    - entity: sensor.prognose_heute
                       name: heute
                       format: precision2
                     - entity: sensor.solcast_zielerreichung_heute
                       name: Zielerreichung
                       format: precision2
-                    - entity: sensor.energy_production_tomorrow_total
+                    - entity: sensor.prognose_morgen
                       name: morgen
                       format: precision2
                 - entity: sensor.pv_extrapolierte_zielerreichung
@@ -1948,48 +1948,129 @@ views:
           - type: entities
             entities:
               - entity: sensor.beste_stunde
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_durchschnittlicher_monatsertrag
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_ki_drift_status
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_leistungsverlust_heute
+                name:
+                  type: entity
               - entity: sensor.max_peak_heute
+                name:
+                  type: entity
               - entity: sensor.max_peak_rekord
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_monatsertrag
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_monatsverbrauch
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_o_ertrag_7_tage
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_o_ertrag_30_tage
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_o_genauigkeit_30_tage
+                name:
+                  type: entity
               - entity: sensor.produktionszeit_heute
+                name:
+                  type: entity
               - entity: sensor.prognose_heute_rest
+                name:
+                  type: entity
               - entity: sensor.prognose_heute
+                name:
+                  type: entity
               - entity: sensor.prognose_morgen
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_prognose_nachste_stunde
+                name:
+                  type: entity
               - entity: sensor.prognose_ubermorgen
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_schatten_aktuell
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_schatten_heute
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_system_status
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_wochenertrag
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_wochenverbrauch
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_yield_sensor_state
+                name:
+                  type: entity
             title: Solar Forecast ML
       - type: grid
         cards:
           - type: entities
             entities:
               - entity: sensor.solar_forecast_ml_active_prediction_model
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_ai_metrics
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_ai_rmse
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_ai_samples
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_coordinator_health
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_database_status
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_end_of_day_duration
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_external_sensors_status
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_last_ai_training
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_last_update
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_next_production_start
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_next_scheduled_update
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_power_sensor_state
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_wetterstabilitat
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_wolken_trend_1h
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_wolken_trend_3h
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_yesterday_deviation
+                name:
+                  type: entity
             title: Solar Forecast ML
+            state_color: false

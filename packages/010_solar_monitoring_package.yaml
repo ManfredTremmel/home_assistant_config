@@ -289,13 +289,10 @@ template:
           and (states("sensor.forecasted_pv_production_ytd") | is_number() ) }}
 
       # Extrapolate in a simple manner the expected go to
-      # solcast_pv_forecast_prognose_heute
-      # solcast_pv_forecast_prognose_fur_morgen
-      # solcast_pv_forecast_vorhersage_tag_3
-      # solcast_pv_forecast_vorhersage_tag_4
-      # solcast_pv_forecast_prognosetag_5
-      # solcast_pv_forecast_vorhersage_tag_6
-      # solcast_pv_forecast_vorhersage_tag_7
+      # sensor.prognose_heute
+      # sensor.prognose_morgen
+      # sensor.prognose_ubermorgen
+      # sensor.solar_forecast_ml_durchschnittlicher_monatsertrag
       - unique_id: "pv_prognose_7d_bis_monatsende"
         name: "PV Prognose 7d bis Monatsende"
         state_class: "measurement"
