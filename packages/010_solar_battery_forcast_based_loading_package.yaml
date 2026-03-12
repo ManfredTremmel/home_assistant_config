@@ -1,6 +1,6 @@
 # ################ HA Local RCT forcast based battery loading ################
 #
-# (C) 2025 Manfred Tremmel
+# (C) 2025-2026 Manfred Tremmel
 #
 # Optimize battery loading to save battery and grid.
 # - when sun is below horizon, keep last value
@@ -32,6 +32,7 @@
 #       "RCT Power" extension from HACS
 #       "Solar Forecast ML" extension from HACS
 #       "000_heatpump_mqtt_package.yaml"
+#       "000_rct_input_widgets_package.yaml"
 #
 # Used entities:
 #       sensor.prognose_heute_rest
@@ -46,8 +47,6 @@
 #
 # Provided entities:
 #       sensor.calculated_maximum_battery_soc
-#       number.number_rct_power_storage_battery_minimum_soc
-#       number.number_rct_power_storage_battery_maximum_soc
 #
 template:
   - sensor:
@@ -91,42 +90,6 @@ template:
           {%- endif %}
       availability: "{{ has_value('sensor.prognose_heute_rest') and has_value('sensor.prognose_morgen') and has_value('binary_sensor.heating_pump_heating_mode') and has_value('sensor.sun_next_noon') and has_value('sensor.sun_next_rising') and has_value('sensor.mosquitto_broker_aussentemperatur') }}"
 
-  - number:
-
-      #
-      # number field for minimum soc
-      #
-      - unique_id: number_rct_power_storage_battery_minimum_soc
-        name: "Number RCT Power Storage Battery Minimum SOC"
-        unit_of_measurement: "%"
-        state: "{{ states('sensor.rct_power_storage_battery_minimum_state_of_charge')|float(7.0) }}"
-        set_value:
-          - action: pyscript.rct_ha_call
-            data:
-              parameter: power_mng.soc_min
-              value: "{{ (value * 0.01)|round(2) }}"
-        step: 1
-        min: 7
-        max: 97
-        icon: "mdi:battery-charging-wireless-10"
-
-      #
-      # number field for maximum soc
-      #
-      - unique_id: number_rct_power_storage_battery_maximum_soc
-        name: "Number RCT Power Storage Battery Maximum SOC"
-        unit_of_measurement: "%"
-        state: "{{ states('sensor.rct_power_storage_battery_maximum_state_of_charge')|float(97.0) }}"
-        set_value:
-          - action: pyscript.rct_ha_call
-            data:
-              parameter: power_mng.soc_max
-              value: "{{ (value * 0.01)|round(2) }}"
-        step: 1
-        min: 7
-        max: 97
-        icon: "mdi:battery-charging-wireless-90"
-
 automation rct_soc_min_max:
 
   #
@@ -167,11 +130,9 @@ automation rct_soc_min_max:
         event: sunrise
     conditions: []
     actions:
-      - action: pyscript.rct_ha_call
-        data:
-          action: set
-          parameter: power_mng.use_grid_power_enable
-          value: '{% if (states(''sensor.energy_production_today_remaining'')|float(0.0)) < 15 -%}true{%- else -%}false{%- endif %}'
+      - action: switch.turn_{{ 'on' if (states('sensor.prognose_heute_rest')|float(0.0)) < 50 else 'off' }}
+        target:
+          entity_id: switch.switch_rct_power_storage_use_grid_power
     mode: single
 
   #
@@ -216,11 +177,11 @@ automation rct_soc_min_max:
         entity_id: "sensor.rct_power_storage_battery_status"
         state: "discharging"
     actions:
-      - action: pyscript.rct_ha_call
+      - action: number.set_value
         data:
-          action: set
-          parameter: p_rec_lim[1]
           value: '{{ min(4000, ((states(''sensor.rct_battery_capacity_unload_calibration'')|float(0.0)) * (states(''sensor.rct_power_storage_battery_state_of_charge'')|float(0.0)))|multiply(10)|round(0)) }}'
+        target:
+          entity_id: number.number_rct_power_storage_battery_to_grid_power
     mode: single
 
   #
@@ -237,11 +198,11 @@ automation rct_soc_min_max:
         to: normal
     conditions: []
     actions:
-      - action: pyscript.rct_ha_call
+      - action: number.set_value
         data:
-          action: set
-          parameter: p_rec_lim[1]
-          value: 0
+          value: '0'
+        target:
+          entity_id: number.number_rct_power_storage_battery_to_grid_power
       - action: switch.turn_off
         target:
           entity_id: switch.mosquitto_broker_einmal_ww_bereitung

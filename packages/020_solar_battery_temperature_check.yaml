@@ -9,6 +9,7 @@
 #       "kodi" extension
 #       "AVM FRITZ!SmartHome" extension
 #       "000_kodi_package.yaml"
+#       "000_rct_input_widgets_package.yaml"
 #       "010_notify_groups.yaml"
 #
 #
@@ -29,10 +30,11 @@ automation solar_battery_temperature_check:
           minutes: 0
           seconds: 10
     actions:
-      - action: pyscript.rct_ha_call
+      - action: number.set_value
         data:
-          parameter: power_mng.soc_max
-          value: '7.00'
+          value: '7'
+        target:
+          entity_id: number.number_rct_power_storage_battery_maximum_soc
       - action: notify.all_devices
         data:
           title: 'PV-Batterie zu warm'

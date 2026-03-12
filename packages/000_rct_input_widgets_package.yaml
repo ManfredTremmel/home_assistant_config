@@ -1,0 +1,227 @@
+# ############ HA Local RCT input widgets ############
+#
+# (C) 2026 Manfred Tremmel
+#
+# The 'RCT Power' home assistant plugin has no write support
+# the 'rctpower_writesupport' script provides this. This script
+# creates input widgets using the sensor values from 'RCT Power'
+# integration in combination with set value using action to
+# trigger setting with rctpower_writesupport script.
+#
+# Dependencies:
+#       "RCT Power" extension from HACS
+#       "rctpower_writesupport" script
+#
+# Provided entities:
+#       select.select_rct_power_storage_load_strategy
+#       switch.switch_rct_power_storage_use_grid_power
+#       number.number_rct_power_storage_battery_target_power
+#       number.number_rct_power_storage_battery_force_soc_target
+#       number.number_rct_power_storage_battery_minimum_soc
+#       number.number_rct_power_storage_battery_maximum_soc
+#       number.number_rct_power_storage_battery_charging_power_to_reach_soc_target
+#       number.number_rct_power_storage_battery_trigger_for_charging_to_soc_min
+#       number.number_rct_power_storage_battery_to_grid_power
+#       number.number_rct_power_storage_external_power_reduction
+#
+
+template:
+
+  - select:
+
+      #
+      # select to choose between storage load strategies
+      #
+      - unique_id: select_rct_power_storage_load_strategy
+        name: "Select RCT Power Storage Load Strategy"
+        options: "{{ ['SOC', 'Constant', 'External', 'Average Battery Voltage', 'Internal', 'Schedule'] }}"
+        state: >-
+          {% set sensorvalue = states("sensor.rct_power_storage_battery_state_of_charge_strategy") | float(0) %}
+          {% set result = "Internal" %}
+          {% if sensorvalue == 0 %}
+            {% set result = "SOC" %}
+          {% elif sensorvalue == 1 %}
+            {% set result = "Constant" %}
+          {% elif sensorvalue == 2 %}
+            {% set result = "External" %}
+          {% elif sensorvalue == 3 %}
+            {% set result = "Average Battery Voltage" %}
+          {% elif sensorvalue == 5 %}
+            {% set result = "Schedule" %}
+          {% else %}
+            {% set result = "Internal" %}
+          {% endif %}
+          {{ result }}
+        select_option:
+          action: pyscript.rct_ha_call
+          data:
+            action: set
+            parameter: power_mng.soc_strategy
+            value: '{% if option == ''SOC'' -%}0{%- elif option == ''Constant'' -%}1{%- elif option == ''External'' -%}2{%- elif option == ''Average Battery Voltage'' -%}3{%- elif option == ''Schedule'' -%}5{%- else -%}4{%- endif %}'
+
+  - switch:
+
+      #
+      # binary switch field to turn grid power usage for load battery on/off
+      #
+      - unique_id: switch_rct_power_storage_use_grid_power
+        name: "Switch RCT Power Storage Use Grid Power"
+        state: "{{ states('sensor.rct_power_storage_use_grid_power')|float(0.0) }}"
+        turn_on:
+          action: pyscript.rct_ha_call
+          data:
+            action: set
+            parameter: power_mng.use_grid_power_enable
+            value: "True"
+        turn_off:
+          action: pyscript.rct_ha_call
+          data:
+            action: set
+            parameter: power_mng.use_grid_power_enable
+            value: "False"
+
+  - number:
+
+      #
+      # number field for battery target power
+      #
+      - unique_id: number_rct_power_storage_battery_target_power
+        name: "Number RCT Power Storage Battery Target Power"
+        unit_of_measurement: "W"
+        state: "{{ states('sensor.rct_power_storage_battery_target_power')|float(0.0) }}"
+        set_value:
+          - action: pyscript.rct_ha_call
+            data:
+              action: set
+              parameter: power_mng.battery_power_extern
+              value: "{{ (value)|round(0) }}"
+        step: 1
+        min: -6000
+        max: 6000
+        icon: "mdi:lightning-bolt"
+
+      #
+      # number field for force soc target
+      #
+      - unique_id: number_rct_power_storage_battery_force_soc_target
+        name: "Number RCT Power Storage Battery Force SOC Target"
+        unit_of_measurement: "%"
+        state: "{{ states('sensor.rct_power_storage_battery_state_of_charge_force_set')|float(5.0) }}"
+        set_value:
+          - action: pyscript.rct_ha_call
+            data:
+              action: set
+              parameter: power_mng.soc_target_set
+              value: "{{ (value * 0.01)|round(2) }}"
+        step: 1
+        min: 5
+        max: 97
+        icon: "mdi:battery-arrow-down-outline"
+
+      #
+      # number field for minimum soc
+      #
+      - unique_id: number_rct_power_storage_battery_minimum_soc
+        name: "Number RCT Power Storage Battery Minimum SOC"
+        unit_of_measurement: "%"
+        state: "{{ states('sensor.rct_power_storage_battery_minimum_state_of_charge')|float(7.0) }}"
+        set_value:
+          - action: pyscript.rct_ha_call
+            data:
+              action: set
+              parameter: power_mng.soc_min
+              value: "{{ (value * 0.01)|round(2) }}"
+        step: 1
+        min: 7
+        max: 97
+        icon: "mdi:battery-charging-wireless-10"
+
+      #
+      # number field for maximum soc
+      #
+      - unique_id: number_rct_power_storage_battery_maximum_soc
+        name: "Number RCT Power Storage Battery Maximum SOC"
+        unit_of_measurement: "%"
+        state: "{{ states('sensor.rct_power_storage_battery_maximum_state_of_charge')|float(97.0) }}"
+        set_value:
+          - action: pyscript.rct_ha_call
+            data:
+              action: set
+              parameter: power_mng.soc_max
+              value: "{{ (value * 0.01)|round(2) }}"
+        step: 1
+        min: 7
+        max: 97
+        icon: "mdi:battery-charging-wireless-90"
+
+      #
+      # number field for battery charging power to reach SOC target
+      #
+      - unique_id: number_rct_power_storage_battery_charging_power_to_reach_soc_target
+        name: "Number RCT Power Storage Battery Charging Power To Reach SOC Target"
+        unit_of_measurement: "W"
+        state: "{{ states('sensor.rct_power_storage_battery_charging_power_to_reach_soc_target')|float(100.0) }}"
+        set_value:
+          - action: pyscript.rct_ha_call
+            data:
+              action: set
+              parameter: power_mng.soc_charge_power
+              value: "{{ (value)|round(0) }}"
+        step: 1
+        min: 100
+        max: 6000
+        icon: "mdi:lightning-bolt"
+
+      #
+      # number field for battery trigger for charging to soc min
+      #
+      - unique_id: number_rct_power_storage_battery_trigger_for_charging_to_soc_min
+        name: "Number RCT Power Storage Battery Trigger For Charging To SOC Min"
+        unit_of_measurement: "%"
+        state: "{{ states('sensor.rct_power_storage_battery_trigger_for_charging_to_soc_min')|float(5.0) }}"
+        set_value:
+          - action: pyscript.rct_ha_call
+            data:
+              action: set
+              parameter: power_mng.soc_charge
+              value: "{{ (value * 0.01)|round(2) }}"
+        step: 1
+        min: 5
+        max: 97
+        icon: "mdi:battery-arrow-down-outline"
+
+      #
+      # number field for battery to grid power
+      #
+      - unique_id: number_rct_power_storage_battery_to_grid_power
+        name: "Number RCT Power Storage Battery To Grid Power"
+        unit_of_measurement: "W"
+        state: "{{ states('sensor.rct_power_storage_battery_max_to_grid_power')|float(0.0) }}"
+        set_value:
+          - action: pyscript.rct_ha_call
+            data:
+              action: set
+              parameter: p_rec_lim[1]
+              value: "{{ (value)|round(0) }}"
+        step: 1
+        min: 0
+        max: 6000
+        icon: "mdi:transmission-tower-import"
+
+      #
+      # number field for external power reduction (export to the grid)
+      #
+      - unique_id: number_rct_power_storage_external_power_reduction
+        name: "Number RCT Power Storage External Power Reduction"
+        unit_of_measurement: "%"
+        state: "{{ states('sensor.rct_power_storage_external_power_reduction')|float(100.0) }}"
+        set_value:
+          - action: pyscript.rct_ha_call
+            data:
+              action: set
+              parameter: buf_v_control.power_reduction
+              value: "{{ (value * 0.01)|round(2) }}"
+        step: 1
+        min: 0
+        max: 100
+        icon: "mdi:transmission-tower-import"

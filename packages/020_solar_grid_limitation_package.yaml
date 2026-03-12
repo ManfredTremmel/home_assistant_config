@@ -1,12 +1,13 @@
 # ########################## HA gird power limitation ########################
 #
-# (C) 2025 Manfred Tremmel
+# (C) 2025-2026 Manfred Tremmel
 #
 # Limit the solar to grid power, but ensure local consumption is not affected.
 #
 # Dependency:
 #       "RCT Power" extension from HACS
 #       "SMA Devices Plus" extensions from HACS
+#       "000_rct_input_widgets_package.yaml"
 #       "010_solar_monitoring_package.yaml"
 #
 # Used entities:
@@ -20,6 +21,7 @@
 #       sensor.stp_20_50_pv_power_b
 #       sensor.stp_20_50_pv_power_c
 #       sensor.installed_pv_size
+#       number.number_rct_power_storage_external_power_reduction
 #
 # Provided entities:
 #       sensor.power_consumption
@@ -76,7 +78,7 @@ template:
       state_class: "measurement"
       unit_of_measurement: "kW"
       state: >-
-          {% set solar_grid_limit = states('input_number.solar_grid_limit')|float(100.0) %}
+          {% set solar_grid_limit = states('number.number_rct_power_storage_external_power_reduction')|float(100.0) %}
           {% set calc_limit = (((states('sensor.installed_pv_size')|float(29.645)) * solar_grid_limit / 100) + (((states('sensor.power_consumption')|float(0.0)) -0.05)|round(1))) %}
           {% set wr_limit = states('sensor.installed_pv_wr_sum')|float(26.0) %}
           {% if solar_grid_limit == 100 -%}
@@ -98,49 +100,8 @@ template:
           {{ max(0, min((states('sensor.solar_power_grid_limit_soft')|float(26.0)), (states('sensor.installed_pv_wr2')|float(20.0)))) | round(3) }}
       availability: "{{ has_value('sensor.solar_power_grid_limit_soft') and has_value('sensor.installed_pv_wr2') }}"
 
-input_number:
-  #
-  # input number with percentage power limitation.
-  #
-  solar_grid_limit:
-    name: "Einspeisebegrenzung"
-    icon: "mdi:transmission-tower-import"
-    unit_of_measurement: "%"
-    mode: slider
-    initial: 100
-    min: 0
-    max: 100
-    step: 1
 
 automation grid_power_limitation:
-  #
-  # send percentage power limitation to rct inverter.
-  #
-  - id: "rct_converter_set_grid_power_limit"
-    alias: "RCT Wechselrichter Limit setzen"
-    description: "Setze das prozentuale Einspeiselimit des RCT Wechselrichters"
-    triggers:
-    - trigger: state
-      entity_id:
-      - input_number.solar_grid_limit
-      not_from:
-      - unknown
-      - unavailable
-      not_to:
-      - unknown
-      - unavailable
-      for:
-        hours: 0
-        minutes: 0
-        seconds: 3
-    conditions: []
-    actions:
-      - action: pyscript.rct_ha_call
-        data:
-          action: set
-          parameter: buf_v_control.power_reduction
-          value: '{{ states(''input_number.solar_grid_limit'')|float(100.0)|multiply(0.01)|round(2) }}'
-    mode: single
 
   #
   # send watt power limitation to sma inverter.
