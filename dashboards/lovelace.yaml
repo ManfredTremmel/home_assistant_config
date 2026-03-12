@@ -533,16 +533,16 @@ views:
             vertical: false
             name: Limit SMA Wechselrichter
             icon: mdi:solar-power
-          - features:
-              - style: slider
-                type: numeric-input
-            type: tile
-            entity: input_number.solar_grid_limit
+          - type: tile
             grid_options:
               columns: full
+            entity: number.number_rct_power_storage_external_power_reduction
             name: PV Einspeisebegrenzung
-            features_position: bottom
             vertical: false
+            features:
+              - style: slider
+                type: numeric-input
+            features_position: bottom
           - type: tile
             name: Eigenverbrauch
             icon: mdi:home
@@ -1283,42 +1283,13 @@ views:
             name: Füllstand (SOC)
             icon: mdi:battery
             state_content: state
-            grid_options:
-              columns: full
             show_entity_picture: false
           - type: tile
-            grid_options:
-              columns: full
             entity: sensor.rct_power_storage_battery_minimum_state_of_charge_island
             name: Min. SOC Zielwert Insel
             icon: mdi:battery-10
             color: yellow
             vertical: false
-            features_position: bottom
-          - type: tile
-            grid_options:
-              columns: full
-            entity: number.number_rct_power_storage_battery_minimum_soc
-            name: Min SOC Zielwert
-            icon: mdi:battery-charging-wireless-10
-            color: yellow
-            state_content: state
-            vertical: false
-            features:
-              - style: slider
-                type: numeric-input
-            features_position: bottom
-          - type: tile
-            grid_options:
-              columns: full
-            entity: number.number_rct_power_storage_battery_maximum_soc
-            name: Max. SOC Zielwert
-            icon: ''
-            color: green
-            vertical: false
-            features:
-              - style: slider
-                type: numeric-input
             features_position: bottom
           - type: tile
             entity: sensor.rct_power_storage_battery_state_of_charge_target
@@ -1332,6 +1303,39 @@ views:
             features_position: bottom
             vertical: false
             entity: sensor.calculated_maximum_battery_soc
+          - type: tile
+            entity: number.number_rct_power_storage_battery_minimum_soc
+            name: Min SOC Zielwert
+            icon: mdi:battery-charging-wireless-10
+            color: yellow
+            state_content: state
+            vertical: false
+            features:
+              - style: slider
+                type: numeric-input
+            features_position: bottom
+          - type: tile
+            entity: number.number_rct_power_storage_battery_maximum_soc
+            name: Max. SOC Zielwert
+            icon: ''
+            color: green
+            vertical: false
+            features:
+              - style: slider
+                type: numeric-input
+            features_position: bottom
+          - type: tile
+            entity: switch.switch_rct_power_storage_use_grid_power
+            name: Laden mit SMA-Support
+            vertical: false
+            features_position: bottom
+          - type: tile
+            entity: number.number_rct_power_storage_battery_to_grid_power
+            name: Entladen ins Netz (max.)
+            show_entity_picture: false
+            hide_state: false
+            vertical: false
+            features_position: bottom
       - type: grid
         cards:
           - type: heading
