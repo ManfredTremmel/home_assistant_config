@@ -119,8 +119,8 @@ automation rct_soc_min_max:
     mode: single
 
   #
-  # on sinrise check expected production of rct connected string, when it's
-  # < 15 kWh enable external loading support, otherwise disable it.
+  # on sinrise check expected production, when it's below 50 kWh, enable external
+  # loading support (using also sma inverter to load battery), otherwise disable it.
   #
   - id: "pv_battery_grid_power_enable"
     alias: "Batterie laden mit Energie vom SMA Wechselrichter erlauben"
@@ -130,7 +130,7 @@ automation rct_soc_min_max:
         event: sunrise
     conditions: []
     actions:
-      - action: switch.turn_{{ 'on' if (states('sensor.prognose_heute_rest')|float(0.0)) < 50 else 'off' }}
+      - action: switch.turn_{{ 'on' if (states('sensor.prognose_heute')|float(0.0)) < 50 else 'off' }}
         target:
           entity_id: switch.switch_rct_power_storage_use_grid_power
     mode: single
