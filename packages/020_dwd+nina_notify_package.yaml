@@ -1,0 +1,61 @@
+# ############ HA helpers for notifying when dwd or nina sends warning ############
+#
+# (C) 2026 Manfred Tremmel
+#
+# Check dwd or nina warnings and send a notification, when new warning receives.
+#
+# Dependencies:
+#       "dwd" extension
+#       "nina" extension
+#       "kodi" extension
+#       "000_kodi_package.yaml"
+#       "010_notify_groups_package.yaml"
+#
+#
+
+automation dwd_nina_notification:
+
+  # dwd notification
+  - id: "dwd_notification"
+    alias: "DWD Notification"
+    description: "Sende Rundmeldung, wenn der DWD Warnungen verschickt"
+    triggers:
+      - trigger: numeric_state
+        entity_id:
+        - sensor.kreis_muhldorf_a_inn_aktuelle_warnstufe
+        above: 0
+    actions:
+      - action: notify.all_t470
+        data:
+          title: 'DWD-Warnung: {{ states.sensor.kreis_muhldorf_a_inn_aktuelle_warnstufe.attributes.warning_1_headline }}'
+          message: '{{ states.sensor.kreis_muhldorf_a_inn_aktuelle_warnstufe.attributes.warning_1_description }}'
+          data:
+            expire: 50000
+            displaytime: 50000
+            urgency: '{{ ''critical'' if (states.sensor.kreis_muhldorf_a_inn_aktuelle_warnstufe.attributes.warning_1_level) > 2 else ''normal'' }}'
+            icon: '{{ ''error'' if (states.sensor.kreis_muhldorf_a_inn_aktuelle_warnstufe.attributes.warning_1_level) > 2 else ''warning'' }}'
+    mode: single
+
+  # nina notification
+  - id: "nina_notification"
+    alias: "Nina Notification"
+    description: "Sende Rundmeldung, wenn die Nina Warnapp Warnungen verschickt"
+    triggers:
+      - trigger: state
+        entity_id:
+        - binary_sensor.nina_warning_schwindegg_muhldorf_am_inn_bayern_1
+        not_from:
+        - unknown
+        - unavailable
+        to: 'on'
+    actions:
+      - action: notify.all_t470
+        data:
+          title: 'Nina-Warnung: {{ states.binary_sensor.nina_warning_schwindegg_muhldorf_am_inn_bayern_1.attributes.headline }}'
+          message: '{{ states.binary_sensor.nina_warning_schwindegg_muhldorf_am_inn_bayern_1.attributes.description }}'
+          data:
+            expire: 50000
+            displaytime: 50000
+            urgency: '{{ ''critical'' if ((states.binary_sensor.nina_warning_schwindegg_muhldorf_am_inn_bayern_1.attributes.severity) == ''Extreme'' or (states.binary_sensor.nina_warning_schwindegg_muhldorf_am_inn_bayern_1.attributes.severity) == ''Severe'') else ''normal'' }}'
+            icon: '{{ ''error'' if ((states.binary_sensor.nina_warning_schwindegg_muhldorf_am_inn_bayern_1.attributes.severity) == ''Extreme'' or (states.binary_sensor.nina_warning_schwindegg_muhldorf_am_inn_bayern_1.attributes.severity) == ''Severe'') else ''warning'' }}'
+    mode: single

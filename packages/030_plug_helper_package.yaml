@@ -10,7 +10,7 @@
 #       "AVM FRITZ!SmartHome" extension
 #       "Appliance has finished" blueprint
 #       "000_kodi_package.yaml"
-#       "010_notify_groups.yaml"
+#       "010_notify_groups_package.yaml"
 #       "020_solar_grid_limitation_package.yaml"
 #
 # Used entities:

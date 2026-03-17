@@ -1,4 +1,4 @@
-# ############ HA helpers for power plugs ############
+# ############ HA helpers for notifying solar battery overheating ############
 #
 # (C) 2025-2026 Manfred Tremmel
 #
@@ -10,7 +10,7 @@
 #       "AVM FRITZ!SmartHome" extension
 #       "000_kodi_package.yaml"
 #       "000_rct_input_widgets_package.yaml"
-#       "010_notify_groups.yaml"
+#       "010_notify_groups_package.yaml"
 #
 #
 
