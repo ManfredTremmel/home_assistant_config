@@ -209,7 +209,8 @@ automation rct_soc_min_max:
     mode: single
 
   #
-  # when calibration discharging is complete, set unload to grid back to zero.
+  # when calibration discharging is complete, set unload to grid back to zero,
+  # stop hot water creation and enable loading battery with help of SMA inverter.
   #
   - id: "pv_batery_stop_unload_to_grid_on_calibration"
     alias: "RCT Batterie Kalibrierungsende, Entladen ins Netz stoppen"
@@ -230,4 +231,7 @@ automation rct_soc_min_max:
       - action: switch.turn_off
         target:
           entity_id: switch.mosquitto_broker_einmal_ww_bereitung
+      - action: switch.turn_on
+        target:
+          entity_id: switch.switch_rct_power_storage_use_grid_power
     mode: single
