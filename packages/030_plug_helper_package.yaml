@@ -277,11 +277,12 @@ automation power_plug_helpers:
           hours: 0
           minutes: 3
           seconds: 0
-    condition: not
     conditions:
-      - condition: state
-        entity_id: "media_player.libreelecmanfred2"
-        state: "playing"
+      - condition: not
+        conditions:
+          - condition: state
+            entity_id: "media_player.libreelecmanfred2"
+            state: "playing"
     actions:
       - action: switch.turn_off
         target:
