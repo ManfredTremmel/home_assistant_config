@@ -17,9 +17,11 @@
 #       sensor.steckdose_ug_waschmaschine_power
 #       sensor.steckdose_eg_geschirrspuhler_power
 #       sensor.steckdose_garage_power
+#       sensor.steckdoese_og_tv_power
 #       switch.steckdose_ug_waschmaschine
 #       switch.steckdose_eg_geschirrspuhler
 #       switch.steckdose_garage
+#       switch.steckdoese_og_tv
 #       binary_sensor.wassersensor_ug_technikraum_water_leak
 #       binary_sensor.wassersensor_ug_kellerraum_water_leak
 #       binary_sensor.wassersensor_ug_fittnesraum_water_leak
@@ -260,6 +262,30 @@ automation power_plug_helpers:
       - action: switch.turn_off
         target:
           entity_id: "switch.steckdose_garage"
+    mode: single
+
+  # Turn off og tv plug when power consumption below 130W and libreelec is not playing
+  - id: "turn_off_og_tv_plug_when_power_consumption_below_130W"
+    alias: "Turn off og tv plug when power consumption below 130W"
+    description: "Sobald an der OG TV Steckdose weniger als 130 W gezogen werden ausschalten"
+    triggers:
+      - trigger: numeric_state
+        entity_id:
+        - sensor.steckdoese_og_tv_power
+        below: 130
+        for:
+          hours: 0
+          minutes: 3
+          seconds: 0
+    condition: not
+    conditions:
+      - condition: state
+        entity_id: "media_player.libreelecmanfred2"
+        state: "playing"
+    actions:
+      - action: switch.turn_off
+        target:
+          entity_id: "switch.steckdoese_og_tv"
     mode: single
 
   # cat bell, send message when sensor detects cat in front of the door
