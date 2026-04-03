@@ -275,8 +275,8 @@ automation power_plug_helpers:
         below: 130
         for:
           hours: 0
-          minutes: 3
-          seconds: 0
+          minutes: 0
+          seconds: 10
     conditions:
       - condition: not
         conditions:
