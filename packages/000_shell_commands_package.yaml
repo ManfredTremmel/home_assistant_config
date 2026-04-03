@@ -8,5 +8,5 @@
 shell_command:
   reboot_libreelecmanfred2: ssh -i /config/ssh_keys/id_ed25519 -o 'StrictHostKeyChecking=no' root@libreelecmanfred2 reboot
   turn_off_libreelecmanfred2: ssh -i /config/ssh_keys/id_ed25519 -o 'StrictHostKeyChecking=no' root@libreelecmanfred2 shutdown -h 0
-  reboot_libreelec_eg2: ssh -i /config/ssh_keys/id_ed25519 -o 'StrictHostKeyChecking=no' root@libreelec-eg2 reboot
-  turn_off_libreelec_eg2: ssh -i /config/ssh_keys/id_ed25519 -o 'StrictHostKeyChecking=no' root@libreelec-eg2 shutdown -h 0
+  reboot_libreelec_eg2: ssh -i /config/ssh_keys/id_ed25519 -o 'StrictHostKeyChecking=no' root@libreelec-eg2.fritz.box reboot
+  turn_off_libreelec_eg2: ssh -i /config/ssh_keys/id_ed25519 -o 'StrictHostKeyChecking=no' root@libreelec-eg2.fritz.box shutdown -h 0
