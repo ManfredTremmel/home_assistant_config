@@ -289,6 +289,70 @@ automation power_plug_helpers:
           entity_id: "switch.steckdoese_og_tv"
     mode: single
 
+  # Turn off eg tv plug when power consumption below 30W and libreelec is not playing
+  - id: "turn_off_eg_tv_plug_when_power_consumption_below_30W"
+    alias: "Turn off eg tv plug when power consumption below 30W"
+    description: "Sobald an der EG TV Steckdose weniger als 30 W gezogen werden ausschalten"
+    triggers:
+      - trigger: numeric_state
+        entity_id:
+        - sensor.steckdose_eg_tv_power
+        below: 130
+        for:
+          hours: 0
+          minutes: 0
+          seconds: 3
+    conditions:
+      - condition: not
+        conditions:
+          - condition: state
+            entity_id: "media_player.libreelec_eg2_fritz_box"
+            state: "playing"
+    actions:
+      - action: switch.turn_off
+        target:
+          entity_id: "switch.steckdose_eg_tv"
+    mode: single
+
+  # Turn on eg tv plug when aquara mini switch t1 button is pressed
+  - id: "turn_on_eg_tv_plug_when_aquara_mini_switch_t1_button_is_pressed"
+    alias: "Turn on eg tv plug when aquara mini switch t1 button is pressed"
+    description: "Sobald der Aquara Mini Switch T1 gedrückt wird, Steckdose des EG TV Plugs einschalten"
+    triggers:
+      - domain: mqtt
+        device_id: b8be6d906f45605dc979c64185f17e92
+        type: action
+        subtype: single
+        trigger: device
+    conditions:
+      - condition: state
+        entity_id: switch.steckdose_eg_tv
+        state: "off"
+    actions:
+      - action: switch.turn_on
+        target:
+          entity_id: "switch.steckdose_eg_tv"
+    mode: single
+
+  # Shutdown eg tv kodi when aquara mini switch t1 button is pressed
+  - id: "shutdown_eg_tv_kodi_when_aquara_mini_switch_t1_button_is_pressed"
+    alias: "Shutdown eg tv kodi when aquara mini switch t1 button is pressed"
+    description: "Sobald der Aquara Mini Switch T1 gedrückt wird, Kodi auf EG TV herunterfahren"
+    triggers:
+      - domain: mqtt
+        device_id: b8be6d906f45605dc979c64185f17e92
+        type: action
+        subtype: single
+        trigger: device
+    conditions:
+      - condition: state
+        entity_id: switch.steckdose_eg_tv
+        state: "on"
+    actions:
+      - action: shell_command.turn_off_libreelec_eg2
+    mode: single
+
+
   # cat bell, send message when sensor detects cat in front of the door
   - id: cat_bell_message
     alias: "Cat Bell Message"
