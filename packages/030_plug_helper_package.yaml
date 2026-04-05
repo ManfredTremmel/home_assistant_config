@@ -349,7 +349,11 @@ automation power_plug_helpers:
         entity_id: switch.steckdose_eg_tv
         state: "on"
     actions:
-      - action: shell_command.turn_off_libreelec_eg2
+      - action: kodi.call_method
+        target:
+          entity_id: media_player.kodi_t470_fritz_box
+        data:
+          method: System.Shutdown
     mode: single
 
 
