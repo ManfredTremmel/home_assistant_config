@@ -297,7 +297,7 @@ automation power_plug_helpers:
       - trigger: numeric_state
         entity_id:
         - sensor.steckdose_eg_tv_power
-        below: 130
+        below: 30
         for:
           hours: 0
           minutes: 0
