@@ -10,10 +10,10 @@ rest:
   - resource: http://tvheadend.fritz.box:9981/api/dvr/entry/grid_upcoming
     username: !secret tvheadend_username
     password: !secret tvheadend_password
-    method: GET
-    headers:
-      Content-Type: application/json
+    authentication: digest
     scan_interval: 30
+    headers:
+      accept: 'application/json'
     binary_sensor:
       - unique_id: "tvheadend_recording_state"
         name: "TVHeadend Recording State"
