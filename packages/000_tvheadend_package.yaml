@@ -19,19 +19,17 @@ rest:
         name: "TVHeadend Recording State"
         device_class: "running"
         value_template: >-
-          {% set entries = state_attr('sensor.rec1', 'entries') %}
+          {% set entries = value_json['entries'] %}
           {% if entries %}
             {% set sorted_entries = entries | sort(attribute='start') %}
             {% set entry = sorted_entries[0] %}
-            {% set airdate = entry.start %}
-            {% set runtime = entry.duration %}
+            {% set timestamp_start = entry.start %}
+            {% set timestamp_stop = entry.stop %}
           
-            {% if airdate and runtime is not none %}
-              {% set target_timestamp_start = airdate %}
-              {% set target_timestamp_end = target_timestamp_start + runtime * 60 %}
+            {% if timestamp_start and timestamp_stop is not none %}
               {% set current_timestamp = as_timestamp(now()) %}
             
-              {% if current_timestamp >= target_timestamp_start - 420 and current_timestamp <= target_timestamp_end + 240 %}
+              {% if current_timestamp >= timestamp_start and current_timestamp <= timestamp_stop %}
                 on
               {% else %}
                 off
