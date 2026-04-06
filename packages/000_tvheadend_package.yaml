@@ -1,0 +1,50 @@
+# ############ HA package to access tvheadend data ############
+#
+# (C) 2026 Manfred Tremmel
+#
+# some experiments to access data from tvheadend, based on json api:
+# https://docs.tvheadend.org/documentation/development/json-api
+#
+
+rest:
+  - resource: http://tvheadend.fritz.box:9981/api/dvr/entry/grid_upcoming
+    username: !secret tvheadend_username
+    password: !secret tvheadend_password
+    method: GET
+    headers:
+      Content-Type: application/json
+    scan_interval: 30
+    binary_sensor:
+      - unique_id: "tvheadend_recording_state"
+        name: "TVHeadend Recording State"
+        device_class: "running"
+        value_template: >-
+          {% set entries = state_attr('sensor.rec1', 'entries') %}
+          {% if entries %}
+            {% set sorted_entries = entries | sort(attribute='start') %}
+            {% set entry = sorted_entries[0] %}
+            {% set airdate = entry.start %}
+            {% set runtime = entry.duration %}
+          
+            {% if airdate and runtime is not none %}
+              {% set target_timestamp_start = airdate %}
+              {% set target_timestamp_end = target_timestamp_start + runtime * 60 %}
+              {% set current_timestamp = as_timestamp(now()) %}
+            
+              {% if current_timestamp >= target_timestamp_start - 420 and current_timestamp <= target_timestamp_end + 240 %}
+                on
+              {% else %}
+                off
+              {% endif %}
+            {% else %}
+              off
+            {% endif %}
+          {% else %}
+            off
+          {% endif %}
+        icon: >
+          {% if is_state("binary_sensor.tvheadend_recording_state", "on") %}
+            mdi:audio-video
+          {% else %}
+            mdi:audio-video-off
+          {% endif %}
