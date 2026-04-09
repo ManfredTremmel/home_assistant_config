@@ -10,6 +10,7 @@ notify:
     platform: group
     services:
       - action: mobile_app_t470
+      - action: mobile_app_thinkpadx1
       - action: mobile_app_waydroid_t470
       - action: mobile_app_orbsmart_soundpad_700
   - name: all_kodies
@@ -29,6 +30,7 @@ notify:
     platform: group
     services:
       - action: mobile_app_t470
+      - action: mobile_app_thinkpadx1
       - action: mobile_app_waydroid_t470
       - action: mobile_app_orbsmart_soundpad_700
       - action: kodi_t470
