@@ -98,7 +98,7 @@ template:
           {% else %}
             {% set DL = (SNS - (SNR - timedelta( days = 1 ))).seconds %}
             {% set GONE = (now() - (SNR - timedelta( days = 1 ))).seconds %}
-            {{(GONE / DL * 100)|round(1)}}
+            {{ (1 / (1 + e**(0 - (GONE / DL * 12 - 6))) * 100) | float(0.0) | round(1) }}
           {%endif%}
 
       # First the forecasted values in total
