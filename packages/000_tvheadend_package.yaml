@@ -30,25 +30,6 @@ rest:
           {% else %}
             off
           {% endif %}
-        attributes:
-          title: >-
-            {% set title = value_json['entries']
-               | rejectattr("enabled", "eq", false)
-               | rejectattr("start_real", "gt", as_timestamp(now()))
-               | rejectattr("stop_real", "lt", as_timestamp(now()))
-               | sort(attribute='start')
-               | map(attribute='disp_title')
-               | first %}
-            {{ title }}
-          subtitle: >-
-            {% set subtitle = value_json['entries']
-               | rejectattr("enabled", "eq", false)
-               | rejectattr("start_real", "gt", as_timestamp(now()))
-               | rejectattr("stop_real", "lt", as_timestamp(now()))
-               | sort(attribute='start')
-               | map(attribute='disp_subtitle')
-               | first %}
-            {{ subtitle }}
         icon: >
           {% if is_state("binary_sensor.tvheadend_recording_state", "on") %}
             mdi:audio-video
