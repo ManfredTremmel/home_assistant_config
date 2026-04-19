@@ -21,8 +21,8 @@ rest:
         value_template: >-
           {% set count_entries = value_json['entries']
              | rejectattr("enabled", "eq", false)
-             | rejectattr("start", "ge", as_timestamp(now()))
-             | rejectattr("stop", "le", as_timestamp(now()))
+             | rejectattr("start_real", "gt", as_timestamp(now()))
+             | rejectattr("stop_real", "lt", as_timestamp(now()))
              | sort(attribute='start')
              | count %}
           {% if count_entries > 0 %}
@@ -30,6 +30,25 @@ rest:
           {% else %}
             off
           {% endif %}
+        attributes:
+          title: >-
+            {% set title = value_json['entries']
+               | rejectattr("enabled", "eq", false)
+               | rejectattr("start_real", "gt", as_timestamp(now()))
+               | rejectattr("stop_real", "lt", as_timestamp(now()))
+               | sort(attribute='start')
+               | map(attribute='disp_title')
+               | first %}
+            {{ title }}
+          subtitle: >-
+            {% set subtitle = value_json['entries']
+               | rejectattr("enabled", "eq", false)
+               | rejectattr("start_real", "gt", as_timestamp(now()))
+               | rejectattr("stop_real", "lt", as_timestamp(now()))
+               | sort(attribute='start')
+               | map(attribute='disp_subtitle')
+               | first %}
+            {{ subtitle }}
         icon: >
           {% if is_state("binary_sensor.tvheadend_recording_state", "on") %}
             mdi:audio-video
