@@ -19,24 +19,14 @@ rest:
         name: "TVHeadend Recording State"
         device_class: "running"
         value_template: >-
-          {% set entries = value_json['entries'] %}
-          {% if entries %}
-            {% set sorted_entries = entries | sort(attribute='start') %}
-            {% set entry = sorted_entries[0] %}
-            {% set timestamp_start = entry.start %}
-            {% set timestamp_stop = entry.stop %}
-          
-            {% if timestamp_start and timestamp_stop is not none %}
-              {% set current_timestamp = as_timestamp(now()) %}
-            
-              {% if current_timestamp >= timestamp_start and current_timestamp <= timestamp_stop %}
-                on
-              {% else %}
-                off
-              {% endif %}
-            {% else %}
-              off
-            {% endif %}
+          {% set count_entries = value_json['entries']
+             | rejectattr("enabled", "eq", false)
+             | rejectattr("start", "ge", as_timestamp(now()))
+             | rejectattr("stop", "le", as_timestamp(now()))
+             | sort(attribute='start')
+             | count %}
+          {% if count_entries > 0 %}
+            on
           {% else %}
             off
           {% endif %}
