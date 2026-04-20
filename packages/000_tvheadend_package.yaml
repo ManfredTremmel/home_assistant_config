@@ -19,20 +19,37 @@ rest:
         name: "TVHeadend Recording State"
         device_class: "running"
         value_template: >-
-          {% set count_entries = value_json['entries']
+          {{ value_json['entries']
              | rejectattr("enabled", "eq", false)
              | rejectattr("start_real", "gt", as_timestamp(now()))
              | rejectattr("stop_real", "lt", as_timestamp(now()))
              | sort(attribute='start')
-             | count %}
-          {% if count_entries > 0 %}
-            on
-          {% else %}
-            off
-          {% endif %}
+             | count > 0 }}
         icon: >
           {% if is_state("binary_sensor.tvheadend_recording_state", "on") %}
             mdi:audio-video
           {% else %}
             mdi:audio-video-off
+          {% endif %}
+    sensor:
+      - unique_id: "tvheadend_recording_count"
+        name: "TVHeadend Recording Count"
+        value_template: >-
+          {{ value_json['entries']
+             | rejectattr("enabled", "eq", false)
+             | rejectattr("start_real", "gt", as_timestamp(now()))
+             | rejectattr("stop_real", "lt", as_timestamp(now()))
+             | sort(attribute='start')
+             | count }}
+        json_attributes_path: "$.entries[0]"
+        json_attributes:
+            - "disp_title"
+            - "disp_subtitle"
+            - "disp_description"
+            - "channelname"
+        icon: >
+          {% if is_state("sensor.tvheadend_recording_count", 0) %}
+            mdi:audio-video-off
+          {% else %}
+            mdi:audio-video
           {% endif %}
