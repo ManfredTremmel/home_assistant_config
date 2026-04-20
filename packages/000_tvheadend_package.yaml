@@ -7,7 +7,7 @@
 #
 
 rest:
-  - resource: http://tvheadend.fritz.box:9981/api/dvr/entry/grid_upcoming?sort=start&enabled=true
+  - resource: http://tvheadend.fritz.box:9981/api/dvr/entry/grid_upcoming?sort=start&filter=[{%22field%22:%22sched_status%22,%22type%22:%22string%22,%22value%22:%22recording%22,%22comparison%22:%22eq%22}]
     username: !secret tvheadend_username
     password: !secret tvheadend_password
     authentication: digest
@@ -19,11 +19,7 @@ rest:
         name: "TVHeadend Recording State"
         device_class: "running"
         value_template: >-
-          {{ value_json['entries']
-             | rejectattr("start_real", "gt", as_timestamp(now()))
-             | rejectattr("stop_real", "lt", as_timestamp(now()))
-             | sort(attribute='start')
-             | count > 0 }}
+          {{ value_json['total'] > 0 }}
         icon: >
           {% if is_state("binary_sensor.tvheadend_recording_state", "on") %}
             mdi:audio-video
@@ -34,11 +30,7 @@ rest:
       - unique_id: "tvheadend_recording_count"
         name: "TVHeadend Recording Count"
         value_template: >-
-          {{ value_json['entries']
-             | rejectattr("start_real", "gt", as_timestamp(now()))
-             | rejectattr("stop_real", "lt", as_timestamp(now()))
-             | sort(attribute='start')
-             | count }}
+          {{ value_json['total'] }}
         json_attributes_path: "$.entries[0]"
         json_attributes:
             - "disp_title"
