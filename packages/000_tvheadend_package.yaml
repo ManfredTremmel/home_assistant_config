@@ -7,7 +7,7 @@
 #
 
 rest:
-  - resource: http://tvheadend.fritz.box:9981/api/dvr/entry/grid_upcoming
+  - resource: http://tvheadend.fritz.box:9981/api/dvr/entry/grid_upcoming?sort=start&enabled=true
     username: !secret tvheadend_username
     password: !secret tvheadend_password
     authentication: digest
@@ -20,7 +20,6 @@ rest:
         device_class: "running"
         value_template: >-
           {{ value_json['entries']
-             | rejectattr("enabled", "eq", false)
              | rejectattr("start_real", "gt", as_timestamp(now()))
              | rejectattr("stop_real", "lt", as_timestamp(now()))
              | sort(attribute='start')
@@ -36,7 +35,6 @@ rest:
         name: "TVHeadend Recording Count"
         value_template: >-
           {{ value_json['entries']
-             | rejectattr("enabled", "eq", false)
              | rejectattr("start_real", "gt", as_timestamp(now()))
              | rejectattr("stop_real", "lt", as_timestamp(now()))
              | sort(attribute='start')
