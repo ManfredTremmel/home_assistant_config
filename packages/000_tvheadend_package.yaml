@@ -7,30 +7,16 @@
 #
 
 rest:
-  - resource: http://tvheadend.fritz.box:9981/api/dvr/entry/grid_upcoming?sort=start
+  - resource: http://tvheadend.fritz.box:9981/api/dvr/entry/grid_upcoming
     username: !secret tvheadend_username
     password: !secret tvheadend_password
     authentication: digest
     scan_interval: 30
     headers:
       accept: 'application/json'
-    binary_sensor:
-      - unique_id: "tvheadend_recording_state"
-        name: "TVHeadend Recording State"
-        device_class: "running"
-        value_template: >-
-          {{ value_json['entries']
-             | rejectattr("enabled", "eq", false)
-             | rejectattr("start_real", "gt", as_timestamp(now()))
-             | rejectattr("stop_real", "lt", as_timestamp(now()))
-             | sort(attribute='start')
-             | count > 0 }}
-        icon: >
-          {% if is_state("binary_sensor.tvheadend_recording_state", "on") %}
-            mdi:audio-video
-          {% else %}
-            mdi:audio-video-off
-          {% endif %}
+    params:
+      sort: 'start'
+      filter: '%5B%7B%22field%22%3A%22sched_status%22,%22type%22%3A%22string%22,%22value%22%3A%22recording%22%7D%5D'
     sensor:
       - unique_id: "tvheadend_recording_count"
         name: "TVHeadend Recording Count"
@@ -48,7 +34,7 @@ rest:
             - "disp_description"
             - "channelname"
             - "start"
-            - "end"
+            - "stop"
         icon: >
           {% if states("sensor.tvheadend_recording_count") | int(0) == 0 %}
             mdi:audio-video-off
