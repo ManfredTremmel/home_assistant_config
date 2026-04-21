@@ -30,15 +30,17 @@ rest:
       - unique_id: "tvheadend_recording_count"
         name: "TVHeadend Recording Count"
         value_template: >-
-          {{ value_json['total'] }}
+          {{ value_json['total'] | int(0) }}
         json_attributes_path: "$.entries[0]"
         json_attributes:
             - "disp_title"
             - "disp_subtitle"
             - "disp_description"
             - "channelname"
+            - "start"
+            - "end"
         icon: >
-          {% if is_state("sensor.tvheadend_recording_count", 0) %}
+          {% if states("sensor.tvheadend_recording_count") | int(0) == 0 %}
             mdi:audio-video-off
           {% else %}
             mdi:audio-video
