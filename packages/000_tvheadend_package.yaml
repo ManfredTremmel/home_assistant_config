@@ -7,7 +7,7 @@
 #
 
 rest:
-  - resource: "http://tvheadend.fritz.box:9981/api/dvr/entry/grid_upcoming?sort=start&filter=[{""field"":""sched_status"",""type"":""string"",""value"":""recording"",""comparison"":""eq""}]"
+  - resource: "http://tvheadend.fritz.box:9981/api/dvr/entry/grid_upcoming?sort=start&filter=[{field:sched_status,type:string,value:recording,comparison:eq}]"
     username: !secret tvheadend_username
     password: !secret tvheadend_password
     authentication: digest
