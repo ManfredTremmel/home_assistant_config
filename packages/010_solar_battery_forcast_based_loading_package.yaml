@@ -108,6 +108,8 @@ automation rct_soc_min_max:
         not_to:
         - unknown
         - unavailable
+      - platform: time
+        at: sensor.sun_next_noon
     conditions: []
     actions:
       - action: number.set_value
