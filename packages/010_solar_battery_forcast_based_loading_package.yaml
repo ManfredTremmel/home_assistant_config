@@ -108,8 +108,19 @@ automation rct_soc_min_max:
         not_to:
         - unknown
         - unavailable
-      - platform: time
-        at: sensor.sun_next_noon
+      - trigger: state
+        entity_id:
+        - sensor.calculated_maximum_battery_soc
+        not_from:
+        - unknown
+        - unavailable
+        not_to:
+        - unknown
+        - unavailable
+        for:
+          hours: 0
+          minutes: 5
+          seconds: 0
     conditions: []
     actions:
       - action: number.set_value
