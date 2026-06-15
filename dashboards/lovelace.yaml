@@ -51,19 +51,29 @@ views:
             min_expected_power: 0.01
             watt_threshold: 1000
             transparency_zero_lines: 0
-            title: Stromflüsse
             grid_options:
               columns: full
-              rows: 7
+              rows: 6
+          - show_current: true
+            show_forecast: false
+            type: weather-forecast
+            entity: weather.ischwi46
+            forecast_type: daily
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/wetter
+            double_tap_action:
+              action: more-info
+            round_temperature: false
+            grid_options:
+              columns: 12
+              rows: 2
           - type: custom:horizon-card
         column_span: 1
       - type: grid
         cards:
           - type: custom:heat-pump-card
-            title: Wärmepumpe
             heatingPumpType: A2W
-            temperatureGroundWaterIn: ''
-            temperatureGroundWaterOut: ''
             heatingPumpStatusOnOff: binary_sensor.heating_pump_status_on_off
             heatingPumpHotWaterMode: binary_sensor.heating_pump_hot_water_mode
             heatingPumpHeatingMode: binary_sensor.heating_pump_heating_mode
@@ -72,8 +82,6 @@ views:
             heatingPumpEnergySaveMode: binary_sensor.heating_pump_energy_save_mode
             heatingPumpNightMode: binary_sensor.heating_pump_night_mode
             warning: binary_sensor.mosquitto_broker_status_sammelmeldung
-            error: ''
-            defrostMode: ''
             outdoorTemperature: sensor.mosquitto_broker_aussentemperatur
             ambientTemperatureNormal: number.mosquitto_broker_raumsolltemperatur_normal
             ambientTemperatureReduced: number.mosquitto_broker_raumsolltemperatur_reduziert
@@ -82,30 +90,20 @@ views:
             hpRunning: binary_sensor.mosquitto_broker_status_primaerquelle
             compressorRunning: binary_sensor.mosquitto_broker_status_verdichter
             circulatingPumpRunning: binary_sensor.mosquitto_broker_warmwasser_zirkulationspumpe
+            storageChargingPumpRunning: binary_sensor.mosquitto_broker_status_speicherladepumpe
             tankHP: true
             tankTempHPUp: sensor.mosquitto_broker_pufferspeichertemperatur
-            tankTempHPMiddle: ''
-            tankTempHPDown: ''
             tankWW: true
             tankTempWWUp: sensor.mosquitto_broker_warmwassertemperatur_oben
-            tankTempWWMiddle: ''
-            tankTempWWDown: ''
-            heatingCircuitType1: 'off'
+            heatingCircuitType1: "off"
             heatingCircuitPumpBeforeValve: false
-            refluxTemperatureHeating: ''
             heatingCircuitType2: underfloor
             heatingCircuitPumpRunning2: binary_sensor.mosquitto_broker_heizkreispumpe
             supplyTemperatureHeating2: sensor.mosquitto_broker_vorlauftemperatur_heizkreis
-            refluxTemperatureHeating2: ''
-            heatingCircuitType3: 'off'
-            heatingCircuitPumpRunning3: ''
-            supplyTemperatureHeating3: ''
-            refluxTemperatureHeating3: ''
+            heatingCircuitType3: "off"
             evaporatorPressure: sensor.mosquitto_broker_druck_im_verdampfer
             evaporatorTemperature: sensor.mosquitto_broker_temperatur_verdampfer
             condenserPressure: sensor.mosquitto_broker_druck_im_kondensator
-            condenserTemperature: ''
-            expansionValveOpening: ''
             wwHeatingValve: binary_sensor.mosquitto_broker_status_warmwasserventil
             heaterRodWW: switch.mosquitto_broker_freigabe_elektroheizung_fuer_ww_bereitung
             heaterRodHP: switch.mosquitto_broker_freigabe_heizen_mit_elektro
@@ -114,17 +112,13 @@ views:
             linkDetails: /lovelace/hp-details
             linkSettings: /lovelace/hp-settings
             thermalSolarAvailable: false
-          - show_current: true
-            show_forecast: true
-            type: weather-forecast
-            entity: weather.ischwi46
-            forecast_type: daily
-            secondary_info_attribute: pressure
-            tap_action:
-              action: more-info
-            double_tap_action:
-              action: navigate
-              navigation_path: /lovelace/wetter
+            grid_options:
+              columns: 60
+              rows: 6
+          - type: custom:hourly-weather
+            entity: weather.forecast_home
+            name: " "
+            icons: true
           - type: tile
             entity: binary_sensor.waschmaschine
             features_position: bottom
@@ -145,12 +139,55 @@ views:
             state_content: state
             vertical: false
             features_position: bottom
+          - type: tile
+            entity: sensor.tvheadend_recording_count
+            name: TV Aufnahme
+            color: grey
+            show_entity_picture: false
+            hide_state: false
+            state_content:
+              - disp_title
+              - disp_subtitle
+              - channelname
+            vertical: false
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/tv
+            icon_tap_action:
+              action: more-info
+            features_position: bottom
+          - type: tile
+            entity: binary_sensor.post
+            vertical: false
+            tap_action:
+              action: url
+              url_path: https://www.ovb-heimatzeitungen.de/
+            features_position: bottom
       - type: grid
         cards:
           - type: heading
             icon: mdi:alarm-light
             heading: Warnungen
-            heading_style: title
+            heading_style: subtitle
+          - type: custom:meteoalarm-card
+            entities:
+              - entity: sensor.kreis_muhldorf_a_inn_aktuelle_warnstufe
+              - entity: sensor.kreis_muhldorf_a_inn_vorwarnstufe
+            integration: dwd
+            scaling_mode: headline_and_scale
+            hide_when_no_warning: true
+            disable_swiper: false
+            hide_caption: false
+            override_headline: false
+          - type: custom:meteoalarm-card
+            entities:
+              - entity: binary_sensor.nina_warning_schwindegg_muhldorf_am_inn_bayern_1
+              - entity: binary_sensor.nina_warning_schwindegg_muhldorf_am_inn_bayern_2
+              - entity: binary_sensor.nina_warning_schwindegg_muhldorf_am_inn_bayern_3
+              - entity: binary_sensor.nina_warning_schwindegg_muhldorf_am_inn_bayern_4
+              - entity: binary_sensor.nina_warning_schwindegg_muhldorf_am_inn_bayern_5
+            integration: nina
+            hide_when_no_warning: true
           - type: tile
             entity: sensor.rct_power_storage_battery_temperature
             name: 🪫🌡️PV Batterie
@@ -166,7 +203,7 @@ views:
             visibility:
               - condition: state
                 entity: binary_sensor.wassersensor_ug_kellerraum_water_leak
-                state: 'on'
+                state: "on"
             entity: binary_sensor.wassersensor_ug_kellerraum_water_leak
             name: 💧 UG Kellerraum
             vertical: false
@@ -184,7 +221,7 @@ views:
             visibility:
               - condition: state
                 entity: binary_sensor.wassersensor_ug_werkstatt_water_leak
-                state: 'on'
+                state: "on"
             entity: binary_sensor.wassersensor_ug_werkstatt_water_leak
             name: 💧 UG Werkstatt
             vertical: false
@@ -202,7 +239,7 @@ views:
             visibility:
               - condition: state
                 entity: binary_sensor.wassersensor_ug_fittnesraum_water_leak
-                state: 'on'
+                state: "on"
             entity: binary_sensor.wassersensor_ug_fittnesraum_water_leak
             name: 💧 UG Fittnesraum
             vertical: false
@@ -220,7 +257,7 @@ views:
             visibility:
               - condition: state
                 entity: binary_sensor.wassersensor_ug_technikraum_water_leak
-                state: 'on'
+                state: "on"
             entity: binary_sensor.wassersensor_ug_technikraum_water_leak
             name: 💧 UG Technikraum
             vertical: false
@@ -238,7 +275,7 @@ views:
             visibility:
               - condition: state
                 entity: binary_sensor.rauchmelder_ug_fittnesraum_smoke
-                state: 'on'
+                state: "on"
             entity: binary_sensor.rauchmelder_ug_fittnesraum_smoke
             name: 🔥 UG Fittnesraum
             vertical: false
@@ -256,7 +293,7 @@ views:
             visibility:
               - condition: state
                 entity: binary_sensor.rauchmelder_eg_schlafzimmer_smoke
-                state: 'on'
+                state: "on"
             entity: binary_sensor.rauchmelder_eg_schlafzimmer_smoke
             name: 🔥 EG Schlafzimmer
             vertical: false
@@ -270,12 +307,24 @@ views:
               - condition: numeric_state
                 entity: sensor.rauchmelder_eg_schlafzimmer_battery
                 below: 5
+          - type: tile
+            visibility:
+              - condition: state
+                entity: binary_sensor.mosquitto_broker_status_sammelmeldung
+                state: "on"
+            entity: binary_sensor.mosquitto_broker_status_sammelmeldung
+            name: 🪛 Störung Wärmepumpe
+            icon: mdi:heat-pump-outline
+            color: red
+            show_entity_picture: false
+            vertical: false
+            features_position: bottom
           - type: heading
             heading: Entsorgung
             heading_style: title
             icon: mdi:trash-can-outline
           - event_grouping: true
-            drop_todayevents_from: '10:00:00'
+            drop_todayevents_from: "10:00:00"
             next_days: 14
             pattern:
               - icon: mdi:flower
@@ -331,7 +380,7 @@ views:
             name: Max. Download
           - features:
               - type: update-actions
-                backup: 'no'
+                backup: "no"
             type: tile
             entity: update.fritz_box_7590_fritz_os
             features_position: bottom
@@ -344,7 +393,7 @@ views:
             visibility:
               - condition: state
                 entity: update.fritz_box_7590_fritz_os
-                state: 'on'
+                state: "on"
             show_entity_picture: true
           - type: tile
             entity: sensor.fritz_box_7590_maximaler_upload_durchsatz_der_verbindung
@@ -358,7 +407,7 @@ views:
             visibility:
               - condition: state
                 entity: binary_sensor.fritz_box_7590_verbindung
-                state: 'off'
+                state: "off"
           - type: heading
             heading: Netzwerkspeicher
             heading_style: title
@@ -509,6 +558,10 @@ views:
             icon: mdi:car-speed-limiter
             heading: Einsepeisebegrenzung
             heading_style: title
+          - type: markdown
+            content: >
+              <center><h4>{{ as_timestamp(now()) | timestamp_custom("%d.%m.%Y -
+              %H:%M") }}</h4></center>
           - type: tile
             name: Installierte Modulleistung
             icon: mdi:solar-power-variant
@@ -578,13 +631,11 @@ views:
             cards:
               - type: markdown
                 content: >-
-                  <center><h4>{{ now().day }}.{{ now().month }}.{{ now().year
-                  }}</h4>
-
-                  <b>{{ states('sensor.wechselrichter_yield_daily_per_kwp') |
-                  regex_replace('\.', ',') }}</b> / {{
-                  state_attr('sensor.forecasted_pv_production_daily', 'per_kwp')
-                  | regex_replace('\.', ',')  }} TS {% if
+                  <b>{{ '%.2f' |
+                  format(states('sensor.wechselrichter_yield_daily_per_kwp') |
+                  float) | regex_replace('\.', ',') }}</b> / {{ '%.2f' |
+                  format(state_attr('sensor.forecasted_pv_production_daily',
+                  'per_kwp') | float) | regex_replace('\.', ',')  }} TS {% if
                   states('sensor.pv_zielerreichung_tagesertrag') | float(0) < 80
                   %}❌{%- elif states('sensor.pv_zielerreichung_tagesertrag') |
                   float(0) < 100 -%}👍{%- elif
@@ -594,6 +645,19 @@ views:
                   300 -%}✅✅{%- else -%}✅✅✅{%- endif %} ({{
                   states('sensor.pv_zielerreichung_tagesertrag', with_unit=True)
                   | regex_replace('\.', ',') }})
+
+
+                  <b>{{ '%.2f' |
+                  format(states('sensor.wechselrichter_yield_monthly_per_kwp') |
+                  float) | regex_replace('\.', ',') }}</b> / {{ '%.2f' |
+                  format(states('sensor.forecasted_pv_production_monthly_per_kwp')
+                  | float) | regex_replace('\.', ',')  }} MS {% if
+                  states('sensor.pv_zielerreichung_monatsertrag_mtd') | float(0)
+                  < 80 %}❌{%- elif
+                  states('sensor.pv_zielerreichung_monatsertrag_mtd') | float(0)
+                  < 100 -%}👍{%- else -%}✅{%- endif %} ({{
+                  states('sensor.pv_zielerreichung_monatsertrag',
+                  with_unit=True) | regex_replace('\.', ',') }})
                 card_mod:
                   style: |
                     ha-card {
@@ -670,7 +734,7 @@ views:
             conditions:
               - condition: state
                 entity: input_boolean.pv_monitoring_absolute_relativ
-                state: 'off'
+                state: "off"
             card:
               type: entities
               card_mod:
@@ -711,17 +775,17 @@ views:
                   show_state: false
                   width: 80%
                   name: Planwerte
-                  secondary_info: '[kWh]'
+                  secondary_info: "[kWh]"
                   icon: mdi:chart-bar
                   entities:
                     - entity: sensor.forecasted_pv_production_daily
-                      name: 'Tgl:'
+                      name: "Tgl:"
                       unit: false
                     - entity: sensor.forecasted_pv_production_mtd
-                      name: 'MTD:'
+                      name: "MTD:"
                       unit: false
                     - entity: sensor.forecasted_pv_production_pvsol
-                      name: 'Mtl:'
+                      name: "Mtl:"
                       unit: false
                 - entity: sensor.forecasted_pv_production_pvsol
                   type: custom:multiple-entity-row
@@ -823,7 +887,7 @@ views:
             conditions:
               - condition: state
                 entity: input_boolean.pv_monitoring_absolute_relativ
-                state: 'on'
+                state: "on"
             card:
               type: entities
               card_mod:
@@ -864,20 +928,20 @@ views:
                   show_state: false
                   name: Planwerte
                   icon: mdi:chart-bar
-                  secondary_info: '[kWh/kWp]'
+                  secondary_info: "[kWh/kWp]"
                   entities:
                     - type: attribute
                       entity: sensor.forecasted_pv_production_daily
                       attribute: per_kwp
-                      name: 'Tgl:'
+                      name: "Tgl:"
                       unit: false
                     - type: attribute
                       entity: sensor.forecasted_pv_production_mtd
                       attribute: per_kwp
-                      name: 'MTD:'
+                      name: "MTD:"
                       unit: false
                     - entity: sensor.forecasted_pv_production_monthly_per_kwp
-                      name: 'Mtl:'
+                      name: "Mtl:"
                       unit: false
                 - entity: sensor.forecasted_pv_production_pvsol
                   type: custom:multiple-entity-row
@@ -976,7 +1040,7 @@ views:
             conditions:
               - condition: state
                 entity: input_boolean.pv_monitoring_absolute_relativ
-                state: 'on'
+                state: "on"
             card:
               type: entities
               card_mod:
@@ -1088,7 +1152,7 @@ views:
             conditions:
               - condition: state
                 entity: input_boolean.pv_monitoring_absolute_relativ
-                state: 'off'
+                state: "off"
             card:
               type: entities
               card_mod:
@@ -1317,7 +1381,7 @@ views:
           - type: tile
             entity: number.number_rct_power_storage_battery_maximum_soc
             name: Max. SOC Zielwert
-            icon: ''
+            icon: ""
             color: green
             vertical: false
             features:
@@ -1416,6 +1480,7 @@ views:
             days_to_show: 1
             grid_options:
               columns: full
+              rows: 6
         column_span: 2
       - type: grid
         cards:
@@ -1425,7 +1490,7 @@ views:
           - type: tile
             entity: sensor.rct_power_storage_inverter_device_name
             name: Name
-            icon: ''
+            icon: ""
           - type: tile
             entity: sensor.rct_power_storage_inverter_serial_number
             name: Seriennummer
@@ -1445,7 +1510,7 @@ views:
           - type: tile
             entity: sensor.rct_power_storage_insulation_resistance
             name: Isolationswiderstand
-            icon: ''
+            icon: ""
           - type: tile
             entity: sensor.rct_power_storage_core_temperature
             icon: mdi:thermometer
@@ -1615,7 +1680,7 @@ views:
             visibility:
               - condition: state
                 entity: switch.mosquitto_broker_temperatursensor_unten_im_speicher
-                state: 'on'
+                state: "on"
             grid_options:
               columns: full
             name: Warmwassertemperatur unten
@@ -1860,7 +1925,7 @@ views:
             visibility:
               - condition: state
                 entity: switch.mosquitto_broker_temperatursensor_unten_im_speicher
-                state: 'on'
+                state: "on"
             grid_options:
               columns: full
             name: Warmwassertemperatur unten
@@ -1921,6 +1986,102 @@ views:
     sections:
       - type: grid
         cards:
+          - type: custom:weather-chart-card
+            entity: weather.ischwi46
+            show_main: true
+            show_temperature: true
+            show_current_condition: true
+            show_attributes: true
+            show_time: true
+            show_time_seconds: false
+            show_day: false
+            show_date: true
+            show_humidity: true
+            show_pressure: true
+            show_wind_direction: true
+            show_wind_speed: true
+            show_sun: true
+            show_feels_like: false
+            show_dew_point: false
+            show_wind_gust_speed: false
+            show_visibility: false
+            show_last_changed: false
+            use_12hour_format: false
+            icons_size: 25
+            animated_icons: false
+            icon_style: style1
+            autoscroll: false
+            forecast:
+              precipitation_type: rainfall
+              show_probability: false
+              labels_font_size: "11"
+              precip_bar_size: "100"
+              style: style2
+              show_wind_forecast: true
+              condition_icons: true
+              round_temp: false
+              type: daily
+              number_of_forecasts: "0"
+              disable_animation: false
+          - type: custom:windrose-card
+            title: Windrichtung
+            data_period:
+              period_back: "-12h"
+            rose_config:
+              windrose_draw_north_offset: 0
+              center_calm_percentage: true
+            refresh_interval: 300
+            windspeed_bar_location: right
+            wind_direction_entity:
+              entity: sensor.ischwi46_wind_direction_degrees
+              use_statistics: false
+              direction_compensation: 0
+            windspeed_entities:
+              - entity: sensor.ischwi46_wind_speed
+                name: Windgeschwindigkeit
+                speed_unit: auto
+                use_statistics: false
+                windspeed_bar_full: true
+                output_speed_unit: kph
+                speed_range_beaufort: true
+                current_speed_arrow: true
+            buttons_config:
+              location: bottom
+              buttons:
+                - type: period_selector
+                  button_text: Heute
+                  preset_period: today
+                - type: period_selector
+                  button_text: Letzte 7 Tage
+                  preset_period: last_7_days
+                - type: period_selector
+                  button_text: Letzte 30 Tage
+                  preset_period: last_30_days
+                  use_analytics: true
+                  analytics_period: hour
+            direction_labels:
+              cardinal_direction_letters: NOSW
+            current_direction:
+              show_arrow: true
+            matching_strategy:
+              name: direction-first
+            corner_info:
+              top_left:
+                label: Windrichtung
+                unit: " °"
+                entity: sensor.ischwi46_wind_direction_degrees
+              top_right:
+                label: Windgeschwindigkeit
+                unit: " km/h"
+                entity: sensor.ischwi46_wind_speed
+            text_blocks:
+              top:
+                text: |2-
+                        <table>
+                            <tr>
+                                <td>Periode:</td><td>${start-date}, ${start-time} - ${end-date}, ${end-time}</td>
+                            </tr>
+                        </table>
           - type: entities
             entities:
               - entity: sensor.ischwi46_forecast_summary_1n
@@ -1934,24 +2095,50 @@ views:
               - entity: sensor.ischwi46_forecast_summary_8d
                 name: Tag+4
               - entity: sensor.ischwi46_temperature
+                name:
+                  type: entity
               - entity: sensor.ischwi46_wind_chill
+                name:
+                  type: entity
               - entity: sensor.ischwi46_heat_index
+                name:
+                  type: entity
               - entity: sensor.ischwi46_dewpoint
+                name:
+                  type: entity
               - entity: sensor.ischwi46_solar_radiation
+                name:
+                  type: entity
               - entity: sensor.ischwi46_uv_index
+                name:
+                  type: entity
               - entity: sensor.ischwi46_relative_humidity
+                name:
+                  type: entity
               - entity: sensor.ischwi46_pressure
+                name:
+                  type: entity
               - entity: sensor.ischwi46_precipitation_rate
+                name:
+                  type: entity
               - entity: sensor.ischwi46_precipitation_today
-              - entity: sensor.ischwi46_wind_speed
+                name:
+                  type: entity
               - entity: sensor.ischwi46_wind_gust
-              - entity: sensor.ischwi46_wind_direction_cardinal
+                name:
+                  type: entity
             title: Wetterstation
       - type: grid
         cards:
           - type: entities
             entities:
               - entity: sensor.beste_stunde
+                name:
+                  type: entity
+              - entity: sensor.solar_forecast_ml_bewertungsabdeckung_7_tage
+                name:
+                  type: entity
+              - entity: sensor.solar_forecast_ml_bewertungsabdeckung_30_tage
                 name:
                   type: entity
               - entity: sensor.solar_forecast_ml_durchschnittlicher_monatsertrag
@@ -1975,6 +2162,12 @@ views:
               - entity: sensor.solar_forecast_ml_monatsverbrauch
                 name:
                   type: entity
+              - entity: sensor.solar_forecast_ml_mppt_ausschluss_7_tage
+                name:
+                  type: entity
+              - entity: sensor.solar_forecast_ml_mppt_ausschluss_30_tage
+                name:
+                  type: entity
               - entity: sensor.solar_forecast_ml_o_ertrag_7_tage
                 name:
                   type: entity
@@ -1982,6 +2175,9 @@ views:
                 name:
                   type: entity
               - entity: sensor.solar_forecast_ml_o_genauigkeit_30_tage
+                name:
+                  type: entity
+              - entity: sensor.solar_forecast_ml_planungsprognose_p10_blend
                 name:
                   type: entity
               - entity: sensor.produktionszeit_heute
@@ -2077,4 +2273,14 @@ views:
                 name:
                   type: entity
             title: Solar Forecast ML
-            state_color: false
+  - type: panel
+    path: tv
+    title: TV
+    icon: mdi:television
+    cards:
+      - type: iframe
+        url: http://tvprogramm/
+        aspect_ratio: 100%
+        title: Fernsehprogramm
+        hide_background: false
+    subview: true
