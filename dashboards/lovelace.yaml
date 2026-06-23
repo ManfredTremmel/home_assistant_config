@@ -31,8 +31,8 @@ views:
                 entity: sensor.electricity_maps_anteil_fossiler_energietrager
               home:
                 secondary_info: {}
-                entity: sensor.power_consumption
                 override_state: true
+                entity: sensor.house_power
               individual: []
             clickable_entities: true
             display_zero_lines:
@@ -598,11 +598,11 @@ views:
                 type: numeric-input
             features_position: bottom
           - type: tile
+            entity: sensor.house_power
             name: Eigenverbrauch
             icon: mdi:home
-            features_position: bottom
             vertical: false
-            entity: sensor.power_consumption
+            features_position: bottom
           - type: tile
             entity: sensor.solar_power_grid_limit_soft
             features_position: bottom
@@ -1467,7 +1467,7 @@ views:
                 name: Süd (WR2S2+3)
               - entity: sensor.stp_20_50_pv_power_c
                 name: Nord (WR2S4)
-              - entity: sensor.power_consumption
+              - entity: sensor.house_power
                 name: Verbrauch
               - entity: sensor.rct_power_storage_grid_power
                 name: Bez./Einsp.
