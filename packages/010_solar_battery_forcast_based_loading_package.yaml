@@ -60,6 +60,7 @@ template:
       name: "Calculated maximum battery soc"
       icon: "mdi:battery"
       state_class: "measurement"
+      device_class: battery
       unit_of_measurement: "%"
       state: >-
           {% if is_state('binary_sensor.nina_warning_schwindegg_muhldorf_am_inn_bayern_1', 'on') %}

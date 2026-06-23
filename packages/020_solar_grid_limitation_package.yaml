@@ -40,6 +40,7 @@ template:
       name: "House Power"
       icon: "mdi:home-lightning-bolt"
       state_class: "measurement"
+      device_class: power
       unit_of_measurement: "W"
       state: >-
           {{ ((states('sensor.rct_power_storage_external_generator_s0_power')|float(0.0)) + (states('sensor.rct_power_storage_grid_power')|float(0.0)) + (states('sensor.rct_power_storage_inverter_ac_power')|float(0.0)))|round(0) }}
@@ -52,6 +53,7 @@ template:
       name: "Installed PV WR Sum"
       icon: "mdi:solar-power"
       state_class: "measurement"
+      device_class: power
       unit_of_measurement: "kW"
       state: >-
           {{ ((states('sensor.installed_pv_wr1')|float(6.0)) + (states('sensor.installed_pv_wr2')|float(20.0)))|round(3) }}
@@ -64,6 +66,7 @@ template:
       name: "Solar Power Generators Sum"
       icon: "mdi:solar-power"
       state_class: "measurement"
+      device_class: power
       unit_of_measurement: "W"
       state: >-
           {{ ((states('sensor.rct_power_storage_all_generators_power')|float(0.0)) + (states('sensor.stp_20_50_pv_power_a')|float(0.0)) + (states('sensor.stp_20_50_pv_power_b')|float(0.0)) + (states('sensor.stp_20_50_pv_power_c')|float(0.0)))|round(0) }}
@@ -76,6 +79,7 @@ template:
       name: "Solar Power Grid Limit Soft"
       icon: "mdi:solar-power"
       state_class: "measurement"
+      device_class: power
       unit_of_measurement: "kW"
       state: >-
           {% set solar_grid_limit = states('number.number_rct_power_storage_external_power_reduction')|float(100.0) %}
@@ -95,6 +99,7 @@ template:
       name: "Solar Power Grid Limit Soft SMA"
       icon: "mdi:solar-power"
       state_class: "measurement"
+      device_class: power
       unit_of_measurement: "kW"
       state: >-
           {{ max(0, min((states('sensor.solar_power_grid_limit_soft')|float(26.0)), (states('sensor.installed_pv_wr2')|float(20.0)))) | round(3) }}

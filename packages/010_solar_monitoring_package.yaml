@@ -18,18 +18,22 @@ rest:
       - unique_id: "forecasted_pv_production_pvsol"
         name: "Forecasted PV Production PVSOL"
         value_template: "{{ value_json['forecast'][now().month]['value'] }}"
+        device_class: energy
         unit_of_measurement: "kWh"
       - unique_id: "installed_pv_size"
         name: "Installed PV Size"
         value_template: "{{ value_json['InstalledSize'] }}"
+        device_class: power
         unit_of_measurement: "kW"
       - unique_id: "installed_pv_wr1"
         name: "Installed PV WR1"
         value_template: "{{ value_json['Installed_WR1'] }}"
+        device_class: power
         unit_of_measurement: "kW"
       - unique_id: "installed_pv_wr2"
         name: "Installed PV WR2"
         value_template: "{{ value_json['Installed_WR2'] }}"
+        device_class: power
         unit_of_measurement: "kW"
       - unique_id: "forecasted_pv_production_pvsol_until_this_month"
         name: "Forecasted PV Production PVSOL until this month"
@@ -39,6 +43,7 @@ rest:
           {%  set ytd.result = ytd.result + value_json['forecast'][i]['value'] %}
           {% endfor %}
           {{ ytd.result }}
+        device_class: energy
         unit_of_measurement: "kWh"
       - unique_id: "forecasted_pv_production_pvsol_yearly"
         name: "Forecasted PV Production PVSOL Year"
@@ -48,6 +53,7 @@ rest:
           {%  set ytd.result = ytd.result + value_json['forecast'][i]['value'] %}
           {% endfor %}
           {{ ytd.result }}
+        device_class: energy
         unit_of_measurement: "kWh"
 
 input_boolean:

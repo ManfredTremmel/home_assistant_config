@@ -38,6 +38,7 @@ template:
       name: "RCT Battery Capacity Unload Calibration"
       icon: "mdi:lightning-bolt"
       state_class: "measurement"
+      device_class: energy
       unit_of_measurement: "kWh"
       state: >-
           {% set unload = ((states('sensor.rct_power_storage_battery_used_energy_end')|float(3526.68)) - (states('sensor.rct_power_storage_battery_used_energy_start')|float(3515.93))) %}
@@ -70,10 +71,12 @@ template:
       - unique_id: rct_power_storage_battery_used_energy_start
         name: "RCT Power Storage Battery Used Energy Start"
         state: '{{ states(''sensor.rct_power_storage_battery_used_energy'')|float()|multiply(0.001)|round(3) }}'
+        device_class: energy
         unit_of_measurement: "kWh"
       - unique_id: rct_power_storage_battery_stored_energy_start
         name: "RCT Power Storage Battery Stored Energy Start"
         state: '{{ states(''sensor.rct_power_storage_battery_stored_energy'')|float()|multiply(0.001)|round(3) }}'
+        device_class: energy
         unit_of_measurement: "kWh"
 
   #
@@ -91,8 +94,10 @@ template:
       - unique_id: rct_power_storage_battery_used_energy_end
         name: "RCT Power Storage Battery Used Energy End"
         state: '{{ states(''sensor.rct_power_storage_battery_used_energy'')|float()|multiply(0.001)|round(3) }}'
+        device_class: energy
         unit_of_measurement: "kWh"
       - unique_id: rct_power_storage_battery_stored_energy_end
         name: "RCT Power Storage Battery Stored Energy End"
         state: '{{ states(''sensor.rct_power_storage_battery_stored_energy'')|float()|multiply(0.001)|round(3) }}'
+        device_class: energy
         unit_of_measurement: "kWh"
