@@ -24,7 +24,6 @@ sensor:
     unit_prefix: m
     unit_time: h
     unit: W
-    device_class: power
     time_window: "00:05:00"
     max_sub_interval: "00:01:00"
   - platform: derivative
@@ -35,7 +34,6 @@ sensor:
     unit_prefix: m
     unit_time: h
     unit: W
-    device_class: power
     time_window: "00:05:00"
     max_sub_interval: "00:01:00"
 
