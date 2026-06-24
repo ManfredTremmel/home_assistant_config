@@ -549,7 +549,7 @@ views:
       image: /api/image/serve/7da56310ee6bc3e48f04499f4e676b5a/original
     icon: mdi:white-balance-sunny
   - type: sections
-    max_columns: 2
+    max_columns: 3
     title: PV Netz
     path: pv-netz
     sections:
@@ -622,6 +622,9 @@ views:
             icon: mdi:transmission-tower
             grid_options:
               columns: full
+      - type: grid
+        cards:
+          - type: custom:sfml-card
       - type: grid
         cards:
           - type: heading
