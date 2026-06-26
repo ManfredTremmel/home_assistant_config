@@ -1230,7 +1230,7 @@ views:
                   name: Forecast
                   icon: m3o:chart-data
                   entities:
-                    - entity: sensor.prognose_heute
+                    - entity: sensor.solar_forecast_ml_hybrid_forecast
                       name: heute
                       format: precision2
                     - entity: sensor.solcast_zielerreichung_heute

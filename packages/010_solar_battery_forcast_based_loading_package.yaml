@@ -39,6 +39,7 @@
 # Used entities:
 #       sensor.prognose_heute_rest
 #       sensor.prognose_morgen
+#       sensor.solar_forecast_ml_hybrid_forecast
 #       sensor.sun_next_noon
 #       sensor.sun_next_rising
 #       sensor.rct_battery_capacity_unload_calibration
@@ -150,7 +151,7 @@ automation rct_soc_min_max:
         event: sunrise
     conditions: []
     actions:
-      - action: switch.turn_{{ 'on' if (states('sensor.prognose_heute')|float(0.0)) < 50 else 'off' }}
+      - action: switch.turn_{{ 'on' if (states('sensor.solar_forecast_ml_hybrid_forecast')|float(0.0)) < 50 else 'off' }}
         target:
           entity_id: switch.switch_rct_power_storage_use_grid_power
     mode: single

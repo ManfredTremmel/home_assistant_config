@@ -295,7 +295,7 @@ template:
           and (states("sensor.forecasted_pv_production_ytd") | is_number() ) }}
 
       # Extrapolate in a simple manner the expected go to
-      # sensor.prognose_heute
+      # sensor.solar_forecast_ml_hybrid_forecast
       # sensor.prognose_morgen
       # sensor.prognose_ubermorgen
       # sensor.solar_forecast_ml_durchschnittlicher_monatsertrag
@@ -307,7 +307,7 @@ template:
           {% set dom = 31 if now().month == 12 else (now().replace(month=now().month+1, day=1) - timedelta(days=1)).day %}
           {% set cd = now().day %}
           {% set remainingDays = dom-cd %}
-          {% set pfv0 = states("sensor.prognose_heute") | float(0) %}
+          {% set pfv0 = states("sensor.solar_forecast_ml_hybrid_forecast") | float(0) %}
           {% set pfv1 = states("sensor.prognose_morgen") | float(0) %}
           {% set pfv2 = states("sensor.prognose_ubermorgen") | float(0) %}
           {% set pfv3 = states("sensor.solar_forecast_ml_durchschnittlicher_monatsertrag") | float(0) %}
@@ -412,11 +412,11 @@ template:
         state_class: "measurement"
         unit_of_measurement: "kWh/kWp"
         state: >-
-          {% set pfv = states("sensor.prognose_heute") | float(0) %}
+          {% set pfv = states("sensor.solar_forecast_ml_hybrid_forecast") | float(0) %}
           {% set ips = states("sensor.installed_pv_size") | float(0) %}
           {{ (pfv/ips) | round(2) }}
         availability: >-
-          {{ has_value("sensor.prognose_heute")
+          {{ has_value("sensor.solar_forecast_ml_hybrid_forecast")
           and has_value("sensor.installed_pv_size") }}
 
       - unique_id: "solcast_pv_forecast_morgen_pro_kwp"
@@ -436,7 +436,7 @@ template:
         state_class: "measurement"
         unit_of_measurement: "%"
         state: >-
-          {% set pfv = states("sensor.prognose_heute") | float(0) %}
+          {% set pfv = states("sensor.solar_forecast_ml_hybrid_forecast") | float(0) %}
           {% set remaining_today = states("sensor.prognose_heute_rest") | float(0) %}
           {% set inv = states("sensor.solar_yield_daily") | float(0) %}
           {% set pfv = pfv-remaining_today %}
@@ -446,6 +446,6 @@ template:
           {{ 0 }}
           {% endif %}
         availability: >-
-          {{ has_value("sensor.prognose_heute")
+          {{ has_value("sensor.solar_forecast_ml_hybrid_forecast")
           and has_value("sensor.prognose_heute_rest")
           and has_value("sensor.solar_yield_daily") }}
