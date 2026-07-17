@@ -1,0 +1,72 @@
+# ############ HA Local scripts for evcc ############
+#
+# (C) 2026 Manfred Tremmel
+#
+# Dependencies:
+#       "RCT Power" extension from HACS
+#       "000_rct_input_widgets_package.yaml"
+#
+# Provided entities:
+#        script.battery_normal
+#        script.battery_hold
+#        script.battery_grid_charge
+#
+
+script:
+
+  # Normalbetrieb Skript, Skript um die Heimbatterie in den Normalbetrieb zu versetzen. Erforderlich, wenn modeHold oder modeCharge gesetzt ist. Das Skript ist verantwortlich für alle notwendigen Statusänderungen auf der HA-Seite.
+  battery_normal:
+    sequence:
+      - action: select.select_option
+        data:
+          option: 'Constant'
+        target:
+          entity_id: select.select_rct_power_storage_load_strategy
+      - action: number.set_value
+        data:
+          value: '0'
+        target:
+          entity_id: number.number_rct_power_storage_battery_target_power
+      - action: number.set_value
+        data:
+          value: '7'
+        target:
+          entity_id: number.number_rct_power_storage_battery_minimum_soc
+      - action: number.set_value
+        data:
+          value: '{{ states(''sensor.calculated_maximum_battery_soc'')|float(97.0) }}'
+        target:
+          entity_id: number.number_rct_power_storage_battery_maximum_soc
+      - action: number.set_value
+        data:
+          value: '{{ states(''sensor.calculated_maximum_battery_soc'')|float(97.0) }}'
+        target:
+          entity_id: number.number_rct_power_storage_battery_force_soc_target
+
+  # Halten Skript, Optionales Skript um Entladen der Heimbatterie zu verhindern.
+  battery_hold:
+    sequence:
+      - action: number.set_value
+        data:
+          value: '{{ states(''sensor.rct_power_storage_battery_state_of_charge'')|float(97.0) }}'
+        target:
+          entity_id: number.number_rct_power_storage_battery_minimum_soc
+
+  # Netzladung Skript, Optionales Skript um die Heimbatterie aus dem Netz zu laden. (optional)
+  battery_grid_charge:
+    sequence:
+      - action: number.set_value
+        data:
+          value: '97'
+        target:
+          entity_id: number.number_rct_power_storage_battery_force_soc_target
+      - action: number.set_value
+        data:
+          value: '-4200'
+        target:
+          entity_id: number.number_rct_power_storage_battery_target_power
+      - action: select.select_option
+        data:
+          option: 'External'
+        target:
+          entity_id: select.select_rct_power_storage_load_strategy
