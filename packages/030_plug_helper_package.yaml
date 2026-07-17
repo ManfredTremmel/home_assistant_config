@@ -218,52 +218,6 @@ automation power_plug_helpers:
         target:
           entity_id: button.anrufharauchmelder
 
-  # Turn on garage plug, when pv power is more then 2 kW
-  - id: "turn_on_garage_plug_when_sun_shines"
-    alias: "Turn on garage plug when sun shines"
-    description: "Sobald mehr als 2 kW PV Leistung anliegt, Garagen Plug aktivieren"
-    triggers:
-      - trigger: numeric_state
-        entity_id:
-        - sensor.solar_power_generators_sum
-        above: 2000
-        for:
-          hours: 0
-          minutes: 5
-          seconds: 0
-    conditions:
-      - condition: state
-        entity_id: "switch.steckdose_garage"
-        state: "off"
-    actions:
-      - action: switch.turn_on
-        target:
-          entity_id: "switch.steckdose_garage"
-    mode: single
-
-  # Turn off garage plug, when pv power is less then 1.5 kW
-  - id: "turn_off_garage_plug_when_sun_doesnt_shines"
-    alias: "Turn off garage plug when sun doesnt shines"
-    description: "Sobald weniger als 1,5 kW PV Leistung anliegt, Garagen Plug deaktivieren"
-    triggers:
-      - trigger: numeric_state
-        entity_id:
-        - sensor.solar_power_generators_sum
-        below: 1500
-        for:
-          hours: 0
-          minutes: 5
-          seconds: 0
-    conditions:
-      - condition: state
-        entity_id: "switch.steckdose_garage"
-        state: "on"
-    actions:
-      - action: switch.turn_off
-        target:
-          entity_id: "switch.steckdose_garage"
-    mode: single
-
   # Turn off og tv plug when power consumption below 130W and libreelec is not playing
   - id: "turn_off_og_tv_plug_when_power_consumption_below_130W"
     alias: "Turn off og tv plug when power consumption below 130W"
