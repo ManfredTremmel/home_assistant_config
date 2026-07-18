@@ -116,6 +116,8 @@ views:
             grid_options:
               columns: 60
               rows: 6
+            additionalLabel000: JAZ
+            additionalValue000: sensor.heating_pump_jaz
           - type: custom:hourly-weather
             entity: weather.forecast_home
             name: " "
@@ -129,9 +131,16 @@ views:
             features_position: bottom
             vertical: false
           - type: tile
-            entity: binary_sensor.eroller
-            features_position: bottom
+            entity: binary_sensor.evcc_garage_eroller_charging
+            name:
+              type: entity
             vertical: false
+            tap_action:
+              action: navigate
+              navigation_path: /app/49686a9f_evcc
+            icon_tap_action:
+              action: more-info
+            features_position: bottom
           - type: tile
             entity: binary_sensor.katzenklingel_water_leak
             name: Katzenklingel
@@ -152,8 +161,8 @@ views:
               - channelname
             vertical: false
             tap_action:
-              action: navigate
-              navigation_path: /lovelace/tv
+              action: url
+              url_path: http://tvprogramm/
             icon_tap_action:
               action: more-info
             features_position: bottom
@@ -1312,8 +1321,11 @@ views:
             color: orange
           - type: tile
             entity: sensor.rct_power_storage_next_battery_calibration_date
-            icon: mdi:calendar
             name: Nächste Kalibrierung
+            icon: mdi:calendar
+            vertical: false
+            features_position: bottom
+            time_format: datetime
           - type: tile
             name: Kapazität letzte Kalibrierung
             icon: mdi:battery-unknown
@@ -2308,14 +2320,3 @@ views:
                 name:
                   type: entity
             title: Solar Forecast ML
-  - type: panel
-    path: tv
-    title: TV
-    icon: mdi:television
-    cards:
-      - type: iframe
-        url: http://tvprogramm/
-        aspect_ratio: 100%
-        title: Fernsehprogramm
-        hide_background: false
-    subview: true

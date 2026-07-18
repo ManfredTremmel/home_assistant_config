@@ -1,6 +1,6 @@
 # ############ HA helpers for power plugs ############
 #
-# (C) 2025 Manfred Tremmel
+# (C) 2025-2026 Manfred Tremmel
 #
 # I've installed some Zigbee power plugs and sensors and
 # here are some helpers defined
@@ -20,7 +20,6 @@
 #       sensor.steckdoese_og_tv_power
 #       switch.steckdose_ug_waschmaschine
 #       switch.steckdose_eg_geschirrspuhler
-#       switch.steckdose_garage
 #       switch.steckdoese_og_tv
 #       binary_sensor.wassersensor_ug_technikraum_water_leak
 #       binary_sensor.wassersensor_ug_kellerraum_water_leak
@@ -33,7 +32,6 @@
 # Provided entities:
 #       binary_sensor.waschmaschine
 #       binary_sensor.geschirrspuelmaschine
-#       binary_sensor.eroller
 #
 #
 template:
@@ -51,12 +49,6 @@ template:
       state: ""
       device_class: running
       icon: mdi:dishwasher
-    # sensor indicates electric mpoed is loading or not
-    - unique_id: "eroller"
-      name: "eRoller"
-      state: ""
-      device_class: battery_charging
-      icon: mdi:moped-electric
 
 automation power_plug_helpers:
 
@@ -122,38 +114,6 @@ automation power_plug_helpers:
         - action: python_script.set_state
           data:
             entity_id: binary_sensor.geschirrspulmaschine
-            state: "on"
-
-  # Prüfe, ob der eRoller gerade geladen wird
-  - id: "eroller_statusbenachrichtigung"
-    alias: "eRoller Statusbenachrichtigung"
-    description: ""
-    use_blueprint:
-      path: sbyx/notify-or-do-something-when-an-appliance-like-a-dishwasher-or-washing-machine-finishes.yaml
-      input:
-        power_sensor: sensor.steckdose_garage_power
-        starting_threshold: 3
-        starting_hysteresis: 2
-        finishing_threshold: 3
-        finishing_hysteresis: 2
-        actions:
-        - action: notify.all_devices
-          data:
-            title: "Roller ist geladen"
-            message: "Der eRoller ist fertig geladen"
-            data:
-              expire: 20000
-              displaytime: 20000
-              urgency: normal
-              icon: "info"
-        - action: python_script.set_state
-          data:
-            entity_id: binary_sensor.eroller
-            state: "off"
-        pre_actions:
-        - action: python_script.set_state
-          data:
-            entity_id: binary_sensor.eroller
             state: "on"
 
   # Wassermelder Alarm
