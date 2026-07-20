@@ -1,0 +1,103 @@
+# ############ HA Local Solar Forecast STATS sensors ############
+#
+# (C) 2026 Manfred Tremmel
+#
+# Dependencies:
+#       "RCT Power" extension from HACS
+#       "020_solar_grid_limitation_package.yaml"
+#
+# Used entities:
+#       sensor.house_power
+#       sensor.solar_power_generators_sum
+#       sensor.rct_power_storage_battery_power
+#       sensor.rct_power_storage_grid_power
+#
+# Provided entities:
+#        sensor.solar_to_house_power
+#        sensor.solar_to_battery_power
+#        sensor.battery_to_house_power
+#        sensor.grid_to_house_power
+#        sensor.to_grid_power
+#        sensor.from_grid_power
+#
+
+template:
+  - sensor:
+
+    #
+    # Calculate the solar power going direct to local house.
+    #
+    - unique_id: "solar_to_house_power"
+      name: "Solar to House Power"
+      icon: "mdi:home-lightning-bolt"
+      state_class: "measurement"
+      device_class: power
+      unit_of_measurement: "W"
+      state: >-
+          {{ min(states('sensor.house_power')|int(0), states('sensor.solar_power_generators_sum')|int(0)) }}
+      availability: "{{ has_value('sensor.house_power') and has_value('sensor.solar_power_generators_sum') }}"
+
+    #
+    # Calculate the solar power going direct to battery.
+    #
+    - unique_id: "solar_to_battery_power"
+      name: "Solar to Battery Power"
+      icon: "mdi:home-lightning-bolt"
+      state_class: "measurement"
+      device_class: power
+      unit_of_measurement: "W"
+      state: >-
+          {{ min(max(0, (0 - states('sensor.rct_power_storage_battery_power')|int(0))), (states('sensor.solar_power_generators_sum')|int(0) - states('sensor.house_power')|int(0))) }}
+      availability: "{{ has_value('sensor.house_power') and has_value('sensor.rct_power_storage_battery_power') and has_value('sensor.solar_power_generators_sum') }}"
+
+    #
+    # Calculate the battery power going direct to local house.
+    #
+    - unique_id: "battery_to_house_power"
+      name: "Battery to House Power"
+      icon: "mdi:home-lightning-bolt"
+      state_class: "measurement"
+      device_class: power
+      unit_of_measurement: "W"
+      state: >-
+          {{ max(0, max(0, (states('sensor.rct_power_storage_battery_power')|int(0))) - max(0, 0 - states('sensor.rct_power_storage_grid_power')|int(0))) }}
+      availability: "{{ has_value('sensor.rct_power_storage_battery_power') and has_value('sensor.rct_power_storage_grid_power') }}"
+
+    #
+    # Calculate the grid power going direct to local house.
+    #
+    - unique_id: "grid_to_house_power"
+      name: "Grid to House Power"
+      icon: "mdi:home-lightning-bolt"
+      state_class: "measurement"
+      device_class: power
+      unit_of_measurement: "W"
+      state: >-
+          {{ min(max(0, states('sensor.rct_power_storage_grid_power')|int(0)), states('sensor.house_power')|int(0)) }}
+      availability: "{{ has_value('sensor.rct_power_storage_grid_power') and has_value('sensor.house_power') }}"
+
+    #
+    # power going to grid.
+    #
+    - unique_id: "to_grid_power"
+      name: "To Grid Power"
+      icon: "mdi:home-lightning-bolt"
+      state_class: "measurement"
+      device_class: power
+      unit_of_measurement: "W"
+      state: >-
+          {{ max(0, 0 - states('sensor.rct_power_storage_grid_power')|int(0)) }}
+      availability: "{{ has_value('sensor.rct_power_storage_grid_power') }}"
+
+    #
+    # power going from grid.
+    #
+    - unique_id: "from_grid_power"
+      name: "From Grid Power"
+      icon: "mdi:home-lightning-bolt"
+      state_class: "measurement"
+      device_class: power
+      unit_of_measurement: "W"
+      state: >-
+          {{ max(0, states('sensor.rct_power_storage_grid_power')|int(0)) }}
+      availability: "{{ has_value('sensor.rct_power_storage_grid_power') }}"
