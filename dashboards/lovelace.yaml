@@ -633,6 +633,7 @@ views:
               columns: full
       - type: grid
         cards:
+          - type: custom:stats-flow-card
           - type: custom:sfml-card
       - type: grid
         cards:
@@ -1613,16 +1614,16 @@ views:
             grid_options:
               columns: full
             hours_to_show: 24
-          - features:
-              - type: select-options
-            type: tile
-            entity: select.mosquitto_broker_betriebsart
-            grid_options:
-              columns: full
-            vertical: true
-            hide_state: true
-            name: Betriebsart
-            features_position: bottom
+          - type: thermostat
+            entity: climate.ug_technikraum_mosquitto_broker_climate_heat_pump
+            name: Wärmepumpe
+            show_current_as_primary: false
+            features:
+              - type: climate-hvac-modes
+              - style: icons
+                type: climate-preset-modes
+              - style: icons
+                type: climate-fan-modes
       - type: grid
         cards:
           - type: heading
