@@ -1690,47 +1690,30 @@ views:
             hours_to_show: 24
             grid_options:
               columns: full
-          - graph: line
-            type: sensor
-            detail: 1
-            entity: sensor.mosquitto_broker_warmwassertemperatur_unten
-            visibility:
-              - condition: state
-                entity: switch.mosquitto_broker_temperatursensor_unten_im_speicher
-                state: "on"
-            grid_options:
-              columns: full
-            name: Warmwassertemperatur unten
-            hours_to_show: 24
-          - features:
-              - style: slider
-                type: numeric-input
-            type: tile
-            entity: number.mosquitto_broker_warmwassersolltemperatur
-            name: Solltemperatur
-            features_position: bottom
-            vertical: false
-          - type: tile
-            entity: number.mosquitto_broker_warmwassersolltemperatur_2
-            name: Solltemperatur 2
+          - type: thermostat
+            entity: >-
+              water_heater.ug_technikraum_mosquitto_broker_water_heater_heat_pump
             features:
-              - style: slider
-                type: numeric-input
+              - type: water-heater-operation-modes
+            grid_options:
+              columns: 6
+              rows: 5
+            name: Solltemperatur
+          - type: thermostat
+            entity: >-
+              water_heater.ug_technikraum_mosquitto_broker_water_heater_temp2_heat_pump
+            grid_options:
+              columns: 6
+              rows: 5
+            features:
+              - type: water-heater-operation-modes
+            name: Erhöhte Solltemperatur
           - type: tile
             entity: switch.mosquitto_broker_einschaltoptimierung_fuer_warmwasser
             name: Einschaltoptimierung
           - type: tile
             entity: switch.mosquitto_broker_ausschaltoptimierung_fuer_warmwasser
             name: Ausschaltoptimierung
-          - type: tile
-            entity: switch.mosquitto_broker_freigabe_zusatzheizung_fuer_ww_bereitung
-            name: Freigabe Zusatzheizung
-          - type: tile
-            entity: switch.mosquitto_broker_freigabe_elektroheizung_fuer_ww_bereitung
-            name: Freigabe Heizstab
-          - type: tile
-            entity: switch.mosquitto_broker_temperatursensor_unten_im_speicher
-            name: Temperatursensor unten im Speicher
           - type: tile
             entity: switch.mosquitto_broker_einmal_ww_bereitung
             name: 1x Aufbereitung starten
