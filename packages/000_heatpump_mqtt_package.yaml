@@ -828,6 +828,93 @@ mqtt:
       device:
         identifiers: vcontrold
         manufacturer: Viessmann
+  climate:
+    - unique_id: "vcontroldClimateHeatPump"
+      name: "Climate Heat Pump"
+      device:
+        identifiers: "vcontrold"
+        manufacturer: "Viessmann"
+        model: "Vitocal 3xx mit Vitotronic 200"
+        model_id: 2049
+      icon: "mdi:heat-pump-outline"
+      modes:
+        - "off"
+        - "auto"
+        - "heat"
+      mode_state_topic: "openv/getBetriebsart2"
+      mode_state_template: >-
+        {% if value=="Abschaltbetrieb" -%}
+          off
+        {%- elif value=="Warmwasser" -%}
+          auto
+        {%- else -%}
+          heat
+        {%- endif %}
+      mode_command_topic: "openv/setBetriebsart2"
+      mode_command_template: >-
+        {% if value=="auto" -%}
+          Warmwasser
+        {%- elif (value=="heat") and (states('binary_sensor.heating_pump_party_mode') | bool) -%}
+          Heizen+WW+Party
+        {%- elif (value=="heat") and (states('binary_sensor.heating_pump_energy_save_mode') | bool) -%}
+          Heizen+WW+Sparbetrieb
+        {%- elif value=="heat" -%}
+          Heizen+WW
+        {%- else -%}
+          Abschaltbetrieb
+        {%- endif %}
+      preset_modes:
+        - "home"
+        - "eco"
+        - "boost"
+        - "sleep"
+      preset_mode_state_topic: "openv/getBetriebsart2"
+      preset_mode_value_template: >-
+        {% if value=="Heizen+WW+Party" -%}
+          boost
+        {%- elif value=="Heizen+WW+Sparbetrieb" -%}
+          eco
+        {%- elif states('binary_sensor.heating_pump_night_mode') | bool -%}
+          sleep
+        {%- else -%}
+          home
+        {%- endif %}
+      preset_mode_command_topic: "openv/setBetriebsart2"
+      preset_mode_command_template: >-
+        {% if (value=="eco") and (states('binary_sensor.heating_pump_heating_mode') | bool) -%}
+          Heizen+WW+Sparbetrieb
+        {%- elif (value=="boost") and (states('binary_sensor.heating_pump_heating_mode') | bool) -%}
+          Heizen+WW+Party
+        {%- else -%}
+          {{ states('select.mosquitto_broker_betriebsart') }}
+        {%- endif %}
+      fan_modes:
+        - "auto"
+        - "medium"
+      fan_mode_state_topic: "openv/getStatusQuellePrim"
+      fan_mode_state_template: >-
+        {% if(float(value) | round(0) == 0) -%}
+          auto
+        {%- else -%}
+          medium
+        {%- endif %}
+      temperature_unit: "C"
+      precision: 1.0
+      min_temp: 10
+      max_temp: 30
+      current_temperature_topic: "openv/getTempRaumIst2"
+      temperature_state_topic: "openv/getTempRaumSollNormal2"
+      temperature_command_topic: "openv/setTempRaumSollNormal2"
+      temperature_command_template: |-
+        {{ value | round(0) }}
+      temperature_low_state_topic: "openv/getTempRaumSollRed2"
+      temperature_low_command_topic: "openv/setTempRaumSollRed2"
+      temperature_low_command_template: |-
+        {{ value | round(0) }}
+      temperature_high_state_topic: "openv/getTempRaumSollParty2"
+      temperature_high_command_topic: "openv/setTempRaumSollParty2"
+      temperature_high_command_template: |-
+        {{ value | round(0) }}
 
 template:
   - binary_sensor:
