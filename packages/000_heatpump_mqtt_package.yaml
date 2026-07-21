@@ -915,6 +915,77 @@ mqtt:
       temperature_high_command_topic: "openv/setTempRaumSollParty2"
       temperature_high_command_template: |-
         {{ value | round(0) }}
+  water_heater:
+    - unique_id: "vcontroldWaterHeaterHeatPump"
+      name: "Water Heater Heat Pump"
+      device:
+        identifiers: "vcontrold"
+        manufacturer: "Viessmann"
+        model: "Vitocal 3xx mit Vitotronic 200"
+        model_id: 2049
+      icon: "mdi:heat-pump-outline"
+      modes:
+        - "off"
+        - "heat_pump"
+        - "electric"
+      mode_state_topic: "openv/getFreigabeElektroheizungWW"
+      mode_state_template: >-
+        {% if(float(value) | round(0) == 0) -%}
+          heat_pump
+        {%- else -%}
+          electric
+        {%- endif %}
+      mode_command_topic: "openv/setFreigabeElektroheizungWW"
+      mode_command_template: >-
+        {% if value=="electric" -%}
+          1
+        {%- else -%}
+          0
+        {%- endif %}
+      temperature_unit: "C"
+      precision: 1.0
+      min_temp: 10
+      max_temp: 50
+      temperature_state_topic: "openv/getTempWWSoll"
+      temperature_command_topic: "openv/setTempWWSoll"
+      temperature_command_template: |-
+        {{ value | round(0) }}
+      current_temperature_topic: "openv/getTempWWIstOben"
+    - unique_id: "vcontroldWaterHeaterTemp2HeatPump"
+      name: "Water Heater Temp2 Heat Pump"
+      device:
+        identifiers: "vcontrold"
+        manufacturer: "Viessmann"
+        model: "Vitocal 3xx mit Vitotronic 200"
+        model_id: 2049
+      icon: "mdi:heat-pump-outline"
+      modes:
+        - "off"
+        - "heat_pump"
+        - "electric"
+      mode_state_topic: "openv/getFreigabeElektroheizungWW"
+      mode_state_template: >-
+        {% if(float(value) | round(0) == 0) -%}
+          heat_pump
+        {%- else -%}
+          electric
+        {%- endif %}
+      mode_command_topic: "openv/setFreigabeElektroheizungWW"
+      mode_command_template: >-
+        {% if value=="electric" -%}
+          1
+        {%- else -%}
+          0
+        {%- endif %}
+      temperature_unit: "C"
+      precision: 1.0
+      min_temp: 10
+      max_temp: 50
+      temperature_state_topic: "openv/getTempWWSoll2"
+      temperature_command_topic: "openv/setTempWWSoll2"
+      temperature_command_template: |-
+        {{ value | round(0) }}
+      current_temperature_topic: "openv/getTempWWIstOben"
 
 template:
   - binary_sensor:
