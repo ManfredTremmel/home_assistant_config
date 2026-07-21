@@ -925,7 +925,6 @@ mqtt:
         model_id: 2049
       icon: "mdi:heat-pump-outline"
       modes:
-        - "off"
         - "heat_pump"
         - "electric"
       mode_state_topic: "openv/getFreigabeElektroheizungWW"
@@ -960,19 +959,18 @@ mqtt:
         model_id: 2049
       icon: "mdi:heat-pump-outline"
       modes:
-        - "off"
         - "heat_pump"
-        - "electric"
-      mode_state_topic: "openv/getFreigabeElektroheizungWW"
+        - "performance"
+      mode_state_topic: "openv/getWWEinmal"
       mode_state_template: >-
         {% if(float(value) | round(0) == 0) -%}
           heat_pump
         {%- else -%}
-          electric
+          performance
         {%- endif %}
-      mode_command_topic: "openv/setFreigabeElektroheizungWW"
+      mode_command_topic: "openv/setWWEinmal"
       mode_command_template: >-
-        {% if value=="electric" -%}
+        {% if value=="performance" -%}
           1
         {%- else -%}
           0

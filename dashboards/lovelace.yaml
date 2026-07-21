@@ -1714,9 +1714,6 @@ views:
           - type: tile
             entity: switch.mosquitto_broker_ausschaltoptimierung_fuer_warmwasser
             name: Ausschaltoptimierung
-          - type: tile
-            entity: switch.mosquitto_broker_einmal_ww_bereitung
-            name: 1x Aufbereitung starten
   - type: sections
     max_columns: 3
     subview: true
