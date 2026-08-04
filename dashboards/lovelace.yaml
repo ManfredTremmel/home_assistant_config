@@ -171,7 +171,7 @@ views:
             vertical: false
             tap_action:
               action: url
-              url_path: https://www.ovb-heimatzeitungen.de/
+              url_path: http://tvprogramm/zeitschriften/
             features_position: bottom
       - type: grid
         cards:
@@ -544,8 +544,6 @@ views:
               - condition: state
                 entity: sensor.nasqnap671_status
                 state_not: unavailable
-      - type: grid
-        cards: []
     cards: []
     type: sections
     max_columns: 3
@@ -633,7 +631,6 @@ views:
               columns: full
       - type: grid
         cards:
-          - type: custom:stats-flow-card
           - type: custom:sfml-card
       - type: grid
         cards:
@@ -787,23 +784,38 @@ views:
                 - entity: sensor.forecasted_pv_production_pvsol
                   type: custom:multiple-entity-row
                   show_state: false
-                  width: 80%
+                  styles:
+                    width: 100px
                   name: Planwerte
                   secondary_info: "[kWh]"
                   icon: mdi:chart-bar
                   entities:
                     - entity: sensor.forecasted_pv_production_daily
                       name: "Tgl:"
+                      format: precision2
                       unit: false
+                      styles:
+                        width: 55px
+                        text-align: right
                     - entity: sensor.forecasted_pv_production_mtd
                       name: "MTD:"
+                      format: precision2
                       unit: false
+                      styles:
+                        width: 55px
+                        text-align: right
                     - entity: sensor.forecasted_pv_production_pvsol
                       name: "Mtl:"
+                      format: precision2
                       unit: false
+                      styles:
+                        width: 55px
+                        text-align: right
                 - entity: sensor.forecasted_pv_production_pvsol
                   type: custom:multiple-entity-row
                   show_state: false
+                  styles:
+                    width: 100px
                   name: Absolut
                   icon: mdi:chart-bar
                   entities:
@@ -811,29 +823,52 @@ views:
                       name: false
                       format: precision2
                       unit: false
+                      styles:
+                        width: 55px
+                        text-align: right
                     - entity: sensor.inverter_yield_monthly
                       name: false
+                      format: precision2
                       unit: false
+                      styles:
+                        width: 55px
+                        text-align: right
                     - entity: sensor.inverter_yield_monthly
                       name: false
+                      format: precision2
                       unit: false
+                      styles:
+                        width: 55px
+                        text-align: right
                 - entity: sensor.forecasted_pv_production_pvsol
                   type: custom:multiple-entity-row
                   show_state: false
+                  styles:
+                    width: 100px
                   name: in %
                   icon: mdi:percent-circle
                   entities:
                     - entity: sensor.pv_zielerreichung_tagesertrag
                       name: false
+                      format: precision2
                       unit: false
+                      styles:
+                        width: 55px
+                        text-align: right
                     - entity: sensor.pv_zielerreichung_monatsertrag_mtd
                       name: false
                       format: precision2
                       unit: false
+                      styles:
+                        width: 55px
+                        text-align: right
                     - entity: sensor.pv_zielerreichung_monatsertrag
                       name: false
                       format: precision2
                       unit: false
+                      styles:
+                        width: 55px
+                        text-align: right
                 - entity: sensor.pv_zielerreichung_tagesertrag
                   name: Tag
                   icon: mdi:calendar-today
@@ -943,50 +978,92 @@ views:
                   name: Planwerte
                   icon: mdi:chart-bar
                   secondary_info: "[kWh/kWp]"
+                  styles:
+                    width: 100px
                   entities:
                     - type: attribute
                       entity: sensor.forecasted_pv_production_daily
                       attribute: per_kwp
                       name: "Tgl:"
+                      format: precision2
                       unit: false
+                      styles:
+                        width: 55px
+                        text-align: right
                     - type: attribute
                       entity: sensor.forecasted_pv_production_mtd
                       attribute: per_kwp
                       name: "MTD:"
+                      format: precision2
                       unit: false
+                      styles:
+                        width: 55px
+                        text-align: right
                     - entity: sensor.forecasted_pv_production_monthly_per_kwp
                       name: "Mtl:"
+                      format: precision2
                       unit: false
+                      styles:
+                        width: 55px
+                        text-align: right
                 - entity: sensor.forecasted_pv_production_pvsol
                   type: custom:multiple-entity-row
                   show_state: false
                   name: Absolut
                   icon: mdi:chart-bar
+                  styles:
+                    width: 100px
                   entities:
                     - entity: sensor.wechselrichter_yield_daily_per_kwp
                       name: false
+                      format: precision2
                       unit: false
+                      styles:
+                        width: 55px
+                        text-align: right
                     - entity: sensor.wechselrichter_yield_monthly_per_kwp
                       name: false
+                      format: precision2
                       unit: false
+                      styles:
+                        width: 55px
+                        text-align: right
                     - entity: sensor.wechselrichter_yield_monthly_per_kwp
                       name: false
+                      format: precision2
                       unit: false
+                      styles:
+                        width: 55px
+                        text-align: right
                 - entity: sensor.forecasted_pv_production_pvsol
                   type: custom:multiple-entity-row
                   show_state: false
                   name: in %
                   icon: mdi:percent-circle
+                  styles:
+                    width: 100px
                   entities:
                     - entity: sensor.pv_zielerreichung_tagesertrag
                       name: false
+                      format: precision2
                       unit: false
+                      styles:
+                        width: 55px
+                        text-align: right
                     - entity: sensor.pv_zielerreichung_monatsertrag_mtd
                       name: false
+                      format: precision2
                       unit: false
+                      styles:
+                        width: 55px
+                        text-align: right
                     - entity: sensor.pv_zielerreichung_monatsertrag
                       name: false
+                      format: precision2
                       unit: false
+                      styles:
+                        width: 55px
+                        text-align: right
                 - entity: sensor.pv_zielerreichung_tagesertrag
                   name: Tag
                   icon: mdi:calendar-today
@@ -1108,14 +1185,26 @@ views:
                   entities:
                     - type: attribute
                       entity: sensor.pv_notwendige_erzeugung_pro_tag
+                      format: precision
                       attribute: per_kwp
                       name: Notwendig pro Tag
+                      styles:
+                        width: 100px
+                        text-align: right
                     - type: attribute
                       entity: sensor.pv_extrapolierter_ertrag
+                      format: precision2
                       attribute: per_kwp
                       name: Hochrechnung
+                      styles:
+                        width: 100px
+                        text-align: right
                     - entity: sensor.pv_extrapolierte_zielerreichung
                       name: Zielerreichung
+                      format: precision2
+                      styles:
+                        width: 100px
+                        text-align: right
                 - entity: sensor.forecasted_pv_production_pvsol
                   card_mod:
                     style:
@@ -1135,12 +1224,21 @@ views:
                     - entity: sensor.solcast_forecast_heute_pro_kwp
                       name: heute
                       format: precision2
+                      styles:
+                        width: 100px
+                        text-align: right
                     - entity: sensor.solcast_zielerreichung_heute
                       name: Zielerreichung
                       format: precision2
+                      styles:
+                        width: 100px
+                        text-align: right
                     - entity: sensor.solcast_forecast_morgen_pro_kwp
                       name: morgen
                       format: precision2
+                      styles:
+                        width: 100px
+                        text-align: right
                 - entity: sensor.pv_extrapolierte_zielerreichung
                   name: Zielerreichung
                   icon: mdi:target
@@ -1220,10 +1318,22 @@ views:
                   entities:
                     - entity: sensor.pv_notwendige_erzeugung_pro_tag
                       name: Notwendig pro Tag
+                      format: precision2
+                      styles:
+                        width: 100px
+                        text-align: right
                     - entity: sensor.pv_extrapolierter_ertrag
                       name: Hochrechnung
+                      format: precision2
+                      styles:
+                        width: 100px
+                        text-align: right
                     - entity: sensor.pv_extrapolierte_zielerreichung
                       name: Zielerreichung
+                      format: precision2
+                      styles:
+                        width: 100px
+                        text-align: right
                 - entity: sensor.forecasted_pv_production_pvsol
                   card_mod:
                     style:
@@ -1243,12 +1353,21 @@ views:
                     - entity: sensor.solar_forecast_ml_hybrid_forecast
                       name: heute
                       format: precision2
+                      styles:
+                        width: 100px
+                        text-align: right
                     - entity: sensor.solcast_zielerreichung_heute
                       name: Zielerreichung
                       format: precision2
+                      styles:
+                        width: 100px
+                        text-align: right
                     - entity: sensor.prognose_morgen
                       name: morgen
                       format: precision2
+                      styles:
+                        width: 100px
+                        text-align: right
                 - entity: sensor.pv_extrapolierte_zielerreichung
                   name: Zielerreichung
                   icon: mdi:target
