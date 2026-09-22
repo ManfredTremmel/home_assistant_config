@@ -10,6 +10,8 @@
 #        script.battery_normal
 #        script.battery_hold
 #        script.battery_grid_charge
+#        script.battery_hold_charge
+#        script.battery_grid_discharge
 #
 
 script:
@@ -27,6 +29,11 @@ script:
           value: '0'
         target:
           entity_id: number.number_rct_power_storage_battery_target_power
+      - action: number.set_value
+        data:
+          value: '0'
+        target:
+          entity_id: number.number_rct_power_storage_battery_to_grid_power
       - action: number.set_value
         data:
           value: '7'
@@ -70,3 +77,21 @@ script:
           option: 'External'
         target:
           entity_id: select.select_rct_power_storage_load_strategy
+
+  # Halten Skript Laden, Optionales Skript um Laden der Heimbatterie zu verhindern, während Entladen zur Deckung des Hausverbrauchs erlaubt bleibt.
+  battery_hold_charge:
+    sequence:
+      - action: number.set_value
+        data:
+          value: '{{ states(''sensor.rct_power_storage_battery_state_of_charge'')|float(97.0) }}'
+        target:
+          entity_id: number.number_rct_power_storage_battery_maximum_soc
+
+  # Netzentladung Skript, Optionales Skript um die Heimbatterie ins Netz zu entladen. (optional)
+  battery_grid_discharge:
+    sequence:
+      - action: number.set_value
+        data:
+          value: '4200'
+        target:
+          entity_id: number.number_rct_power_storage_battery_to_grid_power
