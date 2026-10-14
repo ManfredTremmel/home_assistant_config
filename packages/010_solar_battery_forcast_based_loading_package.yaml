@@ -107,7 +107,7 @@ template:
         and has_value('sensor.sun_next_noon')
         and has_value('sensor.sun_next_rising')
         and has_value('sensor.mosquitto_broker_aussentemperatur')
-        and has_value('sensor.batteriespeicherempfehlung') }}"
+        and has_value('sensor.batteriespeicherempfehlung') }}
 
 automation rct_soc_min_max:
 
