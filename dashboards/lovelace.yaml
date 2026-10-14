@@ -119,22 +119,38 @@ views:
               rows: 6
             additionalLabel000: JAZ
             additionalValue000: sensor.heating_pump_jaz
+            tankWWSource: heatPump
           - type: custom:hourly-weather
             entity: weather.forecast_home
-            name: ' '
+            name: " "
             icons: true
-          - type: tile
-            entity: binary_sensor.waschmaschine
-            features_position: bottom
-            vertical: false
-          - type: tile
-            entity: binary_sensor.geschirrspulmaschine
-            features_position: bottom
-            vertical: false
+          - layout: tile
+            type: custom:ha-washdata-card
+            entity: sensor.waschmaschine_zustand
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+            double_tap_action:
+              action: none
+            show_state: true
+            show_program: true
+            show_progress_bar: true
+          - layout: tile
+            type: custom:ha-washdata-card
+            entity: sensor.geschirrspuler_zustand
+            tap_action:
+              action: more-info
+            hold_action:
+              action: none
+            double_tap_action:
+              action: none
+            show_state: true
+            show_program: true
+            show_progress_bar: true
           - type: tile
             entity: binary_sensor.evcc_garage_eroller_charging
-            name:
-              type: entity
+            name: eRoller lädt
             vertical: false
             tap_action:
               action: navigate
@@ -1551,8 +1567,7 @@ views:
             entity: sensor.rct_power_storage_battery_management_system_serial_number
             name: Batterie Master
           - type: tile
-            entity: >-
-              sensor.rct_power_storage_battery_management_system_software_version
+            entity: sensor.rct_power_storage_battery_management_system_software_version
             name: BMS Version
           - type: tile
             entity: sensor.rct_power_storage_battery_module_1_serial_number
@@ -1816,8 +1831,7 @@ views:
             grid_options:
               columns: full
           - type: thermostat
-            entity: >-
-              water_heater.ug_technikraum_mosquitto_broker_water_heater_heat_pump
+            entity: water_heater.ug_technikraum_mosquitto_broker_water_heater_heat_pump
             features:
               - type: water-heater-operation-modes
             grid_options:
@@ -1825,8 +1839,7 @@ views:
               rows: 5
             name: Solltemperatur
           - type: thermostat
-            entity: >-
-              water_heater.ug_technikraum_mosquitto_broker_water_heater_temp2_heat_pump
+            entity: water_heater.ug_technikraum_mosquitto_broker_water_heater_temp2_heat_pump
             grid_options:
               columns: 6
               rows: 5
@@ -2257,39 +2270,26 @@ views:
               - entity: sensor.beste_stunde
                 name:
                   type: entity
-              - entity: sensor.solar_forecast_ml_bewertungsabdeckung_7_tage
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_bewertungsabdeckung_30_tage
-                name:
-                  type: entity
               - entity: sensor.solar_forecast_ml_durchschnittlicher_monatsertrag
                 name:
                   type: entity
-              - entity: >-
-                  sensor.ug_fittneszimmer_solar_forecast_ml_gruppe_1_actual_today
+              - entity: sensor.ug_fittneszimmer_solar_forecast_ml_gruppe_1_actual_today
                 name: Gar (WR1S1) Heute
               - entity: sensor.ug_fittneszimmer_solar_forecast_ml_gruppe_1_power
                 name: Gar. (WR1S1) Power
-              - entity: >-
-                  sensor.ug_fittneszimmer_solar_forecast_ml_gruppe_2_actual_today
+              - entity: sensor.ug_fittneszimmer_solar_forecast_ml_gruppe_2_actual_today
                 name: Süd (WR2S1) Heute
               - entity: sensor.ug_fittneszimmer_solar_forecast_ml_gruppe_2_power
                 name: Süd (WR2S1) Power
-              - entity: >-
-                  sensor.ug_fittneszimmer_solar_forecast_ml_gruppe_3_actual_today
+              - entity: sensor.ug_fittneszimmer_solar_forecast_ml_gruppe_3_actual_today
                 name: Süd (WR2S2+3) Heute
               - entity: sensor.ug_fittneszimmer_solar_forecast_ml_gruppe_3_power
                 name: Süd (WR2S2+3) Power
-              - entity: >-
-                  sensor.ug_fittneszimmer_solar_forecast_ml_gruppe_4_actual_today
+              - entity: sensor.ug_fittneszimmer_solar_forecast_ml_gruppe_4_actual_today
                 name: Nord (WR2S4) Heute
               - entity: sensor.ug_fittneszimmer_solar_forecast_ml_gruppe_4_power
                 name: Nord (WR2S4) Power
               - entity: sensor.solar_forecast_ml_hybrid_forecast
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_ki_drift_status
                 name:
                   type: entity
               - entity: sensor.solar_forecast_ml_leistungsverlust_heute
@@ -2307,19 +2307,10 @@ views:
               - entity: sensor.solar_forecast_ml_monatsverbrauch
                 name:
                   type: entity
-              - entity: sensor.solar_forecast_ml_mppt_ausschluss_7_tage
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_mppt_ausschluss_30_tage
-                name:
-                  type: entity
               - entity: sensor.solar_forecast_ml_o_ertrag_7_tage
                 name:
                   type: entity
               - entity: sensor.solar_forecast_ml_o_ertrag_30_tage
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_o_genauigkeit_30_tage
                 name:
                   type: entity
               - entity: sensor.solar_forecast_ml_planungsprognose_p10_blend
@@ -2349,15 +2340,13 @@ views:
               - entity: sensor.solar_forecast_ml_schatten_heute
                 name:
                   type: entity
-              - entity: >-
-                  sensor.ug_fittneszimmer_solar_forecast_ml_sfml_total_actual_today
+              - entity: sensor.ug_fittneszimmer_solar_forecast_ml_sfml_total_actual_today
                 name:
                   type: entity
               - entity: sensor.ug_fittneszimmer_solar_forecast_ml_sfml_total_power
                 name:
                   type: entity
-              - entity: >-
-                  sensor.ug_fittneszimmer_solar_forecast_ml_sfml_total_yield_today
+              - entity: sensor.ug_fittneszimmer_solar_forecast_ml_sfml_total_yield_today
                 name:
                   type: entity
               - entity: sensor.solar_forecast_ml_system_status
@@ -2372,57 +2361,16 @@ views:
             title: Solar Forecast ML
       - type: grid
         cards:
+          - type: custom:sfml-weather-card
           - type: entities
             entities:
-              - entity: sensor.solar_forecast_ml_active_prediction_model
+              - entity: sensor.ug_fittneszimmer_solar_forecast_ml_ai_gate_status
                 name:
                   type: entity
               - entity: sensor.solar_forecast_ml_ai_metrics
                 name:
                   type: entity
-              - entity: sensor.solar_forecast_ml_ai_rmse
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_ai_samples
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_coordinator_health
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_database_status
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_end_of_day_duration
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_external_sensors_status
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_last_ai_training
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_last_update
-                name:
-                  type: entity
               - entity: sensor.solar_forecast_ml_next_production_start
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_next_scheduled_update
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_wetterstabilitat
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_wolken_trend_1h
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_wolken_trend_3h
-                name:
-                  type: entity
-              - entity: sensor.ug_fittneszimmer_solar_forecast_ml_workflow_status
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_yesterday_deviation
                 name:
                   type: entity
             title: Solar Forecast ML
