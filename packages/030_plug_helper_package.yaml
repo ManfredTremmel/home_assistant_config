@@ -8,18 +8,13 @@
 # Dependencies:
 #       "kodi" extension
 #       "AVM FRITZ!SmartHome" extension
-#       "Appliance has finished" blueprint
 #       "000_kodi_package.yaml"
 #       "010_notify_groups_package.yaml"
 #       "020_solar_grid_limitation_package.yaml"
 #
 # Used entities:
-#       sensor.steckdose_ug_waschmaschine_power
-#       sensor.steckdose_eg_geschirrspuhler_power
 #       sensor.steckdose_garage_power
 #       sensor.steckdoese_og_tv_power
-#       switch.steckdose_ug_waschmaschine
-#       switch.steckdose_eg_geschirrspuhler
 #       switch.steckdoese_og_tv
 #       binary_sensor.wassersensor_ug_technikraum_water_leak
 #       binary_sensor.wassersensor_ug_kellerraum_water_leak
@@ -29,92 +24,9 @@
 #       binary_sensor.rauchmelder_eg_schlafzimmer_smoke
 #       sensor.solar_power_generators_sum
 #
-# Provided entities:
-#       binary_sensor.waschmaschine
-#       binary_sensor.geschirrspuelmaschine
 #
-#
-template:
-  - binary_sensor:
-
-    # sensor indicates washing machine is running or not
-    - unique_id: "waschmaschine"
-      name: "Waschmaschine"
-      state: ""
-      device_class: running
-      icon: mdi:washing-machine
-    # sensor indicates dishwasher is running or not
-    - unique_id: "geschirrspulmaschine"
-      name: "Geschirrspülmaschine"
-      state: ""
-      device_class: running
-      icon: mdi:dishwasher
 
 automation power_plug_helpers:
-
-  # prüfe, ob die Waschmaschine läuft
-  - id: "waschmaschine_statusbenachrichtigung"
-    alias: "Waschmaschine Statusbenachrichtigung"
-    description: ""
-    use_blueprint:
-      path: sbyx/notify-or-do-something-when-an-appliance-like-a-dishwasher-or-washing-machine-finishes.yaml
-      input:
-        power_sensor: sensor.steckdose_ug_waschmaschine_power
-        starting_threshold: 20
-        starting_hysteresis: 3
-        finishing_threshold: 50
-        finishing_hysteresis: 4
-        actions:
-        - action: notify.all_devices
-          data:
-            title: "Waschmaschine ist fertig"
-            message: "Die Waschmaschine kann geleert werden"
-            data:
-              expire: 20000
-              displaytime: 20000
-              urgency: normal
-              icon: "info"
-        - action: python_script.set_state
-          data:
-            entity_id: binary_sensor.waschmaschine
-            state: "off"
-        pre_actions:
-        - action: python_script.set_state
-          data:
-            entity_id: binary_sensor.waschmaschine
-            state: "on"
-
-  # Prüfe, ob die Geschirrspülmaschine läuft
-  - id: "geschirrspulmaschine_statusbenachrichtigung"
-    alias: "Geschirrspülmaschine Statusbenachrichtigung"
-    description: ""
-    use_blueprint:
-      path: sbyx/notify-or-do-something-when-an-appliance-like-a-dishwasher-or-washing-machine-finishes.yaml
-      input:
-        power_sensor: sensor.steckdose_eg_geschirrspuhler_power
-        starting_threshold: 10
-        starting_hysteresis: 3
-        finishing_threshold: 2
-        finishing_hysteresis: 2
-        actions:
-        - action: notify.all_devices
-          data:
-            title: "Geschirrspüler ist fertig"
-            message: "Die Geschirrspülmaschine kann geleert werden"
-            data:
-              expire: 20000
-              displaytime: 20000
-              urgency: normal
-              icon: "info"
-        - action: python_script.set_state
-          data:
-            entity_id: binary_sensor.geschirrspulmaschine
-            state: "off"
-        pre_actions:
-        - action: python_script.set_state
-          data:
-            entity_id: binary_sensor.geschirrspulmaschine
-            state: "on"
 
   # Wassermelder Alarm
   - id: "wassermelder_alarm"
