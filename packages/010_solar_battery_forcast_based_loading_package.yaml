@@ -168,7 +168,7 @@ automation rct_soc_min_max:
     mode: single
 
   #
-  # 1 hour before sunrise, when calibration discharging is active, and soc
+  # 90 minutes before sunrise, when calibration discharging is active, and soc
   # is > 40% start heating pump hot water generating.
   #
   - id: "pv_batery_start_heat_pump_hot_water_on_calibration"
@@ -177,7 +177,7 @@ automation rct_soc_min_max:
     triggers:
       - trigger: sun
         event: sunrise
-        offset: "-01:00:00"
+        offset: "-01:30:00"
     conditions:
       - condition: state
         entity_id: "sensor.rct_power_storage_battery_status"
