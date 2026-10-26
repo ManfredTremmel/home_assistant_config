@@ -1,6 +1,6 @@
 # ########## HA Local SMA Message Translation ##########
 #
-# (C) 2025 Manfred Tremmel
+# (C) 2025-2026 Manfred Tremmel
 #
 # The SMA solar inverter provides some status information only as number,
 # this configuration file provides sensors which translate this numeric
@@ -16,11 +16,19 @@
 #       sensor.stp_20_50_grid_relay_status
 #       sensor.stp_20_50_operating_status_general
 #       sensor.stp_20_50_status
+#       sensor.stp_20_50_pv_power
+#       sensor.stp_20_50_pv_power_a
+#       sensor.stp_20_50_pv_power_b
+#       sensor.stp_20_50_pv_power_c
 #
 # Provided entities:
 #       sensor.sma_grid_relay_status
 #       sensor.sma_operating_status_general
 #       sensor.sma_status
+#       sensor.stp_20_50_pv_power_24h
+#       sensor.stp_20_50_pv_power_a_24h
+#       sensor.stp_20_50_pv_power_b_24h
+#       sensor.stp_20_50_pv_power_c_24h
 #
 template:
   - sensor:
@@ -90,3 +98,43 @@ template:
           {% set state =  states.sensor.stp_20_50_status.state %}
           {{ mapper[state] if state in mapper else 'Unbekannt' }}
       availability: "{{ has_value('sensor.stp_20_50_status') }}"
+
+    # stp_20_50_pv_power is undefined, when inverter is off, the 24h version should return 0.0 in this case
+    - unique_id: "stp_20_50_pv_power_24h"
+      name: "STP 20 50 PV Power 24h"
+      icon: "mdi:solar-power"
+      state_class: "measurement"
+      device_class: "power"
+      unit_of_measurement: "W"
+      state: >-
+          {{ states('sensor.stp_20_50_pv_power') | int(0) }}
+
+    # stp_20_50_pv_power_a is undefined, when inverter is off, the 24h version should return 0.0 in this case
+    - unique_id: "stp_20_50_pv_power_a_24h"
+      name: "STP 20 50 PV Power A 24h"
+      icon: "mdi:solar-power"
+      state_class: "measurement"
+      device_class: "power"
+      unit_of_measurement: "W"
+      state: >-
+          {{ states('sensor.stp_20_50_pv_power_a') | int(0) }}
+
+    # stp_20_50_pv_power_b is undefined, when inverter is off, the 24h version should return 0.0 in this case
+    - unique_id: "stp_20_50_pv_power_b_24h"
+      name: "STP 20 50 PV Power B 24h"
+      icon: "mdi:solar-power"
+      state_class: "measurement"
+      device_class: "power"
+      unit_of_measurement: "W"
+      state: >-
+          {{ states('sensor.stp_20_50_pv_power_b') | int(0) }}
+
+    # stp_20_50_pv_power_c is undefined, when inverter is off, the 24h version should return 0.0 in this case
+    - unique_id: "stp_20_50_pv_power_c_24h"
+      name: "STP 20 50 PV Power C 24h"
+      icon: "mdi:solar-power"
+      state_class: "measurement"
+      device_class: "power"
+      unit_of_measurement: "W"
+      state: >-
+          {{ states('sensor.stp_20_50_pv_power_c') | int(0) }}
