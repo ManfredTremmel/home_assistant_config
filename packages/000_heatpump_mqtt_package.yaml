@@ -885,6 +885,10 @@ mqtt:
           Heizen+WW+Sparbetrieb
         {%- elif (value=="boost") and (states('binary_sensor.heating_pump_heating_mode') | bool) -%}
           Heizen+WW+Party
+        {%- elif (value=="home") and (states('binary_sensor.heating_pump_heating_mode') | bool) -%}
+          Heizen+WW
+        {%- elif (value=="sleep") and (states('binary_sensor.heating_pump_heating_mode') | bool) -%}
+          Heizen+WW
         {%- else -%}
           {{ states('select.mosquitto_broker_betriebsart') }}
         {%- endif %}
