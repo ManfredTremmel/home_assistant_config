@@ -8,9 +8,15 @@
 # Dependencies:
 #       000_heatpump_mqtt_package.yaml
 #
+# Used entities:
+#       sensor.mosquitto_broker_elektroenergie_heizen_woche
+#       sensor.mosquitto_broker_elektroenergie_warmwasser_woche
+#
 # Provided entities:
 #       sensor.heating_pump_power_heating
 #       sensor.heating_pump_power_hotwater
+#       sensor.heating_pump_power
+#       sensor.heating_pump_energy_week
 #
 
 sensor:
@@ -34,3 +40,28 @@ sensor:
     unit: W
     time_window: "00:05:00"
     max_sub_interval: "00:01:00"
+
+template:
+  - sensor:
+    - unique_id: "heating_pump_power"
+      name: "Heating Pump Power"
+      state_class: "measurement"
+      device_class: "power"
+      unit_of_measurement: "W"
+      state: >-
+          {{ states('sensor.heating_pump_power_heating') | int(0)
+          + states('sensor.heating_pump_power_hotwater') | int(0) }}
+      availability: >-
+          {{ (states("sensor.heating_pump_power_heating") | is_number) 
+          and (states("sensor.heating_pump_power_hotwater") | is_number)  }}
+    - unique_id: "heating_pump_energy_week"
+      name: "Heating Pump Energy Week"
+      state_class: "total_increasing"
+      device_class: "energy"
+      unit_of_measurement: "kWh"
+      state: >-
+          {{ states('sensor.mosquitto_broker_elektroenergie_heizen_woche') | float(0.0)
+          + states('sensor.mosquitto_broker_elektroenergie_warmwasser_woche') | float(0.0) }}
+      availability: >-
+          {{ (states("sensor.mosquitto_broker_elektroenergie_heizen_woche") | is_number) 
+          and (states("sensor.mosquitto_broker_elektroenergie_warmwasser_woche") | is_number)  }}
