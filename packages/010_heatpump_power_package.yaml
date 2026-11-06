@@ -3,7 +3,8 @@
 # (C) 2026 Manfred Tremmel
 #
 # My heat pump provides energy sensors, but now power sensors, this should
-# fix this limit.
+# fix this limit. Also included two switches, to boost or dimm heat pump as
+# SGReady would do.
 #
 # Dependencies:
 #       000_heatpump_mqtt_package.yaml
@@ -11,12 +12,15 @@
 # Used entities:
 #       sensor.mosquitto_broker_elektroenergie_heizen_woche
 #       sensor.mosquitto_broker_elektroenergie_warmwasser_woche
+#       climate.ug_technikraum_mosquitto_broker_climate_heat_pump
 #
 # Provided entities:
 #       sensor.heating_pump_power_heating
 #       sensor.heating_pump_power_hotwater
 #       sensor.heating_pump_power
 #       sensor.heating_pump_energy_week
+#       switch.heating_pump_sgready_boost
+#       switch.heating_pump_sgready_dimm
 #
 
 sensor:
@@ -65,3 +69,40 @@ template:
       availability: >-
           {{ (states("sensor.mosquitto_broker_elektroenergie_heizen_woche") | is_number) 
           and (states("sensor.mosquitto_broker_elektroenergie_warmwasser_woche") | is_number)  }}
+  - switch:
+    - unique_id: "heating_pump_sgready_boost"
+      name: "Heating Pump SGReady Boost"
+      state: >-
+          {{ state_attr("climate.ug_technikraum_mosquitto_broker_climate_heat_pump", "preset_mode") == "boost" }}
+      availability: >-
+          {{ has_value("climate.ug_technikraum_mosquitto_broker_climate_heat_pump") }}
+      turn_on:
+        action: climate.set_preset_mode
+        target:
+          entity_id: climate.ug_technikraum_mosquitto_broker_climate_heat_pump
+        data:
+          preset_mode: boost
+      turn_off:
+        action: climate.set_preset_mode
+        target:
+          entity_id: climate.ug_technikraum_mosquitto_broker_climate_heat_pump
+        data:
+          preset_mode: home
+    - unique_id: "heating_pump_sgready_dimm"
+      name: "Heating Pump SGReady Dimm"
+      state: >-
+          {{ state_attr("climate.ug_technikraum_mosquitto_broker_climate_heat_pump", "preset_mode") == "eco" }}
+      availability: >-
+          {{ has_value("climate.ug_technikraum_mosquitto_broker_climate_heat_pump") }}
+      turn_on:
+        action: climate.set_preset_mode
+        target:
+          entity_id: climate.ug_technikraum_mosquitto_broker_climate_heat_pump
+        data:
+          preset_mode: eco
+      turn_off:
+        action: climate.set_preset_mode
+        target:
+          entity_id: climate.ug_technikraum_mosquitto_broker_climate_heat_pump
+        data:
+          preset_mode: home
