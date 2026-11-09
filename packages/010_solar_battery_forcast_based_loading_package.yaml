@@ -31,15 +31,15 @@
 #
 # Dependencies:
 #       "RCT Power" extension from HACS
-#       "Solar Forecast ML" extension from HACS
+#       "Helios Forecast" extension from HACS
 #       "NINA" warn app extension
 #       "000_heatpump_mqtt_package.yaml"
 #       "000_rct_input_widgets_package.yaml"
 #
 # Used entities:
-#       sensor.prognose_heute_rest
-#       sensor.prognose_morgen
-#       sensor.solar_forecast_ml_hybrid_forecast
+#       sensor.ug_fittneszimmer_helios_forecast_energy_today_remaining
+#       sensor.ug_fittneszimmer_helios_forecast_energy_day_1
+#       sensor.ug_fittneszimmer_helios_forecast_energy_day_2
 #       sensor.sun_next_noon
 #       sensor.sun_next_rising
 #       sensor.rct_battery_capacity_unload_calibration
@@ -70,8 +70,8 @@ template:
             97
           {% else %}
             {% if is_state("sun.sun", "above_horizon") -%}
-              {% set epr_today = (states('sensor.prognose_heute_rest')|float(0.0)) %}
-              {% set ep_tomorrow = (states('sensor.prognose_morgen')|float(0.0)) %}
+              {% set epr_today = (states('sensor.ug_fittneszimmer_helios_forecast_energy_today_remaining')|float(0.0)) %}
+              {% set ep_tomorrow = (states('sensor.ug_fittneszimmer_helios_forecast_energy_day_2')|float(0.0)) %}
               {% set heating_on = states("binary_sensor.heating_pump_heating_mode") | bool %}
               {% set before_noon_minus_one = ((states('sensor.sun_next_noon') | as_datetime() | as_local()).day == now().day)
                  and (now() + timedelta( hours = 1 )) < (states('sensor.sun_next_noon') | as_datetime() | as_local()) %}
@@ -101,13 +101,12 @@ template:
             {%- endif %}
           {% endif %}
       availability: >-
-        {{ has_value('sensor.prognose_heute_rest')
-        and has_value('sensor.prognose_morgen')
+        {{ has_value('sensor.ug_fittneszimmer_helios_forecast_energy_today_remaining')
+        and has_value('sensor.ug_fittneszimmer_helios_forecast_energy_day_2')
         and has_value('binary_sensor.heating_pump_heating_mode')
         and has_value('sensor.sun_next_noon')
         and has_value('sensor.sun_next_rising')
-        and has_value('sensor.mosquitto_broker_aussentemperatur')
-        and has_value('sensor.batteriespeicherempfehlung') }}
+        and has_value('sensor.mosquitto_broker_aussentemperatur') }}
 
 automation rct_soc_min_max:
 
@@ -162,7 +161,7 @@ automation rct_soc_min_max:
         event: sunrise
     conditions: []
     actions:
-      - action: switch.turn_{{ 'on' if (states('sensor.solar_forecast_ml_hybrid_forecast')|float(0.0)) < 50 else 'off' }}
+      - action: switch.turn_{{ 'on' if (states('sensor.ug_fittneszimmer_helios_forecast_energy_day_1')|float(0.0)) < 50 else 'off' }}
         target:
           entity_id: switch.switch_rct_power_storage_use_grid_power
     mode: single

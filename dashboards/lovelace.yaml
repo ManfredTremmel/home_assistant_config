@@ -57,7 +57,7 @@ views:
           - show_current: true
             show_forecast: false
             type: weather-forecast
-            entity: weather.ischwi65
+            entity: weather.openweathermap
             forecast_type: daily
             tap_action:
               action: navigate
@@ -74,28 +74,19 @@ views:
       - type: grid
         cards:
           - type: custom:heat-pump-card
+            climate: climate.ug_technikraum_mosquitto_broker_climate_heat_pump
             heatingPumpType: A2W
-            heatingPumpStatusOnOff: binary_sensor.heating_pump_status_on_off
-            heatingPumpHotWaterMode: binary_sensor.heating_pump_hot_water_mode
-            heatingPumpHeatingMode: binary_sensor.heating_pump_heating_mode
-            heatingPumpCoolingMode: binary_sensor.heating_pump_cooling_mode
-            heatingPumpPartyMode: binary_sensor.heating_pump_party_mode
-            heatingPumpEnergySaveMode: binary_sensor.heating_pump_energy_save_mode
-            heatingPumpNightMode: binary_sensor.heating_pump_night_mode
             warning: binary_sensor.mosquitto_broker_status_sammelmeldung
             additionalHeating: switch.mosquitto_broker_freigabe_zusatzheizung_fuer_ww_bereitung
             outdoorTemperature: sensor.mosquitto_broker_aussentemperatur
-            ambientTemperatureNormal: number.mosquitto_broker_raumsolltemperatur_normal
-            ambientTemperatureReduced: number.mosquitto_broker_raumsolltemperatur_reduziert
-            ambientTemperatureParty: number.mosquitto_broker_raumsolltemperatur_party
             supplyTemperature: sensor.mosquitto_broker_anlagenvorlauftemperatur
-            hpRunning: binary_sensor.mosquitto_broker_status_primaerquelle
             compressorRunning: binary_sensor.mosquitto_broker_status_verdichter
             circulatingPumpRunning: binary_sensor.mosquitto_broker_warmwasser_zirkulationspumpe
             storageChargingPumpRunning: binary_sensor.mosquitto_broker_status_speicherladepumpe
             tankHP: true
             tankTempHPUp: sensor.mosquitto_broker_pufferspeichertemperatur
             tankWW: true
+            tankWWSource: heatPump
             tankTempWWUp: sensor.mosquitto_broker_warmwassertemperatur_oben
             heatingCircuitType1: 'off'
             heatingCircuitPumpBeforeValve: false
@@ -111,15 +102,14 @@ views:
             heaterRodHP: switch.mosquitto_broker_freigabe_heizen_mit_elektro
             heaterRodLevel1: binary_sensor.mosquitto_broker_status_heizstab_stufe_1
             heaterRodLevel2: binary_sensor.mosquitto_broker_status_heizstab_stufe_2
+            thermalSolarAvailable: false
+            additionalLabel000: JAZ
+            additionalValue000: sensor.heating_pump_jaz
             linkDetails: /lovelace/hp-details
             linkSettings: /lovelace/hp-settings
-            thermalSolarAvailable: false
             grid_options:
               columns: 60
               rows: 6
-            additionalLabel000: JAZ
-            additionalValue000: sensor.heating_pump_jaz
-            tankWWSource: heatPump
           - type: custom:hourly-weather
             entity: weather.forecast_home
             name: " "
@@ -588,10 +578,15 @@ views:
             icon: mdi:car-speed-limiter
             heading: Einsepeisebegrenzung
             heading_style: title
-          - type: markdown
-            content: >
-              <center><h4>{{ as_timestamp(now()) | timestamp_custom("%d.%m.%Y -
-              %H:%M") }}</h4></center>
+          - date_size: small
+            no_background: false
+            type: date
+          - type: clock
+            clock_style: digital
+            clock_size: small
+            show_seconds: false
+            no_background: false
+            face_style: markers
           - type: tile
             name: Installierte Modulleistung
             icon: mdi:solar-power-variant
@@ -651,9 +646,6 @@ views:
             icon: mdi:transmission-tower
             grid_options:
               columns: full
-      - type: grid
-        cards:
-          - type: custom:sfml-card
       - type: grid
         cards:
           - type: heading
@@ -2121,43 +2113,10 @@ views:
     sections:
       - type: grid
         cards:
-          - type: custom:weather-chart-card
-            entity: weather.ischwi65
-            show_main: true
-            show_temperature: true
-            show_current_condition: true
-            show_attributes: true
-            show_time: true
-            show_time_seconds: false
-            show_day: false
-            show_date: true
-            show_humidity: true
-            show_pressure: true
-            show_wind_direction: true
-            show_wind_speed: true
-            show_sun: true
-            show_feels_like: false
-            show_dew_point: false
-            show_wind_gust_speed: false
-            show_visibility: false
-            show_last_changed: false
-            use_12hour_format: false
-            icons_size: 25
-            animated_icons: false
-            icon_style: style1
-            autoscroll: false
-            forecast:
-              precipitation_type: rainfall
-              show_probability: false
-              labels_font_size: '11'
-              precip_bar_size: '100'
-              style: style2
-              show_wind_forecast: true
-              condition_icons: true
-              round_temp: false
-              type: daily
-              number_of_forecasts: '0'
-              disable_animation: false
+          - type: custom:clock-weather-card
+            entity: weather.forecast_home
+      - type: grid
+        cards:
           - type: custom:windrose-card
             title: Windrichtung
             data_period:
@@ -2168,11 +2127,11 @@ views:
             refresh_interval: 300
             windspeed_bar_location: right
             wind_direction_entity:
-              entity: sensor.ischwi65_wind_direction_degrees
+              entity: sensor.openweathermap_windrichtung
               use_statistics: false
               direction_compensation: 0
             windspeed_entities:
-              - entity: sensor.ischwi65_wind_speed
+              - entity: sensor.openweathermap_windgeschwindigkeit
                 name: Windgeschwindigkeit
                 speed_unit: auto
                 use_statistics: false
@@ -2204,11 +2163,11 @@ views:
               top_left:
                 label: Windrichtung
                 unit: ' °'
-                entity: sensor.ischwi65_wind_direction_degrees
+                entity: sensor.openweathermap_windrichtung
               top_right:
                 label: Windgeschwindigkeit
                 unit: ' km/h'
-                entity: sensor.ischwi65_wind_speed
+                entity: sensor.openweathermap_windgeschwindigkeit
             text_blocks:
               top:
                 text: |2-
@@ -2217,160 +2176,53 @@ views:
                                 <td>Periode:</td><td>${start-date}, ${start-time} - ${end-date}, ${end-time}</td>
                             </tr>
                         </table>
+      - type: grid
+        cards:
           - type: entities
             entities:
-              - entity: sensor.ischwi65_forecast_summary_1n
-                name: Heute
-              - entity: sensor.ischwi65_forecast_summary_2d
-                name: Morgen
-              - entity: sensor.ischwi65_forecast_summary_4d
-                name: Übermorgen
-              - entity: sensor.ischwi65_forecast_summary_6d
-                name: Tag+3
-              - entity: sensor.ischwi65_forecast_summary_8d
-                name: Tag+4
-              - entity: sensor.ischwi65_temperature
+              - entity: sensor.openweathermap_wetter
                 name:
                   type: entity
-              - entity: sensor.ischwi65_wind_chill
+              - entity: sensor.openweathermap_wetter_code
                 name:
                   type: entity
-              - entity: sensor.ischwi65_heat_index
+              - entity: sensor.openweathermap_bedingung
                 name:
                   type: entity
-              - entity: sensor.ischwi65_dewpoint
+              - entity: sensor.openweathermap_bewolkung
                 name:
                   type: entity
-              - entity: sensor.ischwi65_solar_radiation
+              - entity: sensor.openweathermap_druck
                 name:
                   type: entity
-              - entity: sensor.ischwi65_uv_index
+              - entity: sensor.openweathermap_luftfeuchtigkeit
                 name:
                   type: entity
-              - entity: sensor.ischwi65_relative_humidity
+              - entity: sensor.openweathermap_niederschlagsart
                 name:
                   type: entity
-              - entity: sensor.ischwi65_pressure
+              - entity: sensor.openweathermap_regenintensitat
                 name:
                   type: entity
-              - entity: sensor.ischwi65_precipitation_rate
+              - entity: sensor.openweathermap_schneeintensitat
                 name:
                   type: entity
-              - entity: sensor.ischwi65_precipitation_today
+              - entity: sensor.openweathermap_sichtweite
                 name:
                   type: entity
-              - entity: sensor.ischwi65_wind_gust
+              - entity: sensor.openweathermap_temperatur
+                name:
+                  type: entity
+              - entity: sensor.openweathermap_gefuhlte_temperatur
+                name:
+                  type: entity
+              - entity: sensor.openweathermap_windboengeschwindigkeit
+                name:
+                  type: entity
+              - entity: sensor.openweathermap_windgeschwindigkeit
+                name:
+                  type: entity
+              - entity: sensor.openweathermap_windrichtung
                 name:
                   type: entity
             title: Wetterstation
-      - type: grid
-        cards:
-          - type: entities
-            entities:
-              - entity: sensor.beste_stunde
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_durchschnittlicher_monatsertrag
-                name:
-                  type: entity
-              - entity: sensor.ug_fittneszimmer_solar_forecast_ml_gruppe_1_actual_today
-                name: Gar (WR1S1) Heute
-              - entity: sensor.ug_fittneszimmer_solar_forecast_ml_gruppe_1_power
-                name: Gar. (WR1S1) Power
-              - entity: sensor.ug_fittneszimmer_solar_forecast_ml_gruppe_2_actual_today
-                name: Süd (WR2S1) Heute
-              - entity: sensor.ug_fittneszimmer_solar_forecast_ml_gruppe_2_power
-                name: Süd (WR2S1) Power
-              - entity: sensor.ug_fittneszimmer_solar_forecast_ml_gruppe_3_actual_today
-                name: Süd (WR2S2+3) Heute
-              - entity: sensor.ug_fittneszimmer_solar_forecast_ml_gruppe_3_power
-                name: Süd (WR2S2+3) Power
-              - entity: sensor.ug_fittneszimmer_solar_forecast_ml_gruppe_4_actual_today
-                name: Nord (WR2S4) Heute
-              - entity: sensor.ug_fittneszimmer_solar_forecast_ml_gruppe_4_power
-                name: Nord (WR2S4) Power
-              - entity: sensor.solar_forecast_ml_hybrid_forecast
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_leistungsverlust_heute
-                name:
-                  type: entity
-              - entity: sensor.max_peak_heute
-                name:
-                  type: entity
-              - entity: sensor.max_peak_rekord
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_monatsertrag
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_monatsverbrauch
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_o_ertrag_7_tage
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_o_ertrag_30_tage
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_planungsprognose_p10_blend
-                name:
-                  type: entity
-              - entity: sensor.produktionszeit_heute
-                name:
-                  type: entity
-              - entity: sensor.prognose_heute_rest
-                name:
-                  type: entity
-              - entity: sensor.prognose_heute
-                name:
-                  type: entity
-              - entity: sensor.prognose_morgen
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_prognose_nachste_stunde
-                name:
-                  type: entity
-              - entity: sensor.prognose_ubermorgen
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_schatten_aktuell
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_schatten_heute
-                name:
-                  type: entity
-              - entity: sensor.ug_fittneszimmer_solar_forecast_ml_sfml_total_actual_today
-                name:
-                  type: entity
-              - entity: sensor.ug_fittneszimmer_solar_forecast_ml_sfml_total_power
-                name:
-                  type: entity
-              - entity: sensor.ug_fittneszimmer_solar_forecast_ml_sfml_total_yield_today
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_system_status
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_wochenertrag
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_wochenverbrauch
-                name:
-                  type: entity
-            title: Solar Forecast ML
-      - type: grid
-        cards:
-          - type: custom:sfml-weather-card
-          - type: entities
-            entities:
-              - entity: sensor.ug_fittneszimmer_solar_forecast_ml_ai_gate_status
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_ai_metrics
-                name:
-                  type: entity
-              - entity: sensor.solar_forecast_ml_next_production_start
-                name:
-                  type: entity
-            title: Solar Forecast ML
