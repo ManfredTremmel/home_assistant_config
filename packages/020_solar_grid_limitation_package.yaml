@@ -47,6 +47,19 @@ template:
       availability: "{{ has_value('sensor.rct_power_storage_external_generator_s0_power') and has_value('sensor.rct_power_storage_grid_power') and has_value('sensor.rct_power_storage_inverter_ac_power') }}"
 
     #
+    # Calculate the local house energy consumption.
+    #
+    - unique_id: "house_energy"
+      name: "House Energy"
+      icon: "mdi:meter-electric"
+      state_class: "total_increasing"
+      device_class: energy
+      unit_of_measurement: "kWh"
+      state: >-
+          {{ ((states('sensor.rct_power_storage_external_energy_production_total')|float(0.0)) + (states('sensor.rct_power_storage_grid_energy_production_total')|float(0.0)) + (states('sensor.rct_power_storage_inverter_energy_production_total')|float(0.0)))|multiply(0.001)|round(3) }}
+      availability: "{{ has_value('sensor.rct_power_storage_external_energy_production_total') and has_value('sensor.rct_power_storage_grid_energy_production_total') and has_value('sensor.rct_power_storage_inverter_energy_production_total') }}"
+
+    #
     # Summarize capacity of all inverters.
     #
     - unique_id: "installed_pv_wr_sum"
