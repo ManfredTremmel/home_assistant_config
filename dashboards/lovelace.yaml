@@ -42,7 +42,7 @@ views:
                 - 189
                 - 189
                 - 189
-            use_new_flow_rate_model: true
+              grey_out_circles: false
             min_flow_rate: 0.75
             max_flow_rate: 6
             max_expected_power: 30000
@@ -54,6 +54,12 @@ views:
             kilo_threshold: 1000
             base_decimals: 0
             kilo_decimals: 1
+            flow_rate_model: duration
+            topology: standard
+            disable_dots: false
+            keep_trailing_zeros: false
+            no_labels: false
+            allow_layout_break: false
           - show_current: true
             show_forecast: false
             type: weather-forecast
@@ -191,25 +197,6 @@ views:
             icon: mdi:alarm-light
             heading: Warnungen
             heading_style: subtitle
-          - type: custom:meteoalarm-card
-            entities:
-              - entity: sensor.kreis_muhldorf_a_inn_aktuelle_warnstufe
-              - entity: sensor.kreis_muhldorf_a_inn_vorwarnstufe
-            integration: dwd
-            scaling_mode: headline_and_scale
-            hide_when_no_warning: true
-            disable_swiper: false
-            hide_caption: false
-            override_headline: false
-          - type: custom:meteoalarm-card
-            entities:
-              - entity: binary_sensor.nina_warning_schwindegg_muhldorf_am_inn_bayern_1
-              - entity: binary_sensor.nina_warning_schwindegg_muhldorf_am_inn_bayern_2
-              - entity: binary_sensor.nina_warning_schwindegg_muhldorf_am_inn_bayern_3
-              - entity: binary_sensor.nina_warning_schwindegg_muhldorf_am_inn_bayern_4
-              - entity: binary_sensor.nina_warning_schwindegg_muhldorf_am_inn_bayern_5
-            integration: nina
-            hide_when_no_warning: true
           - type: tile
             entity: sensor.rct_power_storage_battery_temperature
             name: 🪫🌡️PV Batterie
@@ -341,6 +328,22 @@ views:
             show_entity_picture: false
             vertical: false
             features_position: bottom
+          - type: custom:nina-dwd-card
+            nina_entity_prefix:
+              - binary_sensor.nina_warning_schwindegg_muhldorf_am_inn_bayern
+            dwd_map_type: region
+            dwd_map_land: SchilderMS
+            dwd_device: 22cb05c6950351914ee9ed4442bd871a
+            hide_expired: true
+            dwd_map_position: inside
+            max_warnings: 1
+            hide_on_level_below: '2'
+            show_nina_area: false
+            hide_footer: false
+            hide_instructions: false
+            separate_advance_warnings: false
+            hide_when_no_warnings: true
+            suppress_warning_text: true
           - type: heading
             heading: Entsorgung
             heading_style: title
@@ -580,6 +583,13 @@ views:
             heading_style: title
           - date_size: small
             no_background: false
+            date_format:
+              - weekday-short
+              - day-2-digit
+              - separator-dot
+              - month-2-digit
+              - separator-dot
+              - year-numeric
             type: date
           - type: clock
             clock_style: digital
@@ -1364,7 +1374,7 @@ views:
                   name: Forecast
                   icon: m3o:chart-data
                   entities:
-                    - entity: sensor.solar_forecast_ml_hybrid_forecast
+                    - entity: sensor.ug_fittneszimmer_helios_forecast_energy_day_1
                       name: heute
                       format: precision2
                       styles:
@@ -1376,7 +1386,7 @@ views:
                       styles:
                         width: 100px
                         text-align: right
-                    - entity: sensor.prognose_morgen
+                    - entity: sensor.ug_fittneszimmer_helios_forecast_energy_day_2
                       name: morgen
                       format: precision2
                       styles:
