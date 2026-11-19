@@ -22,9 +22,14 @@
 #       sensor.stp_20_50_pv_power_c
 #       sensor.installed_pv_size
 #       number.number_rct_power_storage_external_power_reduction
+#       sensor.rct_power_storage_external_energy_production_total
+#       sensor.rct_power_storage_inverter_energy_production_total
+#       sensor.rct_power_storage_grid_energy_production_total
+#       sensor.rct_power_storage_grid_energy_consumption_total
 #
 # Provided entities:
 #       sensor.house_power
+#       sensor.house_energy
 #       sensor.installed_pv_wr_sum
 #       sensor.solar_power_generators_sum
 #       sensor.solar_power_grid_limit_soft
@@ -56,8 +61,15 @@ template:
       device_class: energy
       unit_of_measurement: "kWh"
       state: >-
-          {{ ((states('sensor.rct_power_storage_external_energy_production_total')|float(0.0)) + (states('sensor.rct_power_storage_grid_energy_production_total')|float(0.0)) + (states('sensor.rct_power_storage_inverter_energy_production_total')|float(0.0)))|multiply(0.001)|round(3) }}
-      availability: "{{ has_value('sensor.rct_power_storage_external_energy_production_total') and has_value('sensor.rct_power_storage_grid_energy_production_total') and has_value('sensor.rct_power_storage_inverter_energy_production_total') }}"
+          {{ ((states('sensor.rct_power_storage_external_energy_production_total')|float(0.0))
+          + (states('sensor.rct_power_storage_inverter_energy_production_total')|float(0.0))
+          + (states('sensor.rct_power_storage_grid_energy_production_total')|float(0.0))
+          + (states('sensor.rct_power_storage_grid_energy_consumption_total')|float(0.0)))|multiply(0.001)|round(3) }}
+      availability: >-
+          {{ has_value('sensor.rct_power_storage_external_energy_production_total')
+          and has_value('sensor.rct_power_storage_inverter_energy_production_total')
+          and has_value('sensor.rct_power_storage_grid_energy_production_total')
+          and has_value('sensor.rct_power_storage_grid_energy_consumption_total') }}
 
     #
     # Summarize capacity of all inverters.
